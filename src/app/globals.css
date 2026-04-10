@@ -17,14 +17,12 @@
   --font-family-sans: "Inter", system-ui, sans-serif;
   --font-family-display: "Cal Sans", "Inter", sans-serif;
 
-  /* Animations — only define, never auto-apply */
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 8s ease-in-out infinite;
   --animate-gradient: gradient 8s linear infinite;
   --animate-shimmer: shimmer 2s linear infinite;
   --animate-spin-slow: spin 8s linear infinite;
 
-  /* Box shadows */
   --shadow-glow-sm: 0 0 20px rgba(16, 185, 129, 0.3);
   --shadow-glow-md: 0 0 40px rgba(16, 185, 129, 0.4);
   --shadow-glow-lg: 0 0 60px rgba(16, 185, 129, 0.5);
@@ -48,15 +46,11 @@
   --glow-color: rgba(16, 185, 129, 0.5);
 }
 
-/* ============================================================
-   BASE RESET
-   ============================================================ */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* FIX: Never set will-change globally — only on specific interactive elements */
   }
 
   html {
@@ -72,11 +66,9 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     font-family: var(--font-family-sans);
-    /* FIX: Use a single static gradient on body instead of multiple animated blobs */
     background-image: 
       radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent),
       radial-gradient(ellipse 60% 40% at 100% 0%, rgba(59, 130, 246, 0.06), transparent);
-    /* FIX: Contain paint to avoid full-page repaints */
     contain: layout style;
   }
 
@@ -95,16 +87,10 @@
     background-color: rgb(255 255 255 / 0.2);
   }
 
-  /* FIX: Prevent iOS tap flash */
   * { -webkit-tap-highlight-color: transparent; }
-
-  /* FIX: Touch targets */
   button, a, [role="button"] { touch-action: manipulation; }
 }
 
-/* ============================================================
-   KEYFRAMES — only the ones actually used
-   ============================================================ */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-20px); }
@@ -141,9 +127,6 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* ============================================================
-   LAYOUT
-   ============================================================ */
 @layer components {
   .container-custom {
     width: 100%;
@@ -189,9 +172,6 @@
     .section-spacing-sm { padding-top: 8rem; padding-bottom: 8rem; }
   }
 
-  /* ============================================================
-     TYPOGRAPHY
-     ============================================================ */
   .heading-display {
     font-size: clamp(2rem, 8vw, 6rem);
     font-weight: 700;
@@ -243,9 +223,6 @@
     line-height: 1.75;
   }
 
-  /* ============================================================
-     GRADIENT TEXT
-     ============================================================ */
   .gradient-text {
     background-clip: text;
     -webkit-background-clip: text;
@@ -269,7 +246,6 @@
     background-image: linear-gradient(to right, #ffffff, #ffffff, #a7f3d0);
   }
 
-  /* FIX: gradient-text-enhanced uses CSS animation only — no JS */
   .gradient-text-enhanced {
     background: linear-gradient(135deg, #10b981 0%, #06b6d4 25%, #3b82f6 50%, #8b5cf6 75%, #ec4899 100%);
     background-size: 300% auto;
@@ -277,13 +253,9 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: gradient-shift 8s ease infinite;
-    /* FIX: isolate to its own layer without spilling will-change */
     isolation: isolate;
   }
 
-  /* ============================================================
-     BADGES
-     ============================================================ */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -295,7 +267,6 @@
     background-image: linear-gradient(to right, rgb(16 185 129 / 0.1), rgb(6 182 212 / 0.1));
     border: 1px solid rgb(16 185 129 / 0.2);
     color: #34d399;
-    /* FIX: Use no-blur badge on mobile for perf */
   }
 
   .badge-glow {
@@ -312,9 +283,7 @@
     box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
   }
 
-  /* ============================================================
-     BUTTONS
-     ============================================================ */
+  /* FIX: Base button styles without @apply circular dependency */
   .btn {
     position: relative;
     display: inline-flex;
@@ -327,28 +296,59 @@
     font-size: 1rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     cursor: pointer;
+    border: none;
+    outline: none;
   }
 
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn:disabled { 
+    opacity: 0.5; 
+    cursor: not-allowed; 
+  }
 
   .btn-primary {
-    @apply btn;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
     color: white;
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), 0 10px 40px -10px rgba(16, 185, 129, 0.5);
+    border: none;
   }
+  
   .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 20px 50px -10px rgba(16, 185, 129, 0.6);
   }
-  .btn-primary:active { transform: translateY(0); }
+  
+  .btn-primary:active { 
+    transform: translateY(0); 
+  }
 
   .btn-secondary {
-    @apply btn;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
     color: white;
     background-color: rgb(255 255 255 / 0.05);
     border: 1px solid rgb(255 255 255 / 0.1);
   }
+  
   .btn-secondary:hover {
     background-color: rgb(255 255 255 / 0.1);
     border-color: rgb(255 255 255 / 0.2);
@@ -356,29 +356,50 @@
   }
 
   .btn-ghost {
-    @apply btn;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    cursor: pointer;
     color: rgb(255 255 255 / 0.7);
+    background: transparent;
+    border: none;
   }
+  
   .btn-ghost:hover {
     color: white;
     background-color: rgb(255 255 255 / 0.05);
   }
 
   .btn-white {
-    @apply btn;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
     background-color: white;
     color: #111827;
     box-shadow: 0 10px 40px -10px rgba(255, 255, 255, 0.3);
+    border: none;
   }
+  
   .btn-white:hover {
     transform: translateY(-2px);
     box-shadow: 0 20px 50px -10px rgba(255, 255, 255, 0.4);
   }
 
-  /* ============================================================
-     CARDS — FIX: remove individual backdrop-filter on every card,
-     use a single composite approach instead
-     ============================================================ */
   .card {
     position: relative;
     border-radius: 1rem;
@@ -387,6 +408,7 @@
     border: 1px solid rgb(255 255 255 / 0.08);
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   }
+  
   .card:hover {
     border-color: rgb(255 255 255 / 0.15);
     transform: translateY(-4px);
@@ -401,6 +423,7 @@
     border: 1px solid rgb(16 185 129 / 0.3);
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   }
+  
   .card-highlight:hover {
     border-color: rgb(16 185 129 / 0.5);
     transform: translateY(-4px);
@@ -414,7 +437,6 @@
     padding: 2rem;
     background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    /* FIX: Only blur on desktop — blurring is extremely expensive on mobile GPU */
   }
 
   @media (min-width: 768px) {
@@ -424,9 +446,6 @@
     }
   }
 
-  /* ============================================================
-     FEATURE CARDS
-     ============================================================ */
   .feature-card {
     position: relative;
     padding: 2rem;
@@ -435,14 +454,12 @@
     border: 1px solid rgb(255 255 255 / 0.06);
     transition: border-color 0.3s ease, transform 0.3s ease;
   }
+  
   .feature-card:hover {
     border-color: rgb(255 255 255 / 0.12);
     transform: translateY(-8px);
   }
 
-  /* ============================================================
-     STATS
-     ============================================================ */
   .stat-value {
     font-size: 2.5rem;
     font-weight: 800;
@@ -461,22 +478,23 @@
     text-transform: uppercase;
   }
 
-  /* ============================================================
-     INPUTS
-     ============================================================ */
   .input {
     padding: 0.875rem 1.25rem;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0.875rem;
     color: white;
-    font-size: 16px; /* prevents iOS zoom */
+    font-size: 16px;
     line-height: 1.5;
     transition: border-color 0.2s ease, background 0.2s ease;
     width: 100%;
     -webkit-appearance: none;
   }
-  .input::placeholder { color: rgba(255,255,255,0.25); }
+  
+  .input::placeholder { 
+    color: rgba(255,255,255,0.25); 
+  }
+  
   .input:focus {
     outline: none;
     border-color: rgba(16, 185, 129, 0.5);
@@ -484,9 +502,6 @@
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
   }
 
-  /* ============================================================
-     TESTIMONIALS
-     ============================================================ */
   .testimonial-card {
     position: relative;
     padding: 2rem;
@@ -496,14 +511,12 @@
     transition: border-color 0.3s ease, transform 0.3s ease;
     overflow: hidden;
   }
+  
   .testimonial-card:hover {
     border-color: rgba(255,255,255,0.15);
     transform: translateY(-4px);
   }
 
-  /* ============================================================
-     NAV BAR
-     ============================================================ */
   .nav-bar-premium {
     display: flex;
     align-items: center;
@@ -511,7 +524,6 @@
     border-radius: 1.25rem;
     background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
     border: 1px solid rgba(255,255,255,0.1);
-    /* FIX: Only apply backdrop on desktop */
     transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
@@ -542,16 +554,16 @@
     transition: color 0.2s ease, background-color 0.2s ease;
     cursor: pointer;
   }
+  
   .nav-item-premium:hover {
     color: white;
     background-color: rgba(255,255,255,0.05);
   }
-  .nav-item-premium.active { color: #34d399; }
+  
+  .nav-item-premium.active { 
+    color: #34d399; 
+  }
 
-  /* ============================================================
-     PREMIUM BUTTONS — FIX: remove ::before shimmer on mobile,
-     simplify transitions
-     ============================================================ */
   .btn-primary-premium {
     position: relative;
     display: inline-flex;
@@ -571,16 +583,20 @@
     overflow: hidden;
     min-height: 52px;
     cursor: pointer;
+    border: none;
   }
+  
   .btn-primary-premium:hover {
     background-position: right center;
     box-shadow: 0 0 0 2px rgba(16,185,129,0.5), 0 24px 56px -8px rgba(16,185,129,0.7),
       inset 0 1px 0 rgba(255,255,255,0.3);
     transform: translateY(-2px);
   }
-  .btn-primary-premium:active { transform: translateY(0); }
+  
+  .btn-primary-premium:active { 
+    transform: translateY(0); 
+  }
 
-  /* Shimmer — desktop only via media query */
   @media (min-width: 768px) {
     .btn-primary-premium::before {
       content: "";
@@ -592,7 +608,9 @@
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
       transition: left 0.5s ease;
     }
-    .btn-primary-premium:hover::before { left: 100%; }
+    .btn-primary-premium:hover::before { 
+      left: 100%; 
+    }
   }
 
   .btn-secondary-premium {
@@ -613,6 +631,7 @@
     min-height: 52px;
     cursor: pointer;
   }
+  
   .btn-secondary-premium:hover {
     background: rgba(255,255,255,0.1);
     border-color: rgba(255,255,255,0.2);
@@ -636,19 +655,20 @@
     transition: background-position 0.4s ease, box-shadow 0.3s ease, transform 0.2s ease;
     min-height: 56px;
     cursor: pointer;
+    border: none;
   }
+  
   .btn-cta-premium:hover {
     background-position: right center;
     box-shadow: 0 0 0 2px rgba(16,185,129,0.5), 0 24px 64px -8px rgba(16,185,129,0.75),
       inset 0 1px 0 rgba(255,255,255,0.4);
     transform: translateY(-3px);
   }
-  .btn-cta-premium:active { transform: translateY(0); }
+  
+  .btn-cta-premium:active { 
+    transform: translateY(0); 
+  }
 
-  /* ============================================================
-     PREMIUM CARDS — FIX: NO backdrop-filter on feature-card-premium
-     (this was the #1 perf killer)
-     ============================================================ */
   .stat-card-premium {
     position: relative;
     padding: 2rem;
@@ -658,12 +678,12 @@
     border: 1px solid rgba(255,255,255,0.08);
     transition: border-color 0.3s ease, transform 0.3s ease;
   }
+  
   .stat-card-premium:hover {
     border-color: rgba(255,255,255,0.15);
     transform: translateY(-4px);
   }
 
-  /* FIX: card-glass-premium — remove backdrop on mobile */
   .card-glass-premium {
     position: relative;
     border-radius: 2rem;
@@ -680,7 +700,6 @@
     }
   }
 
-  /* FIX: feature-card-premium — NO backdrop-filter, it's the worst offender */
   .feature-card-premium {
     position: relative;
     padding: 2.5rem;
@@ -689,6 +708,7 @@
     border: 1px solid rgba(255,255,255,0.07);
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   }
+  
   .feature-card-premium:hover {
     border-color: rgba(255,255,255,0.14);
     box-shadow: 0 16px 48px -12px rgba(0,0,0,0.4);
@@ -706,19 +726,12 @@
     transition: transform 0.3s ease;
   }
 
-  /* ============================================================
-     DECORATIVE BACKGROUND HELPERS
-     FIX: Static blobs instead of animated ones. Animated blobs
-     on every page cause constant compositing and GPU thrashing.
-     Use CSS-only keyframes where animation is truly needed.
-     ============================================================ */
   .bg-blob {
     position: absolute;
     pointer-events: none;
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.15;
-    /* FIX: Use will-change only on elements that actually animate */
   }
 
   .bg-blob-animated {
@@ -728,7 +741,6 @@
     filter: blur(80px);
     opacity: 0.12;
     animation: float 12s ease-in-out infinite;
-    /* will-change only on desktop — mobile doesn't benefit from it */
   }
 
   @media (min-width: 768px) {
@@ -737,7 +749,6 @@
     }
   }
 
-  /* Grid patterns */
   .bg-grid-dense {
     background-image:
       linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
@@ -745,9 +756,6 @@
     background-size: 40px 40px;
   }
 
-  /* ============================================================
-     SERVICE / PRICING CARDS
-     ============================================================ */
   .service-card {
     position: relative;
     padding: 2rem;
@@ -757,6 +765,7 @@
     transition: border-color 0.3s ease, transform 0.3s ease;
     overflow: hidden;
   }
+  
   .service-card:hover { 
     border-color: rgba(255,255,255,0.14);
     transform: translateY(-4px);
@@ -771,17 +780,17 @@
     transition: border-color 0.3s ease, transform 0.3s ease;
     overflow: hidden;
   }
+  
   .pricing-card-featured {
     background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.05));
     border-color: rgba(16,185,129,0.3);
     box-shadow: 0 0 60px -20px rgba(16,185,129,0.3);
   }
-  .pricing-card:hover { transform: translateY(-6px); }
+  
+  .pricing-card:hover { 
+    transform: translateY(-6px); 
+  }
 
-  /* ============================================================
-     GPU ACCELERATION — FIX: Only apply to elements that actually
-     transition/animate. Do NOT apply globally.
-     ============================================================ */
   .btn-primary-premium,
   .btn-secondary-premium,
   .btn-cta-premium {
@@ -790,9 +799,6 @@
   }
 }
 
-/* ============================================================
-   PERFORMANCE: prefers-reduced-motion
-   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -801,9 +807,6 @@
   }
 }
 
-/* ============================================================
-   SWIPE ROW
-   ============================================================ */
 .swipe-row {
   display: flex;
   gap: 1rem;
@@ -814,41 +817,33 @@
   -ms-overflow-style: none;
   padding-bottom: 1rem;
 }
+
 .swipe-row::-webkit-scrollbar { display: none; }
 .swipe-row > * { scroll-snap-align: start; flex-shrink: 0; }
 
-/* Scrollbar hide utility */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
 
-/* Smooth momentum scrolling on iOS */
 .overflow-x-auto, .overflow-y-auto { -webkit-overflow-scrolling: touch; }
 
-/* ============================================================
-   MOBILE-SPECIFIC OVERRIDES
-   ============================================================ */
 @media (max-width: 767px) {
-  /* FIX: Remove expensive backdrop-filter on all glass elements on mobile */
   .badge, .badge-glow, .card-glass, .card-glass-premium,
   .feature-card-premium, .testimonial-card {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
 
-  /* FIX: Disable blob animations on mobile */
   .bg-blob-animated {
     animation: none !important;
     will-change: auto !important;
   }
 
-  /* Tighter spacing on mobile */
   .section-spacing { padding-top: 3.5rem; padding-bottom: 3.5rem; }
   .card-glass-premium { padding: 1.5rem; }
   .stat-card-premium { padding: 0.875rem; }
   .feature-card-premium { padding: 1.5rem; }
   .btn-primary-premium, .btn-secondary-premium { padding: 1rem 1.75rem; font-size: 1rem; }
   .btn-cta-premium { padding: 1.25rem 2rem; font-size: 1.125rem; }
-
   .stat-value { font-size: 1.75rem !important; }
   .service-card { padding: 1.5rem; }
 }
