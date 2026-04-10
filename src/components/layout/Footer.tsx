@@ -104,18 +104,18 @@ export default function Footer() {
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
                     <Mail className="w-5 h-5" />
                   </div>
-                  <span className="font-medium">hello@remarketix.com</span>
+                  <span className="font-medium">info@remarketix.in</span>
                 </motion.a>
 
                 <motion.a
-                  href="tel:+1234567890"
+                  href="tel:+91 8759839140"
                   className="flex items-center gap-3 text-white/70 hover:text-cyan-400 transition-colors group"
                   whileHover={{ x: 5 }}
                 >
                   <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors">
                     <Phone className="w-5 h-5" />
                   </div>
-                  <span className="font-medium">+1 (234) 567-890</span>
+                  <span className="font-medium">+91 8759839140</span>
                 </motion.a>
 
                 <motion.div
@@ -128,8 +128,8 @@ export default function Footer() {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <span className="font-medium">
-                    123 Business Ave<br />
-                    San Francisco, CA 94107
+                    Ecospace Business Park, Newtown<br />
+                    Kolkata, 700156, India
                   </span>
                 </motion.div>
               </div>
