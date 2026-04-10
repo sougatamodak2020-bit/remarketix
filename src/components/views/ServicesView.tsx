@@ -1,6 +1,6 @@
 ﻿"use client";
-import { motion } from "framer-motion";
-import { useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { useAppStore } from "@/store/appStore";
 import {
   Users, Database, Crosshair, Keyboard, Link2, UserRound, Send,
@@ -45,26 +45,25 @@ function ServiceCard({ service, colors, mobile = false }: {
 }) {
   return (
     <div className={`service-card h-full ${colors.glow} ${mobile ? "" : ""}`}>
-      <div className="relative z-10">
-        <div className={`w-14 h-14 sm:w-16 sm:h-16 ${colors.bg} rounded-2xl flex items-center justify-center mb-5 border ${colors.border} transition-all`}>
-          <service.icon className={`w-7 h-7 sm:w-8 sm:h-8 ${colors.text}`} />
-        </div>
-        <div className="mb-4">
-          <h3 className="heading-sm text-white mb-1">{service.title}</h3>
-          <p className={`text-sm ${colors.text} font-medium`}>{service.subtitle}</p>
-        </div>
-        <p className="text-body-sm mb-5 leading-relaxed">{service.desc}</p>
-        <div className="pt-5 border-t border-white/5">
-          <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">Includes:</p>
-          <ul className="space-y-2.5">
-            {service.features.map((feature) => (
-              <li key={feature} className="flex items-center gap-2.5 text-sm text-white/70">
-                <Check className={`w-3.5 h-3.5 ${colors.text} flex-shrink-0`} />
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className={`w-14 h-14 sm:w-16 sm:h-16 ${colors.bg} rounded-2xl flex items-center justify-center mb-5 border ${colors.border} transition-all`}>
+        <service.icon className={`w-7 h-7 sm:w-8 sm:h-8 ${colors.text}`} />
+      </div>
+      <h3 className="heading-sm text-white mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all duration-300">
+        {service.title}
+      </h3>
+      <p className={`text-sm ${colors.text} font-medium mb-3`}>{service.subtitle}</p>
+      <p className="text-body-sm mb-6 leading-relaxed">{service.desc}</p>
+      
+      <div className="pt-6 border-t border-white/5">
+        <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Includes:</p>
+        <ul className="space-y-3">
+          {service.features.map((feature) => (
+            <li key={feature} className="flex items-center gap-2.5 text-sm text-white/70">
+              <Check className={`w-3.5 h-3.5 ${colors.text} flex-shrink-0`} />
+              {feature}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
@@ -73,39 +72,53 @@ function ServiceCard({ service, colors, mobile = false }: {
 export default function ServicesView() {
   const setView = useAppStore((s) => s.setView);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const scroll = (dir: number) => {
     scrollRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
   };
 
+  const shouldReduceMotion = prefersReducedMotion || isMobile;
+
   return (
-    <div className="bg-[var(--bg-primary)] text-white overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute top-0 right-0 w-[400px] h-[400px] md:w-[600px] md:h-[600px]"
-          style={{
-            background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59, 130, 246, 0.15), transparent 70%)",
-            filter: "blur(80px)"
-          }}
-          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-0 left-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px]"
-          style={{
-            background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)",
-            filter: "blur(80px)"
-          }}
-          animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.02]" />
+    <div className="flex flex-col min-h-screen">
+      {/* Background - Static on mobile */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {!shouldReduceMotion && (
+          <>
+            <motion.div
+              className="absolute top-0 right-0 w-[400px] h-[400px] md:w-[600px] md:h-[600px]"
+              style={{
+                background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59, 130, 246, 0.15), transparent 70%)",
+                filter: "blur(80px)"
+              }}
+              animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute bottom-0 left-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px]"
+              style={{
+                background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)",
+                filter: "blur(80px)"
+              }}
+              animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.4, 0.2] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            />
+          </>
+        )}
       </div>
 
       {/* Hero */}
-      <section className="relative section-spacing">
-        <div className="container-custom relative z-10 text-center">
+      <section className="relative section-spacing pt-32">
+        <div className="container-custom relative z-10 text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -135,9 +148,9 @@ export default function ServicesView() {
 
       {/* Services Grid / Swiper */}
       <section className="section-spacing">
-        <div className="container-custom">
+        <div className="container-custom px-4">
 
-          {/* Mobile: horizontal swipe */}
+          {/* Mobile: horizontal swipe (Native CSS Snap) */}
           <div className="md:hidden relative">
             <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">Swipe to explore →</p>
             <div className="relative">
@@ -150,8 +163,12 @@ export default function ServicesView() {
               </button>
               <div
                 ref={scrollRef}
-                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 hide-scrollbar"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                  WebkitOverflowScrolling: "touch",
+                } as React.CSSProperties}
               >
                 {services.map((service, i) => {
                   const colors = colorMap[service.color];
@@ -200,7 +217,7 @@ export default function ServicesView() {
                 >
                   <motion.div
                     className={`service-card h-full ${colors.glow}`}
-                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileHover={!isMobile ? { y: -8, scale: 1.02 } : {}}
                     transition={{ duration: 0.4 }}
                   >
                     <motion.div
@@ -210,7 +227,7 @@ export default function ServicesView() {
                     <div className="relative z-10">
                       <motion.div
                         className={`w-16 h-16 ${colors.bg} rounded-2xl flex items-center justify-center mb-6 border ${colors.border} transition-all`}
-                        whileHover={{ rotate: 360, scale: 1.15 }}
+                        whileHover={!isMobile ? { rotate: 360, scale: 1.15 } : {}}
                         transition={{ duration: 0.8 }}
                       >
                         <service.icon className={`w-8 h-8 ${colors.text}`} />
@@ -254,13 +271,15 @@ export default function ServicesView() {
 
       {/* CTA */}
       <section className="section-spacing relative overflow-hidden">
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] md:w-[800px] md:h-[600px]"
-            style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)", filter: "blur(100px)" }}
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
+        <div className="absolute inset-0 pointer-events-none">
+          {!shouldReduceMotion && (
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] md:w-[800px] md:h-[600px]"
+              style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)", filter: "blur(100px)" }}
+              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+          )}
         </div>
         <div className="container-custom relative z-10 px-4 md:px-6">
           <motion.div
@@ -281,7 +300,7 @@ export default function ServicesView() {
             <motion.button
               onClick={() => setView("contact")}
               className="btn-primary-premium group w-full sm:w-auto"
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
               whileTap={{ scale: 0.98 }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">

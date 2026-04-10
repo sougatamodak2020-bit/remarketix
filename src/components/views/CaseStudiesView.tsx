@@ -1,8 +1,15 @@
 ﻿"use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useAppStore } from "@/store/appStore";
-import { ArrowRight, Sparkles, Target, TrendingUp, Award, CheckCircle } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Award,
+  CheckCircle,
+} from "lucide-react";
 
 const filters = ["All", "Europe", "UK", "Asia", "Hospitality", "Tech/SaaS"];
 
@@ -17,9 +24,12 @@ const cases = [
       { v: "99%", l: "Accuracy", icon: CheckCircle },
       { v: "40%", l: "Pipeline Boost", icon: TrendingUp },
     ],
-    challenge: "Outdated exhibitor lists with incorrect emails and missing decision-makers.",
-    solution: "Mapped 800+ companies, identified CMOs/Marketing Directors, triple-verified all emails.",
-    result: "Complete database transformation enabling multi-event campaigns.",
+    challenge:
+      "Outdated exhibitor lists with incorrect emails and missing decision-makers.",
+    solution:
+      "Mapped 800+ companies, identified CMOs/Marketing Directors, triple-verified all emails.",
+    result:
+      "Complete database transformation enabling multi-event campaigns.",
     color: "emerald",
   },
   {
@@ -32,8 +42,10 @@ const cases = [
       { v: "98%", l: "Accuracy", icon: CheckCircle },
       { v: "2 wks", l: "Delivery", icon: Award },
     ],
-    challenge: "Generic databases with duplicates and no real decision-maker contacts.",
-    solution: "Manual research, validated ownership, found Owners/Managing Directors only.",
+    challenge:
+      "Generic databases with duplicates and no real decision-maker contacts.",
+    solution:
+      "Manual research, validated ownership, found Owners/Managing Directors only.",
     result: "Hyper-personalized local outreach with immediate results.",
     color: "blue",
   },
@@ -47,8 +59,10 @@ const cases = [
       { v: "90+", l: "Contacts", icon: CheckCircle },
       { v: "95%", l: "Delivery", icon: TrendingUp },
     ],
-    challenge: "Language barriers and limited public data for Korean biotech.",
-    solution: "Used ResearchGate, Korean R&D portals, validated through publications.",
+    challenge:
+      "Language barriers and limited public data for Korean biotech.",
+    solution:
+      "Used ResearchGate, Korean R&D portals, validated through publications.",
     result: "Breakthrough access to Korean scientific community.",
     color: "violet",
   },
@@ -62,8 +76,10 @@ const cases = [
       { v: "800+", l: "Contacts", icon: CheckCircle },
       { v: "3", l: "Role Levels", icon: Award },
     ],
-    challenge: "Identify Tier 1&2 chains and find Operations/Finance/IT decision-makers.",
-    solution: "Mapped chains via registries, sourced C-level through LinkedIn/Apollo.",
+    challenge:
+      "Identify Tier 1 &2 chains and find Operations/Finance/IT decision-makers.",
+    solution:
+      "Mapped chains via registries, sourced C-level through LinkedIn/Apollo.",
     result: "Successful SaaS demo campaign with surgical precision.",
     color: "cyan",
   },
@@ -72,44 +88,70 @@ const cases = [
 export default function CaseStudiesView() {
   const setView = useAppStore((s) => s.setView);
   const [active, setActive] = useState("All");
-  const visible = cases.filter((c) => active === "All" || c.tags.includes(active));
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const visible = cases.filter(
+    (c) => active === "All" || c.tags.includes(active)
+  );
+
+  const shouldReduceMotion = prefersReducedMotion || isMobile;
 
   return (
-    <div className="bg-[var(--bg-primary)] text-white overflow-hidden">
-      {/* Background — single static gradient, no animated blobs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute top-0 left-1/4 w-[500px] h-[500px]"
-          style={{
-            background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16,185,129,0.1), transparent 70%)",
-            filter: "blur(80px)",
-          }}
-        />
-        <div
-          className="absolute bottom-0 right-1/4 w-[400px] h-[400px]"
-          style={{
-            background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59,130,246,0.1), transparent 70%)",
-            filter: "blur(80px)",
-          }}
-        />
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.018]" />
+    <div className="flex flex-col min-h-screen">
+      {/* Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {!shouldReduceMotion && (
+          <>
+            <div
+              className="absolute top-0 left-1/4 w-[500px] h-[500px]"
+              style={{
+                background:
+                  "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16,185,129,0.1), transparent 70%)",
+                filter: "blur(80px)",
+              }}
+            />
+            <div
+              className="absolute bottom-0 right-1/4 w-[400px] h-[400px]"
+              style={{
+                background:
+                  "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59,130,246,0.1), transparent 70%)",
+                filter: "blur(80px)",
+              }}
+            />
+          </>
+        )}
       </div>
 
       {/* Hero */}
-      <section className="relative section-spacing">
-        <div className="container-custom relative z-10 text-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+      <section className="relative section-spacing pt-32">
+        <div className="container-custom relative z-10 text-center px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <div className="badge-glow mx-auto mb-6 md:mb-8 w-fit">
               <Sparkles className="w-4 h-4" />
               Precision • Verification • Execution
             </div>
             <h1 className="heading-display mb-5 md:mb-6 max-w-4xl mx-auto">
               <span className="block text-white">Data Challenges?</span>
-              <span className="block gradient-text-enhanced mt-2 md:mt-3">We Turn Them Into Growth!</span>
+              <span className="block gradient-text-enhanced mt-2 md:mt-3">
+                We Turn Them Into Growth!
+              </span>
             </h1>
             <div className="h-1.5 w-28 mx-auto bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 rounded-full mb-6 md:mb-8" />
             <p className="text-body-lg max-w-2xl mx-auto text-white/80 px-4 md:px-0">
-              Stop wasting time on bad lists. We deliver manually verified, high-intent B2B data.
+              Stop wasting time on bad lists. We deliver manually verified,
+              high-intent B2B data.
             </p>
           </motion.div>
 
@@ -117,9 +159,9 @@ export default function CaseStudiesView() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mt-10 md:mt-16 max-w-4xl mx-auto px-2 md:px-0">
             {[
               { n: "4,500+", l: "Verified Contacts", color: "emerald" },
-              { n: "99%",    l: "Accuracy Rate",     color: "blue"    },
-              { n: "12",     l: "Countries",          color: "violet"  },
-              { n: "40%",    l: "Avg. Growth Boost",  color: "cyan"    },
+              { n: "99%", l: "Accuracy Rate", color: "blue" },
+              { n: "12", l: "Countries", color: "violet" },
+              { n: "40%", l: "Avg. Growth Boost", color: "cyan" },
             ].map((stat, i) => (
               <motion.div
                 key={stat.l}
@@ -128,7 +170,9 @@ export default function CaseStudiesView() {
                 transition={{ delay: 0.5 + i * 0.09, duration: 0.5 }}
                 className="stat-card-premium"
               >
-                <div className="stat-value mb-1 md:mb-2 text-2xl md:text-4xl">{stat.n}</div>
+                <div className="stat-value mb-1 md:mb-2 text-2xl md:text-4xl">
+                  {stat.n}
+                </div>
                 <div className="stat-label text-xs md:text-sm">{stat.l}</div>
               </motion.div>
             ))}
@@ -138,10 +182,10 @@ export default function CaseStudiesView() {
 
       {/* Cases */}
       <section className="section-spacing bg-white/[0.015]">
-        <div className="container-custom">
+        <div className="container-custom px-4">
           {/* Filters */}
           <div
-            className="flex gap-2 md:gap-3 mb-10 md:mb-16 overflow-x-auto pb-2 -mx-4 px-4 md:flex-wrap md:justify-center md:overflow-visible md:pb-0 md:mx-0 md:px-0"
+            className="flex gap-2 md:gap-3 mb-10 md:mb-16 overflow-x-auto pb-2 -mx-4 px-4 md:flex-wrap md:justify-center md:overflow-visible md:pb-0 md:mx-0 md:px-0 hide-scrollbar"
             style={{ scrollbarWidth: "none" } as React.CSSProperties}
           >
             {filters.map((f) => (
@@ -174,29 +218,45 @@ export default function CaseStudiesView() {
                 >
                   <motion.div
                     className="feature-card-premium h-full"
-                    whileHover={{ y: -6 }}
+                    whileHover={!isMobile ? { y: -6 } : {}}
                     transition={{ duration: 0.3 }}
                   >
                     <div className="relative z-10">
                       {/* Header */}
                       <div className="flex justify-between items-start mb-5 md:mb-6 gap-2">
-                        <span className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-${c.color}-500/10 border border-${c.color}-500/20 text-${c.color}-400 text-xs md:text-sm font-semibold`}>
+                        <span
+                          className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl bg-${c.color}-500/10 border border-${c.color}-500/20 text-${c.color}-400 text-xs md:text-sm font-semibold`}
+                        >
                           {c.type}
                         </span>
-                        <span className="text-xs md:text-sm text-white/40 font-medium text-right">{c.region}</span>
+                        <span className="text-xs md:text-sm text-white/40 font-medium text-right">
+                          {c.region}
+                        </span>
                       </div>
 
-                      <h3 className="heading-sm text-white mb-4 md:mb-6">{c.title}</h3>
+                      <h3 className="heading-sm text-white mb-4 md:mb-6">
+                        {c.title}
+                      </h3>
 
                       {/* Stats */}
                       <div className="grid grid-cols-3 gap-2 md:gap-4 mb-6 md:mb-8 p-3 md:p-5 bg-white/[0.03] rounded-xl border border-white/5">
                         {c.stats.map((s) => (
                           <div key={s.l} className="text-center">
-                            <div className={`w-8 h-8 md:w-10 md:h-10 mx-auto mb-1.5 md:mb-2 rounded-xl bg-${c.color}-500/10 border border-${c.color}-500/20 flex items-center justify-center`}>
-                              <s.icon className={`w-4 h-4 md:w-5 md:h-5 text-${c.color}-400`} />
+                            <div
+                              className={`w-8 h-8 md:w-10 md:h-10 mx-auto mb-1.5 md:mb-2 rounded-xl bg-${c.color}-500/10 border border-${c.color}-500/20 flex items-center justify-center`}
+                            >
+                              <s.icon
+                                className={`w-4 h-4 md:w-5 md:h-5 text-${c.color}-400`}
+                              />
                             </div>
-                            <div className={`text-base md:text-xl font-bold text-${c.color}-400 mb-0.5 md:mb-1`}>{s.v}</div>
-                            <div className="text-[10px] md:text-xs text-white/40 uppercase tracking-wider">{s.l}</div>
+                            <div
+                              className={`text-base md:text-xl font-bold text-${c.color}-400 mb-0.5 md:mb-1`}
+                            >
+                              {s.v}
+                            </div>
+                            <div className="text-[10px] md:text-xs text-white/40 uppercase tracking-wider">
+                              {s.l}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -206,26 +266,40 @@ export default function CaseStudiesView() {
                         <div>
                           <div className="flex items-center gap-2 mb-2">
                             <span className="w-2 h-2 rounded-full bg-red-400 flex-shrink-0" />
-                            <span className="text-xs font-bold text-white/60 uppercase tracking-wider">Challenge</span>
+                            <span className="text-xs font-bold text-white/60 uppercase tracking-wider">
+                              Challenge
+                            </span>
                           </div>
-                          <p className="text-sm text-white/70 leading-relaxed pl-4">{c.challenge}</p>
+                          <p className="text-sm text-white/70 leading-relaxed pl-4">
+                            {c.challenge}
+                          </p>
                         </div>
                         <div>
                           <div className="flex items-center gap-2 mb-2">
                             <span className="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0" />
-                            <span className="text-xs font-bold text-white/60 uppercase tracking-wider">Solution</span>
+                            <span className="text-xs font-bold text-white/60 uppercase tracking-wider">
+                              Solution
+                            </span>
                           </div>
-                          <p className="text-sm text-white/70 leading-relaxed pl-4">{c.solution}</p>
+                          <p className="text-sm text-white/70 leading-relaxed pl-4">
+                            {c.solution}
+                          </p>
                         </div>
                       </div>
 
                       {/* Result */}
                       <div className="pt-5 md:pt-6 border-t border-white/10">
                         <div className="flex items-center gap-2 mb-3">
-                          <Award className={`w-4 h-4 md:w-5 md:h-5 text-${c.color}-400`} />
-                          <span className="text-xs font-bold text-white/60 uppercase tracking-wider">Result</span>
+                          <Award
+                            className={`w-4 h-4 md:w-5 md:h-5 text-${c.color}-400`}
+                          />
+                          <span className="text-xs font-bold text-white/60 uppercase tracking-wider">
+                            Result
+                          </span>
                         </div>
-                        <p className={`text-sm italic text-${c.color}-400/90 leading-relaxed pl-6 md:pl-7`}>
+                        <p
+                          className={`text-sm italic text-${c.color}-400/90 leading-relaxed pl-6 md:pl-7`}
+                        >
                           &ldquo;{c.result}&rdquo;
                         </p>
                       </div>
@@ -254,10 +328,13 @@ export default function CaseStudiesView() {
           >
             <h2 className="heading-xl mb-5 md:mb-6">
               <span className="text-white">Ready to Write Your</span>
-              <span className="block gradient-text-enhanced mt-2">Success Story?</span>
+              <span className="block gradient-text-enhanced mt-2">
+                Success Story?
+              </span>
             </h2>
             <p className="text-body-lg max-w-2xl mx-auto mb-8 md:mb-10 text-white/80">
-              Join hundreds of businesses that turned data challenges into growth.
+              Join hundreds of businesses that turned data challenges into
+              growth.
             </p>
             <button
               onClick={() => setView("contact")}

@@ -1,6 +1,6 @@
 ﻿"use client";
-import { motion } from "framer-motion";
-import { useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { useAppStore } from "@/store/appStore";
 import Image from "next/image";
 import { ArrowRight, ExternalLink, Sparkles, TrendingUp, BarChart, Users, Target, ChevronLeft, ChevronRight } from "lucide-react";
@@ -71,34 +71,46 @@ export default function ProjectsView() {
   const setView = useAppStore((s) => s.setView);
   const smmScrollRef = useRef<HTMLDivElement>(null);
   const leadScrollRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const scrollSMM = (dir: number) => smmScrollRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
   const scrollLead = (dir: number) => leadScrollRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
+  
+  const shouldReduceMotion = prefersReducedMotion || isMobile;
 
   return (
-    <div className="bg-[var(--bg-primary)] text-white overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-48 h-48 md:w-64 md:h-64 rounded-full"
-            style={{
-              background: `radial-gradient(circle, ${i === 0 ? "rgba(16, 185, 129, 0.1)" : i === 1 ? "rgba(59, 130, 246, 0.1)" : "rgba(139, 92, 246, 0.1)"}, transparent 70%)`,
-              filter: "blur(60px)",
-              top: `${20 + i * 30}%`,
-              left: `${10 + i * 25}%`,
-            }}
-            animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.3, 1] }}
-            transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "easeInOut", delay: i * 2 }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.02]" />
+    <div className="flex flex-col min-h-screen">
+      {/* Background - Static on mobile */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {!shouldReduceMotion && (
+          [...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-48 h-48 md:w-64 md:h-64 rounded-full"
+              style={{
+                background: `radial-gradient(circle, ${i === 0 ? "rgba(16, 185, 129, 0.1)" : i === 1 ? "rgba(59, 130, 246, 0.1)" : "rgba(139, 92, 246, 0.1)"}, transparent 70%)`,
+                filter: "blur(60px)",
+                top: `${20 + i * 30}%`,
+                left: `${10 + i * 25}%`,
+              }}
+              animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.3, 1] }}
+              transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "easeInOut", delay: i * 2 }}
+            />
+          ))
+        )}
       </div>
 
       {/* Hero */}
-      <section className="relative section-spacing">
-        <div className="container-custom relative z-10 text-center">
+      <section className="relative section-spacing pt-32">
+        <div className="container-custom relative z-10 text-center px-4">
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <div className="badge-glow mx-auto mb-6 md:mb-8">
               <Sparkles className="w-4 h-4" />
@@ -123,7 +135,7 @@ export default function ProjectsView() {
 
       {/* Lead Generation */}
       <section className="section-spacing">
-        <div className="container-custom">
+        <div className="container-custom px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -140,7 +152,7 @@ export default function ProjectsView() {
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
           </motion.div>
 
-          {/* Mobile: swipe */}
+          {/* Mobile: swipe (Native CSS Snap) */}
           <div className="lg:hidden relative">
             <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">Swipe to explore →</p>
             <div className="relative">
@@ -153,8 +165,12 @@ export default function ProjectsView() {
               </button>
               <div
                 ref={leadScrollRef}
-                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 hide-scrollbar"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                  WebkitOverflowScrolling: "touch",
+                } as React.CSSProperties}
               >
                 {leadProjects.map((project, i) => (
                   <motion.div
@@ -213,14 +229,14 @@ export default function ProjectsView() {
                 transition={{ delay: i * 0.1, duration: 0.8 }}
                 className="group relative"
               >
-                <motion.div className="card overflow-hidden h-full" whileHover={{ y: -8 }} transition={{ duration: 0.4 }}>
+                <motion.div className="card overflow-hidden h-full" whileHover={!isMobile ? { y: -8 } : {}} transition={{ duration: 0.4 }}>
                   <motion.div className={`absolute -inset-1 bg-gradient-to-r from-${project.color}-500/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`} />
                   <div className="relative h-64 overflow-hidden">
-                    <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.6 }}>
+                    <motion.div whileHover={!isMobile ? { scale: 1.1 } : {}} transition={{ duration: 0.6 }}>
                       <Image src={project.image} alt={project.title} fill className="object-cover" unoptimized />
                     </motion.div>
                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/60 to-transparent" />
-                    <motion.div className={`absolute top-4 right-4 px-4 py-2 rounded-full bg-${project.color}-500/20 border border-${project.color}-500/30 backdrop-blur-sm text-${project.color}-400 text-sm font-semibold shadow-lg`} whileHover={{ scale: 1.1 }}>
+                    <motion.div className={`absolute top-4 right-4 px-4 py-2 rounded-full bg-${project.color}-500/20 border border-${project.color}-500/30 backdrop-blur-sm text-${project.color}-400 text-sm font-semibold shadow-lg`} whileHover={!isMobile ? { scale: 1.1 } : {}}>
                       {project.stats}
                     </motion.div>
                     <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-${project.color}-500/30 to-transparent blur-2xl`} />
@@ -231,13 +247,13 @@ export default function ProjectsView() {
                     </h3>
                     <p className="text-body-sm mb-6 leading-relaxed">{project.desc}</p>
                     <div className="flex items-center justify-between">
-                      <motion.div className={`px-4 py-2 rounded-xl bg-${project.color}-500/10 border border-${project.color}-500/20`} whileHover={{ scale: 1.05 }}>
+                      <motion.div className={`px-4 py-2 rounded-xl bg-${project.color}-500/10 border border-${project.color}-500/20`} whileHover={!isMobile ? { scale: 1.05 } : {}}>
                         <span className="text-sm">
                           <span className="text-white/60">Focus:</span>{" "}
                           <span className={`text-${project.color}-400 font-medium`}>{project.focus}</span>
                         </span>
                       </motion.div>
-                      <motion.button className={`flex items-center gap-2 text-${project.color}-400 hover:text-${project.color}-300 font-medium transition-colors group/btn`} whileHover={{ x: 5 }}>
+                      <motion.button className={`flex items-center gap-2 text-${project.color}-400 hover:text-${project.color}-300 font-medium transition-colors group/btn`} whileHover={!isMobile ? { x: 5 } : {}}>
                         Details <ExternalLink className="w-4 h-4 group-hover/btn:rotate-45 transition-transform" />
                       </motion.button>
                     </div>
@@ -252,7 +268,7 @@ export default function ProjectsView() {
 
       {/* Social Media */}
       <section className="section-spacing bg-white/[0.02]">
-        <div className="container-custom">
+        <div className="container-custom px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -269,7 +285,7 @@ export default function ProjectsView() {
             <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-violet-400 rounded-full mx-auto" />
           </motion.div>
 
-          {/* Mobile: swipe */}
+          {/* Mobile: swipe (Native CSS Snap) */}
           <div className="md:hidden relative">
             <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">Swipe to explore →</p>
             <div className="relative">
@@ -282,8 +298,12 @@ export default function ProjectsView() {
               </button>
               <div
                 ref={smmScrollRef}
-                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 hide-scrollbar"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                  WebkitOverflowScrolling: "touch",
+                } as React.CSSProperties}
               >
                 {smmProjects.map((project, i) => (
                   <motion.div
@@ -336,10 +356,10 @@ export default function ProjectsView() {
                 transition={{ delay: i * 0.1, duration: 0.8 }}
                 className="group"
               >
-                <motion.div className="card overflow-hidden h-full" whileHover={{ y: -8, scale: 1.02 }} transition={{ duration: 0.4 }}>
+                <motion.div className="card overflow-hidden h-full" whileHover={!isMobile ? { y: -8, scale: 1.02 } : {}} transition={{ duration: 0.4 }}>
                   <motion.div className={`absolute -inset-1 bg-gradient-to-r from-${project.color}-500/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`} />
                   <div className="relative h-48 overflow-hidden">
-                    <motion.div whileHover={{ scale: 1.1 }} transition={{ duration: 0.6 }}>
+                    <motion.div whileHover={!isMobile ? { scale: 1.1 } : {}} transition={{ duration: 0.6 }}>
                       <Image src={project.image} alt={project.title} fill className="object-cover" unoptimized />
                     </motion.div>
                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
@@ -350,7 +370,7 @@ export default function ProjectsView() {
                       {project.title}
                     </h4>
                     <div className="flex items-center gap-4 pt-4 border-t border-white/10">
-                      <motion.div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${project.gradient} opacity-20 border border-${project.color}-500/30 flex items-center justify-center`} whileHover={{ rotate: 360, scale: 1.1 }} transition={{ duration: 0.6 }}>
+                      <motion.div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${project.gradient} opacity-20 border border-${project.color}-500/30 flex items-center justify-center`} whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}} transition={{ duration: 0.6 }}>
                         <TrendingUp className={`w-6 h-6 text-${project.color}-400`} />
                       </motion.div>
                       <div>
@@ -373,13 +393,15 @@ export default function ProjectsView() {
 
       {/* CTA */}
       <section className="section-spacing relative overflow-hidden">
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] md:w-[800px] md:h-[600px]"
-            style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)", filter: "blur(100px)" }}
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
+        <div className="absolute inset-0 pointer-events-none">
+          {!shouldReduceMotion && (
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] md:w-[800px] md:h-[600px]"
+              style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)", filter: "blur(100px)" }}
+              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+          )}
         </div>
         <div className="container-custom relative z-10 px-4 md:px-6">
           <motion.div
@@ -390,7 +412,7 @@ export default function ProjectsView() {
           >
             <motion.div
               className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center"
-              whileHover={{ rotate: 360, scale: 1.1 }}
+              whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
               transition={{ duration: 0.8 }}
             >
               <Target className="w-8 h-8 md:w-10 md:h-10 text-emerald-400" />
@@ -405,7 +427,7 @@ export default function ProjectsView() {
             <motion.button
               onClick={() => setView("contact")}
               className="btn-primary-premium group w-full sm:w-auto"
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
               whileTap={{ scale: 0.98 }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">

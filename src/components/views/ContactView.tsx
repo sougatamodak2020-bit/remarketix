@@ -1,7 +1,7 @@
 ﻿"use client";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { MapPin, Phone, Mail, Send, Sparkles, CheckCircle, Clock } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const contactInfo = [
   {
@@ -9,7 +9,7 @@ const contactInfo = [
     color: "emerald",
     title: "Office",
     content: "Ecospace Business Park, Newtown\nKolkata, 700156, India",
-    gradient: "from-emerald-500 to-emerald-600"
+    gradient: "from-emerald-500 to-emerald-600",
   },
   {
     icon: Phone,
@@ -17,7 +17,7 @@ const contactInfo = [
     title: "Phone",
     content: "+91 8759839140",
     href: "tel:+918759839140",
-    gradient: "from-blue-500 to-blue-600"
+    gradient: "from-blue-500 to-blue-600",
   },
   {
     icon: Mail,
@@ -25,35 +25,61 @@ const contactInfo = [
     title: "Email",
     content: "info@remarketix.in",
     href: "mailto:info@remarketix.in",
-    gradient: "from-violet-500 to-violet-600"
+    gradient: "from-violet-500 to-violet-600",
   },
 ];
 
 export default function ContactView() {
   const [sent, setSent] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const shouldReduceMotion = prefersReducedMotion || isMobile;
 
   return (
-    <div className="bg-[var(--bg-primary)] text-white overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-64 h-64 md:w-96 md:h-96 rounded-full"
-            style={{
-              background: `radial-gradient(circle, ${i === 0 ? "rgba(16, 185, 129, 0.1)" : i === 1 ? "rgba(59, 130, 246, 0.1)" : "rgba(139, 92, 246, 0.1)"}, transparent 70%)`,
-              filter: "blur(80px)",
-              top: `${5 + i * 30}%`,
-              left: `${5 + i * 25}%`,
-            }}
-            animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.2, 1] }}
-            transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "easeInOut", delay: i * 2 }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.02]" />
+    <div className="relative min-h-screen flex flex-col">
+      {/* Background - Static on mobile */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {!shouldReduceMotion &&
+          [...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-64 h-64 md:w-96 md:h-96 rounded-full"
+              style={{
+                background: `radial-gradient(circle, ${
+                  i === 0
+                    ? "rgba(16, 185, 129, 0.1)"
+                    : i === 1
+                    ? "rgba(59, 130, 246, 0.1)"
+                    : "rgba(139, 92, 246, 0.1)"
+                }, transparent 70%)`,
+                filter: "blur(80px)",
+                top: `${5 + i * 30}%`,
+                left: `${5 + i * 25}%`,
+              }}
+              animate={{
+                x: [0, 100, 0],
+                y: [0, -50, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 20 + i * 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 2,
+              }}
+            />
+          ))}
       </div>
 
-      <div className="relative z-10 container-custom section-spacing px-4 md:px-6">
+      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-32">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -67,7 +93,9 @@ export default function ContactView() {
           </div>
           <h1 className="heading-display mb-5 md:mb-6">
             <span className="block text-white">Get in</span>
-            <span className="block gradient-text-enhanced mt-2 md:mt-3">Touch</span>
+            <span className="block gradient-text-enhanced mt-2 md:mt-3">
+              Touch
+            </span>
           </h1>
           <motion.div
             className="h-1.5 w-24 md:w-32 mx-auto bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 rounded-full mb-6 md:mb-8"
@@ -76,8 +104,8 @@ export default function ContactView() {
             transition={{ delay: 0.5, duration: 0.8 }}
           />
           <p className="text-body-lg max-w-2xl mx-auto text-white/80">
-            Ready to scale your business? Drop us a message and we&apos;ll craft a
-            tailored growth strategy for you.
+            Ready to scale your business? Drop us a message and we&apos;ll craft
+            a tailored growth strategy for you.
           </p>
         </motion.div>
 
@@ -89,7 +117,9 @@ export default function ContactView() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:col-span-2 space-y-4 md:space-y-6"
           >
-            <h2 className="heading-md text-white mb-6 md:mb-8">Contact Information</h2>
+            <h2 className="heading-md text-white mb-6 md:mb-8">
+              Contact Information
+            </h2>
 
             {contactInfo.map((info, i) => (
               <motion.div
@@ -101,23 +131,29 @@ export default function ContactView() {
               >
                 <motion.div
                   className="feature-card-premium flex items-start gap-4"
-                  whileHover={{ x: 3, scale: 1.01 }}
+                  whileHover={!isMobile ? { x: 3, scale: 1.01 } : {}}
                   whileTap={{ scale: 0.99 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <motion.div
+                  <div
                     className={`absolute -inset-1 bg-gradient-to-r ${info.gradient} opacity-0 group-hover:opacity-20 rounded-3xl transition-opacity duration-500 blur-xl`}
                   />
                   <div className="relative z-10 flex items-start gap-4 w-full">
                     <motion.div
                       className={`w-12 h-12 bg-gradient-to-br ${info.gradient} opacity-20 rounded-xl flex items-center justify-center flex-shrink-0 border border-${info.color}-500/30`}
-                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      whileHover={
+                        !isMobile ? { rotate: 360, scale: 1.1 } : {}
+                      }
                       transition={{ duration: 0.6 }}
                     >
-                      <info.icon className={`w-6 h-6 text-${info.color}-400`} />
+                      <info.icon
+                        className={`w-6 h-6 text-${info.color}-400`}
+                      />
                     </motion.div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-base md:text-lg font-semibold text-white mb-1.5">{info.title}</h3>
+                      <h3 className="text-base md:text-lg font-semibold text-white mb-1.5">
+                        {info.title}
+                      </h3>
                       {info.href ? (
                         <a
                           href={info.href}
@@ -126,7 +162,9 @@ export default function ContactView() {
                           {info.content}
                         </a>
                       ) : (
-                        <p className="text-white/60 whitespace-pre-line text-sm md:text-base">{info.content}</p>
+                        <p className="text-white/60 whitespace-pre-line text-sm md:text-base">
+                          {info.content}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -190,13 +228,20 @@ export default function ContactView() {
             ) : (
               <form
                 className="card-glass-premium p-6 md:p-8 lg:p-10"
-                onSubmit={(e) => { e.preventDefault(); setSent(true); }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setSent(true);
+                }}
               >
-                <h2 className="heading-md text-white mb-6 md:mb-8">Send us a message</h2>
+                <h2 className="heading-md text-white mb-6 md:mb-8">
+                  Send us a message
+                </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
                   <div>
-                    <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">First Name</label>
+                    <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">
+                      First Name
+                    </label>
                     <input
                       type="text"
                       className="input w-full"
@@ -206,7 +251,9 @@ export default function ContactView() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">Last Name</label>
+                    <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">
+                      Last Name
+                    </label>
                     <input
                       type="text"
                       className="input w-full"
@@ -218,7 +265,9 @@ export default function ContactView() {
                 </div>
 
                 <div className="mb-4 md:mb-6">
-                  <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">Email Address</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     className="input w-full"
@@ -229,7 +278,9 @@ export default function ContactView() {
                 </div>
 
                 <div className="mb-4 md:mb-6">
-                  <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">Company / Website</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">
+                    Company / Website
+                  </label>
                   <input
                     type="text"
                     className="input w-full"
@@ -239,7 +290,9 @@ export default function ContactView() {
                 </div>
 
                 <div className="mb-6 md:mb-8">
-                  <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">How can we help?</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2 md:mb-3">
+                    How can we help?
+                  </label>
                   <textarea
                     rows={5}
                     className="input resize-none w-full"
@@ -252,7 +305,7 @@ export default function ContactView() {
                 <motion.button
                   type="submit"
                   className="btn-primary-premium w-full group touch-manipulation"
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileHover={!isMobile ? { scale: 1.02, y: -2 } : {}}
                   whileTap={{ scale: 0.98 }}
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">

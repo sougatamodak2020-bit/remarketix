@@ -1,6 +1,6 @@
 ﻿"use client";
-import { useRef } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useAppStore } from "@/store/appStore";
 import { CORE_PLANS, PRICING_SERVICES } from "@/data/pricing";
 import {
@@ -17,30 +17,45 @@ export default function PricingView() {
   const { currency, setCurrency, setView } = useAppStore();
   const sym = currency === "USD" ? "$" : "₹";
   const fmt = (v: number | string) => typeof v === "number" ? v.toLocaleString() : v;
+  
   const plansScrollRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const scrollPlans = (dir: number) => plansScrollRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
+  
+  const shouldReduceMotion = prefersReducedMotion || isMobile;
 
   return (
-    <div className="bg-[var(--bg-primary)] text-white overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          className="absolute top-0 left-1/4 w-[300px] h-[300px] md:w-[600px] md:h-[600px]"
-          style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)", filter: "blur(80px)" }}
-          animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px]"
-          style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59, 130, 246, 0.12), transparent 70%)", filter: "blur(80px)" }}
-          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.02]" />
+    <div className="flex flex-col min-h-screen">
+      {/* Background - Static on mobile */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {!shouldReduceMotion && (
+          <>
+            <motion.div
+              className="absolute top-0 left-1/4 w-[300px] h-[300px] md:w-[600px] md:h-[600px]"
+              style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16, 185, 129, 0.15), transparent 70%)", filter: "blur(80px)" }}
+              animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute bottom-0 right-1/4 w-[250px] h-[250px] md:w-[500px] md:h-[500px]"
+              style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59, 130, 246, 0.12), transparent 70%)", filter: "blur(80px)" }}
+              animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            />
+          </>
+        )}
       </div>
 
-      <div className="relative z-10 container-custom section-spacing">
+      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-32">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -95,7 +110,7 @@ export default function PricingView() {
           </div>
         </motion.div>
 
-        {/* Core Plans — Mobile swipe */}
+        {/* Core Plans — Mobile swipe (Native CSS Snap) */}
         <div className="md:hidden relative mb-16">
           <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">Swipe to compare plans →</p>
           <div className="relative">
@@ -108,8 +123,12 @@ export default function PricingView() {
             </button>
             <div
               ref={plansScrollRef}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 -mx-4 px-4"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 -mx-4 px-4 hide-scrollbar"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                WebkitOverflowScrolling: "touch",
+              } as React.CSSProperties}
             >
               {CORE_PLANS.map((plan, i) => {
                 const Icon = ICONS[plan.icon] ?? Zap;
@@ -196,7 +215,7 @@ export default function PricingView() {
               >
                 <motion.div
                   className={isFeatured ? "pricing-card-featured" : "pricing-card"}
-                  whileHover={{ y: -10, scale: 1.02 }}
+                  whileHover={!isMobile ? { y: -10, scale: 1.02 } : {}}
                   transition={{ duration: 0.4 }}
                 >
                   {isFeatured && (
@@ -213,7 +232,7 @@ export default function PricingView() {
                   <div className="mb-8">
                     <motion.div
                       className={`w-16 h-16 rounded-2xl ${isFeatured ? "bg-emerald-500/20 border border-emerald-500/30" : "bg-white/5 border border-white/10"} flex items-center justify-center mb-6`}
-                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
                       transition={{ duration: 0.8 }}
                     >
                       <Icon className={`w-8 h-8 ${isFeatured ? "text-emerald-400" : "text-white/60"}`} />
@@ -240,7 +259,7 @@ export default function PricingView() {
                   <motion.button
                     onClick={() => setView("contact")}
                     className={isFeatured ? "btn-primary-premium w-full" : "btn-secondary-premium w-full"}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={!isMobile ? { scale: 1.05 } : {}}
                     whileTap={{ scale: 0.98 }}
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">
@@ -289,13 +308,13 @@ export default function PricingView() {
                 >
                   <motion.div
                     className="feature-card-premium flex flex-col h-full"
-                    whileHover={{ y: -8, scale: 1.05 }}
+                    whileHover={!isMobile ? { y: -8, scale: 1.05 } : {}}
                     transition={{ duration: 0.4 }}
                   >
                     <div className="flex justify-between items-start mb-5 md:mb-6">
                       <motion.div
                         className="w-10 h-10 md:w-12 md:h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20"
-                        whileHover={{ rotate: 360 }}
+                        whileHover={!isMobile ? { rotate: 360 } : {}}
                         transition={{ duration: 0.6 }}
                       >
                         <Icon className="w-5 h-5 md:w-6 md:h-6 text-emerald-400" />
@@ -327,7 +346,7 @@ export default function PricingView() {
                     <motion.button
                       onClick={() => setView("contact")}
                       className="w-full py-3 text-center text-sm font-semibold border border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white/80 hover:text-emerald-400 rounded-xl transition-all touch-manipulation"
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={!isMobile ? { scale: 1.05 } : {}}
                       whileTap={{ scale: 0.98 }}
                     >
                       Get Quote
@@ -357,7 +376,7 @@ export default function PricingView() {
           <motion.button
             onClick={() => setView("contact")}
             className="btn-cta-premium group w-full sm:w-auto"
-            whileHover={{ scale: 1.05, y: -4 }}
+            whileHover={!isMobile ? { scale: 1.05, y: -4 } : {}}
             whileTap={{ scale: 0.98 }}
           >
             <span className="relative z-10 flex items-center justify-center gap-3">

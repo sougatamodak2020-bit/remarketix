@@ -1,66 +1,174 @@
 ﻿"use client";
-import { motion } from "framer-motion";
-import { useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { useAppStore } from "@/store/appStore";
 import Image from "next/image";
 import {
-  Zap, Crosshair, Palette, BarChart2, ShieldCheck, Quote,
-  ArrowRight, Sparkles, Heart, ChevronLeft, ChevronRight
+  Zap,
+  Crosshair,
+  Palette,
+  BarChart2,
+  ShieldCheck,
+  Quote,
+  ArrowRight,
+  Sparkles,
+  Heart,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 const team = [
-  { name: "Devan", role: "Founder & CEO", image: "https://i.postimg.cc/Pq5J4mp4/Whats-App-Image-2026-02-14-at-7-44-21-PM.jpg", bio: "Leading Remarketix with a vision to make data-driven growth simple and impactful.", color: "emerald" },
-  { name: "Syed Rahaman", role: "Partner & CGO", image: "https://i.postimg.cc/t4X4qhzK/Whats-App-Image-2026-02-14-at-7-52-20-PM.jpg", bio: "Driving the growth engine, turning ideas into measurable outcomes.", color: "blue" },
-  { name: "Souvik Bera", role: "Head of Lead Gen", image: "https://i.postimg.cc/66RT66dq/Whats-App-Image-2026-02-15-at-12-02-34-PM.jpg", bio: "Leading lead generation with precision and creativity.", color: "violet" },
-  { name: "Sun Roy", role: "CTO & Automation", image: "https://i.postimg.cc/tTmXDwQT/Sun-suit.png", bio: "Leading technology and automation for efficient, scalable processes.", color: "cyan" },
-  { name: "Sourav Show", role: "Data Research Manager", image: "https://i.postimg.cc/pdmxrknH/Whats-App-Image-2026-02-15-at-12-04-15-PM.jpg", bio: "Overseeing data research with focus on accuracy and insights.", color: "pink" },
-  { name: "Sujata Manna", role: "Head of BD", image: "https://i.postimg.cc/CxHm3fMx/Whats-App-Image-2026-02-14-at-7-50-07-PM.jpg", bio: "Driving expansion and building lasting client partnerships.", color: "amber" },
+  {
+    name: "Devan",
+    role: "Founder & CEO",
+    image:
+      "https://i.postimg.cc/Pq5J4mp4/Whats-App-Image-2026-02-14-at-7-44-21-PM.jpg",
+    bio: "Leading Remarketix with a vision to make data-driven growth simple and impactful.",
+    color: "emerald",
+  },
+  {
+    name: "Syed Rahaman",
+    role: "Partner & CGO",
+    image:
+      "https://i.postimg.cc/t4X4qhzK/Whats-App-Image-2026-02-14-at-7-52-20-PM.jpg",
+    bio: "Driving the growth engine, turning ideas into measurable outcomes.",
+    color: "blue",
+  },
+  {
+    name: "Souvik Bera",
+    role: "Head of Lead Gen",
+    image:
+      "https://i.postimg.cc/66RT66dq/Whats-App-Image-2026-02-15-at-12-02-34-PM.jpg",
+    bio: "Leading lead generation with precision and creativity.",
+    color: "violet",
+  },
+  {
+    name: "Sun Roy",
+    role: "CTO & Automation",
+    image: "https://i.postimg.cc/tTmXDwQT/Sun-suit.png",
+    bio: "Leading technology and automation for efficient, scalable processes.",
+    color: "cyan",
+  },
+  {
+    name: "Sourav Show",
+    role: "Data Research Manager",
+    image:
+      "https://i.postimg.cc/pdmxrknH/Whats-App-Image-2026-02-15-at-12-04-15-PM.jpg",
+    bio: "Overseeing data research with focus on accuracy and insights.",
+    color: "pink",
+  },
+  {
+    name: "Sujata Manna",
+    role: "Head of BD",
+    image:
+      "https://i.postimg.cc/CxHm3fMx/Whats-App-Image-2026-02-14-at-7-50-07-PM.jpg",
+    bio: "Driving expansion and building lasting client partnerships.",
+    color: "amber",
+  },
 ];
 
 const values = [
-  { icon: Crosshair, color: "emerald", title: "Precision", desc: "Data that targets real buyers", gradient: "from-emerald-500 to-emerald-600" },
-  { icon: Palette, color: "blue", title: "Creativity", desc: "Design and ads that stand out", gradient: "from-blue-500 to-blue-600" },
-  { icon: BarChart2, color: "violet", title: "Performance", desc: "Pipeline and revenue impact", gradient: "from-violet-500 to-violet-600" },
-  { icon: ShieldCheck, color: "rose", title: "Trust", desc: "We grow when you grow", gradient: "from-rose-500 to-rose-600" },
+  {
+    icon: Crosshair,
+    color: "emerald",
+    title: "Precision",
+    desc: "Data that targets real buyers",
+    gradient: "from-emerald-500 to-emerald-600",
+  },
+  {
+    icon: Palette,
+    color: "blue",
+    title: "Creativity",
+    desc: "Design and ads that stand out",
+    gradient: "from-blue-500 to-blue-600",
+  },
+  {
+    icon: BarChart2,
+    color: "violet",
+    title: "Performance",
+    desc: "Pipeline and revenue impact",
+    gradient: "from-violet-500 to-violet-600",
+  },
+  {
+    icon: ShieldCheck,
+    color: "rose",
+    title: "Trust",
+    desc: "We grow when you grow",
+    gradient: "from-rose-500 to-rose-600",
+  },
 ];
 
 export default function AboutView() {
   const setView = useAppStore((s) => s.setView);
   const teamScrollRef = useRef<HTMLDivElement>(null);
-  const scrollTeam = (dir: number) => teamScrollRef.current?.scrollBy({ left: dir * 280, behavior: "smooth" });
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const scrollTeam = (dir: number) =>
+    teamScrollRef.current?.scrollBy({ left: dir * 280, behavior: "smooth" });
+
+  const shouldReduceMotion = prefersReducedMotion || isMobile;
 
   return (
-    <div className="bg-[var(--bg-primary)] text-white overflow-hidden">
+    <div className="flex flex-col min-h-screen">
       {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-64 h-64 md:w-96 md:h-96 rounded-full"
-            style={{
-              background: `radial-gradient(circle, ${i === 0 ? "rgba(16, 185, 129, 0.08)" : i === 1 ? "rgba(59, 130, 246, 0.08)" : "rgba(139, 92, 246, 0.08)"}, transparent 70%)`,
-              filter: "blur(80px)",
-              top: `${5 + i * 35}%`,
-              left: `${10 + i * 20}%`,
-            }}
-            animate={{ x: [0, 100, 0], y: [0, -50, 0], scale: [1, 1.2, 1] }}
-            transition={{ duration: 20 + i * 5, repeat: Infinity, ease: "easeInOut", delay: i * 2 }}
-          />
-        ))}
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.02]" />
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {!shouldReduceMotion &&
+          [...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-64 h-64 md:w-96 md:h-96 rounded-full"
+              style={{
+                background: `radial-gradient(circle, ${
+                  i === 0
+                    ? "rgba(16, 185, 129, 0.08)"
+                    : i === 1
+                    ? "rgba(59, 130, 246, 0.08)"
+                    : "rgba(139, 92, 246, 0.08)"
+                }, transparent 70%)`,
+                filter: "blur(80px)",
+                top: `${5 + i * 35}%`,
+                left: `${10 + i * 20}%`,
+              }}
+              animate={{
+                x: [0, 100, 0],
+                y: [0, -50, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 20 + i * 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 2,
+              }}
+            />
+          ))}
       </div>
 
       {/* Hero */}
-      <section className="relative section-spacing">
-        <div className="container-custom relative z-10 text-center">
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+      <section className="relative section-spacing pt-32">
+        <div className="container-custom relative z-10 text-center px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
             <div className="badge-glow mx-auto mb-6 md:mb-8">
               <Sparkles className="w-4 h-4" />
               Who We Are
             </div>
             <h1 className="heading-display mb-5 md:mb-6">
               <span className="block text-white">About</span>
-              <span className="block gradient-text-enhanced mt-2 md:mt-3">Remarketix</span>
+              <span className="block gradient-text-enhanced mt-2 md:mt-3">
+                Remarketix
+              </span>
             </h1>
             <motion.div
               className="h-1.5 w-24 md:w-32 mx-auto bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 rounded-full mb-6 md:mb-8"
@@ -77,9 +185,9 @@ export default function AboutView() {
 
       {/* Mission */}
       <section className="section-spacing">
-        <div className="container-custom">
+        <div className="container-custom px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
-            {/* Image — first on mobile so it's visual, text below */}
+            {/* Image */}
             <motion.div
               initial={{ opacity: 0, x: 0, y: 30 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -88,13 +196,13 @@ export default function AboutView() {
               className="relative order-1 lg:order-2"
             >
               <div className="absolute -inset-4 md:-inset-6 bg-gradient-to-r from-emerald-500/20 via-cyan-500/15 to-blue-500/20 blur-3xl rounded-3xl" />
-              <div className="relative rounded-3xl overflow-hidden border border-white/10">
+              <div className="relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/3] md:aspect-auto">
                 <Image
                   src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80"
                   alt="Team collaboration"
                   width={800}
                   height={600}
-                  className="w-full h-auto object-cover max-h-64 md:max-h-none"
+                  className="w-full h-auto object-cover"
                   unoptimized
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-transparent to-transparent" />
@@ -113,19 +221,24 @@ export default function AboutView() {
                 High Impact Solutions
               </div>
               <h2 className="heading-xl mb-5 md:mb-6">
-                <span className="block text-white">We build the foundation of</span>
-                <span className="block gradient-text-enhanced mt-2 md:mt-3">your revenue engine</span>
+                <span className="block text-white">
+                  We build the foundation of
+                </span>
+                <span className="block gradient-text-enhanced mt-2 md:mt-3">
+                  your revenue engine
+                </span>
               </h2>
               <p className="text-body-lg leading-relaxed text-white/80 mb-7 md:mb-8">
-                At Remarketix, we don&apos;t just find leads — we create everything you need
-                to reach them, impress them, and convert them. From ICP-aligned data and
-                powerful websites to product advertising and social outreach, we deliver
-                a complete growth system.
+                At Remarketix, we don&apos;t just find leads — we create
+                everything you need to reach them, impress them, and convert
+                them. From ICP-aligned data and powerful websites to product
+                advertising and social outreach, we deliver a complete growth
+                system.
               </p>
               <motion.button
                 onClick={() => setView("services")}
                 className="btn-secondary-premium group w-full sm:w-auto"
-                whileHover={{ scale: 1.05 }}
+                whileHover={!isMobile ? { scale: 1.05 } : {}}
                 whileTap={{ scale: 0.98 }}
               >
                 Explore Our Services
@@ -138,7 +251,7 @@ export default function AboutView() {
 
       {/* Values */}
       <section className="section-spacing bg-white/[0.02]">
-        <div className="container-custom">
+        <div className="container-custom px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -163,16 +276,18 @@ export default function AboutView() {
               >
                 <motion.div
                   className="feature-card-premium text-center py-6 md:py-8"
-                  whileHover={{ y: -8, scale: 1.05 }}
+                  whileHover={!isMobile ? { y: -8, scale: 1.05 } : {}}
                   whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.4 }}
                 >
                   <motion.div
                     className={`w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 md:mb-6 rounded-2xl bg-gradient-to-br ${value.gradient} opacity-20 border border-${value.color}-500/30 flex items-center justify-center group-hover:opacity-30 transition-opacity`}
-                    whileHover={{ rotate: 360 }}
+                    whileHover={!isMobile ? { rotate: 360 } : {}}
                     transition={{ duration: 0.8 }}
                   >
-                    <value.icon className={`w-6 h-6 md:w-8 md:h-8 text-${value.color}-400`} />
+                    <value.icon
+                      className={`w-6 h-6 md:w-8 md:h-8 text-${value.color}-400`}
+                    />
                   </motion.div>
                   <h3 className="heading-sm text-white mb-2 md:mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all duration-300 text-base md:text-lg">
                     {value.title}
@@ -195,7 +310,9 @@ export default function AboutView() {
             className="text-center mb-8 md:mb-12"
           >
             <Quote className="w-12 h-12 md:w-16 md:h-16 text-emerald-500/30 mx-auto mb-5 md:mb-6" />
-            <h2 className="heading-xl text-white">The Story Behind Remarketix</h2>
+            <h2 className="heading-xl text-white">
+              The Story Behind Remarketix
+            </h2>
           </motion.div>
 
           <motion.div
@@ -204,12 +321,15 @@ export default function AboutView() {
             viewport={{ once: true }}
             className="card-glass-premium p-7 md:p-10 lg:p-14"
           >
-            <p className="text-xl md:text-2xl font-medium text-white mb-6 md:mb-8">Hi, I&apos;m Devan.</p>
+            <p className="text-xl md:text-2xl font-medium text-white mb-6 md:mb-8">
+              Hi, I&apos;m Devan.
+            </p>
             <div className="space-y-5 md:space-y-6 text-white/70 leading-relaxed text-base md:text-lg">
               <p>
-                My journey has been built in silence, in late nights when no one was watching
-                and weekends when everyone else was resting. I didn&apos;t start with a perfect
-                plan — I started with determination.
+                My journey has been built in silence, in late nights when no one
+                was watching and weekends when everyone else was resting. I
+                didn&apos;t start with a perfect plan — I started with
+                determination.
               </p>
               <motion.blockquote
                 className="border-l-4 border-emerald-500 pl-5 md:pl-8 py-3 md:py-4 my-6 md:my-8 bg-emerald-500/5 rounded-r-xl"
@@ -218,13 +338,16 @@ export default function AboutView() {
                 viewport={{ once: true }}
               >
                 <p className="italic text-white/80 text-base md:text-xl">
-                  &ldquo;During this journey, I realized many businesses want to grow but struggle
-                  because they don&apos;t have the right data, prospects, or strategy. That&apos;s
-                  when I decided to build something better.&rdquo;
+                  &ldquo;During this journey, I realized many businesses want to
+                  grow but struggle because they don&apos;t have the right data,
+                  prospects, or strategy. That&apos;s when I decided to build
+                  something better.&rdquo;
                 </p>
               </motion.blockquote>
               <p className="text-xl md:text-2xl font-bold">
-                <span className="gradient-text-enhanced">That decision became Remarketix.</span>
+                <span className="gradient-text-enhanced">
+                  That decision became Remarketix.
+                </span>
               </p>
             </div>
           </motion.div>
@@ -233,16 +356,22 @@ export default function AboutView() {
 
       {/* Team */}
       <section className="section-spacing bg-white/[0.02]">
-        <div className="container-custom">
+        <div className="container-custom px-4">
           <div className="text-center mb-10 md:mb-16">
-            <h2 className="heading-xl text-white mb-3 md:mb-4">Meet the Team</h2>
-            <p className="text-body-lg text-white/70">Talented individuals driving innovation and excellence</p>
+            <h2 className="heading-xl text-white mb-3 md:mb-4">
+              Meet the Team
+            </h2>
+            <p className="text-body-lg text-white/70">
+              Talented individuals driving innovation and excellence
+            </p>
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto mt-5 md:mt-6" />
           </div>
 
           {/* Mobile: swipe */}
           <div className="md:hidden relative">
-            <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">Swipe to meet the team →</p>
+            <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">
+              Swipe to meet the team →
+            </p>
             <div className="relative">
               <button
                 onClick={() => scrollTeam(-1)}
@@ -253,8 +382,12 @@ export default function AboutView() {
               </button>
               <div
                 ref={teamScrollRef}
-                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 hide-scrollbar"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                  WebkitOverflowScrolling: "touch",
+                } as React.CSSProperties}
               >
                 {team.map((member, i) => (
                   <motion.div
@@ -265,7 +398,7 @@ export default function AboutView() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06, duration: 0.5 }}
                   >
-                    <div className="team-card text-center">
+                    <div className="team-card text-center p-4 rounded-2xl bg-white/[0.03] border border-white/10">
                       <div className="relative z-10">
                         <Image
                           src={member.image}
@@ -275,12 +408,20 @@ export default function AboutView() {
                           className="w-24 h-24 mx-auto rounded-full object-cover border-4 border-white/10 mb-4"
                           unoptimized
                         />
-                        <h3 className="text-lg font-bold text-white mb-1">{member.name}</h3>
-                        <p className={`text-${member.color}-400 font-semibold text-xs uppercase tracking-wider mb-3`}>
+                        <h3 className="text-lg font-bold text-white mb-1">
+                          {member.name}
+                        </h3>
+                        <p
+                          className={`text-${member.color}-400 font-semibold text-xs uppercase tracking-wider mb-3`}
+                        >
                           {member.role}
                         </p>
-                        <div className={`w-12 h-1 bg-gradient-to-r from-${member.color}-400 to-${member.color}-600 mx-auto rounded-full mb-3`} />
-                        <p className="text-body-sm leading-relaxed text-sm">{member.bio}</p>
+                        <div
+                          className={`w-12 h-1 bg-gradient-to-r from-${member.color}-400 to-${member.color}-600 mx-auto rounded-full mb-3`}
+                        />
+                        <p className="text-body-sm leading-relaxed text-sm">
+                          {member.bio}
+                        </p>
                       </div>
                     </div>
                   </motion.div>
@@ -293,12 +434,6 @@ export default function AboutView() {
               >
                 <ChevronRight className="w-4 h-4 text-white" />
               </button>
-            </div>
-            {/* Dots */}
-            <div className="flex justify-center gap-1.5 mt-4">
-              {team.map((_, i) => (
-                <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/20" />
-              ))}
             </div>
           </div>
 
@@ -314,13 +449,18 @@ export default function AboutView() {
                 className="group"
               >
                 <motion.div
-                  className="team-card"
+                  className="team-card p-6 rounded-3xl bg-white/[0.03] border border-white/10 relative overflow-hidden"
                   whileHover={{ y: -10, scale: 1.05 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <motion.div className={`absolute -inset-1 bg-gradient-to-br from-${member.color}-500/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`} />
+                  <div
+                    className={`absolute -inset-1 bg-gradient-to-br from-${member.color}-500/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                  />
                   <div className="relative z-10">
-                    <motion.div whileHover={{ scale: 1.1, rotate: 5 }} transition={{ duration: 0.4 }}>
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.4 }}
+                    >
                       <Image
                         src={member.image}
                         alt={member.name}
@@ -330,10 +470,20 @@ export default function AboutView() {
                         unoptimized
                       />
                     </motion.div>
-                    <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
-                    <p className={`text-${member.color}-400 font-semibold text-sm uppercase tracking-wider mb-4`}>{member.role}</p>
-                    <div className={`w-16 h-1 bg-gradient-to-r from-${member.color}-400 to-${member.color}-600 mx-auto rounded-full mb-4`} />
-                    <p className="text-body-sm leading-relaxed">{member.bio}</p>
+                    <h3 className="text-xl font-bold text-white mb-1">
+                      {member.name}
+                    </h3>
+                    <p
+                      className={`text-${member.color}-400 font-semibold text-sm uppercase tracking-wider mb-4`}
+                    >
+                      {member.role}
+                    </p>
+                    <div
+                      className={`w-16 h-1 bg-gradient-to-r from-${member.color}-400 to-${member.color}-600 mx-auto rounded-full mb-4`}
+                    />
+                    <p className="text-body-sm leading-relaxed">
+                      {member.bio}
+                    </p>
                   </div>
                 </motion.div>
               </motion.div>
@@ -360,7 +510,9 @@ export default function AboutView() {
             </motion.div>
             <h2 className="heading-xl mb-5 md:mb-6">
               <span className="text-white">One partner.</span>
-              <span className="block gradient-text-enhanced mt-2">Endless growth.</span>
+              <span className="block gradient-text-enhanced mt-2">
+                Endless growth.
+              </span>
             </h2>
             <p className="text-body-lg max-w-2xl mx-auto mb-8 md:mb-10 text-white/80">
               The complete growth system behind modern B2B brands.
@@ -368,7 +520,7 @@ export default function AboutView() {
             <motion.button
               onClick={() => setView("contact")}
               className="btn-primary-premium group w-full sm:w-auto"
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
               whileTap={{ scale: 0.98 }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
