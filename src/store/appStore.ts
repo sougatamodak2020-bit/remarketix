@@ -11,7 +11,9 @@ export type ViewId =
   | "about"
   | "contact"
   | "auth"
-  | "admin";
+  | "admin"
+  | "privacy"
+  | "terms";
 
 export type Currency = "USD" | "INR";
 

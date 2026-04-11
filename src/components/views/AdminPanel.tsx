@@ -84,96 +84,85 @@ const GRADIENT_OPTIONS = [
   { value: "from-teal-500 to-teal-600", label: "Teal" },
 ];
 
+// ─── Array field helper — stored as PostgreSQL TEXT[] ─────────────────────────
+// We edit them as newline-separated strings and convert on save/load in CrudTable.
+// Fields with type "array" are serialised as text for the textarea but converted
+// to/from string[] before hitting Supabase.
+
+const ARRAY_FIELDS: Record<string, string[]> = {
+  case_studies: ["tags", "solution", "services_used"],
+  services: ["features", "use_cases"],
+  pricing_plans: ["features"],
+};
+
 const SECTION_CONFIGS: Record<string, TableConfig[]> = {
+  // ── Home: no tables in the current schema; kept as future placeholders ─────
   home: [
-    {
-      table: "home_hero",
-      label: "Hero Section",
-      displayField: "headline",
-      fields: [
-        { key: "headline", label: "Main Headline", type: "text", required: true, span: "full" },
-        { key: "subheadline", label: "Sub Headline", type: "text", span: "full" },
-        { key: "description", label: "Description", type: "textarea", rows: 3, span: "full" },
-        { key: "cta_primary", label: "Primary CTA Text", type: "text", placeholder: "Book Free Strategy Call" },
-        { key: "cta_secondary", label: "Secondary CTA Text", type: "text", placeholder: "View Our Work" },
-        { key: "badge_text", label: "Badge Text", type: "text", placeholder: "Trusted by 200+ Businesses" },
-      ],
-    },
-    {
-      table: "home_stats",
-      label: "Stats / Counters",
-      displayField: "label",
-      secondaryField: "value",
-      orderBy: "order",
-      fields: [
-        { key: "value", label: "Value", type: "text", required: true, placeholder: "500+" },
-        { key: "label", label: "Label", type: "text", required: true, placeholder: "Leads Generated" },
-        { key: "description", label: "Description", type: "text" },
-        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "order", label: "Display Order", type: "number" },
-      ],
-    },
-    {
-      table: "home_capabilities",
-      label: "Service Capabilities",
-      displayField: "title",
-      orderBy: "order",
-      fields: [
-        { key: "title", label: "Title", type: "text", required: true },
-        { key: "subtitle", label: "Subtitle", type: "text" },
-        { key: "description", label: "Description", type: "textarea", rows: 3, span: "full" },
-        { key: "image", label: "Image URL", type: "url", span: "full" },
-        { key: "gradient", label: "Gradient", type: "select", options: GRADIENT_OPTIONS },
-        { key: "accent", label: "Accent Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "items", label: "Feature Items (comma-separated)", type: "text", span: "full" },
-        { key: "order", label: "Display Order", type: "number" },
-      ],
-    },
-    {
-      table: "home_process_steps",
-      label: "Process Steps",
-      displayField: "title",
-      orderBy: "step_number",
-      fields: [
-        { key: "step_number", label: "Step Number", type: "number", required: true },
-        { key: "title", label: "Title", type: "text", required: true },
-        { key: "description", label: "Description", type: "textarea", rows: 3, span: "full" },
-        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-      ],
-    },
+    // The home page is currently hardcoded in HomeView.tsx.
+    // Add tables here (e.g. home_hero, home_stats) once you create them in Supabase.
   ],
+
+  // ── Services ──────────────────────────────────────────────────────────────
   services: [
     {
+      // PK is TEXT (e.g. "data-lead-gen"), not UUID — handled specially below
       table: "service_categories",
       label: "Service Categories",
-      displayField: "label",
-      orderBy: "order",
+      displayField: "title",
+      secondaryField: "subtitle",
       fields: [
-        { key: "id_slug", label: "ID Slug", type: "text", required: true, placeholder: "data" },
-        { key: "label", label: "Category Label", type: "text", required: true, span: "full" },
-        { key: "intro", label: "Introduction", type: "textarea", rows: 2, span: "full" },
-        { key: "accent", label: "Accent Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "gradient", label: "Gradient", type: "select", options: GRADIENT_OPTIONS },
-        { key: "order", label: "Display Order", type: "number" },
+        {
+          key: "id",
+          label: "ID (slug, e.g. data-lead-gen)",
+          type: "text",
+          required: true,
+          placeholder: "data-lead-gen",
+          span: "full",
+        },
+        { key: "title", label: "Title", type: "text", required: true, span: "full" },
+        { key: "subtitle", label: "Subtitle", type: "textarea", rows: 2, span: "full" },
+        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
       ],
     },
     {
       table: "services",
       label: "Individual Services",
       displayField: "title",
-      secondaryField: "category",
-      orderBy: "order",
+      secondaryField: "subtitle",
       fields: [
-        { key: "title", label: "Service Title", type: "text", required: true, span: "full" },
+        { key: "title", label: "Title", type: "text", required: true, span: "full" },
         { key: "subtitle", label: "Subtitle", type: "text", span: "full" },
-        { key: "category", label: "Category Slug", type: "text", required: true, placeholder: "data" },
+        {
+          key: "category_id",
+          label: "Category ID",
+          type: "text",
+          required: true,
+          placeholder: "data-lead-gen",
+        },
         { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "desc", label: "Description", type: "textarea", rows: 4, span: "full" },
-        { key: "features", label: "Features (comma-separated)", type: "textarea", rows: 2, span: "full" },
-        { key: "order", label: "Display Order", type: "number" },
+        { key: "short_desc", label: "Short Description", type: "textarea", rows: 2, span: "full" },
+        { key: "full_desc", label: "Full Description", type: "textarea", rows: 4, span: "full" },
+        {
+          key: "features",
+          label: "Features (one per line)",
+          type: "array",
+          rows: 4,
+          span: "full",
+          placeholder: "B2B Lead Generation\nIndustry Prospecting",
+        },
+        {
+          key: "use_cases",
+          label: "Use Cases (one per line)",
+          type: "array",
+          rows: 3,
+          span: "full",
+          placeholder: "New market entry\nEnterprise prospecting",
+        },
       ],
     },
   ],
+
+  // ── Projects ──────────────────────────────────────────────────────────────
   projects: [
     {
       table: "lead_projects",
@@ -184,8 +173,8 @@ const SECTION_CONFIGS: Record<string, TableConfig[]> = {
         { key: "title", label: "Project Title", type: "text", required: true, span: "full" },
         { key: "image", label: "Image URL", type: "url", span: "full" },
         { key: "desc", label: "Description", type: "textarea", rows: 3, span: "full" },
-        { key: "focus", label: "Focus Area", type: "text", placeholder: "B2B SaaS" },
-        { key: "stats", label: "Stats", type: "text", placeholder: "500+ leads" },
+        { key: "focus", label: "Focus Area", type: "text", placeholder: "CMOs & Heads of Sales" },
+        { key: "stats", label: "Stats", type: "text", placeholder: "2,400+ contacts" },
         { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
         { key: "order", label: "Display Order", type: "number" },
       ],
@@ -199,35 +188,60 @@ const SECTION_CONFIGS: Record<string, TableConfig[]> = {
         { key: "title", label: "Project Title", type: "text", required: true, span: "full" },
         { key: "image", label: "Image URL", type: "url", span: "full" },
         { key: "stat", label: "Stat Value", type: "text", placeholder: "210%" },
-        { key: "label", label: "Stat Label", type: "text", placeholder: "Growth" },
+        { key: "label", label: "Stat Label", type: "text", placeholder: "Profile Views Increase" },
         { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
         { key: "gradient", label: "Gradient", type: "select", options: GRADIENT_OPTIONS },
         { key: "order", label: "Display Order", type: "number" },
       ],
     },
   ],
+
+  // ── Case Studies ──────────────────────────────────────────────────────────
   casestudies: [
     {
       table: "case_studies",
       label: "Case Studies",
       displayField: "title",
-      secondaryField: "industry",
-      orderBy: "order",
+      secondaryField: "category",
       fields: [
         { key: "title", label: "Case Study Title", type: "text", required: true, span: "full" },
-        { key: "industry", label: "Industry", type: "text", required: true },
-        { key: "client", label: "Client Name", type: "text" },
+        { key: "category", label: "Category", type: "text", required: true, placeholder: "Lead Generation" },
+        { key: "service", label: "Service", type: "text", placeholder: "Lead Generation and Outreach" },
+        { key: "client_type", label: "Client Type", type: "text", required: true, placeholder: "Event Management Company" },
         { key: "image", label: "Image URL", type: "url", span: "full" },
-        { key: "challenge", label: "Challenge", type: "textarea", rows: 3, span: "full" },
-        { key: "solution", label: "Solution", type: "textarea", rows: 3, span: "full" },
-        { key: "results", label: "Results", type: "textarea", rows: 3, span: "full" },
-        { key: "stat_value", label: "Key Stat Value", type: "text", placeholder: "300%" },
-        { key: "stat_label", label: "Key Stat Label", type: "text", placeholder: "ROI Increase" },
+        { key: "short_desc", label: "Short Description", type: "textarea", rows: 2, span: "full" },
+        { key: "key_result", label: "Key Result", type: "text", required: true, placeholder: "3x increase in qualified leads", span: "full" },
+        { key: "problem", label: "Problem Statement", type: "textarea", rows: 3, span: "full" },
+        {
+          key: "tags",
+          label: "Tags (one per line)",
+          type: "array",
+          rows: 2,
+          span: "full",
+          placeholder: "Lead Generation\nOutreach",
+        },
+        {
+          key: "solution",
+          label: "Solution Steps (one per line)",
+          type: "array",
+          rows: 4,
+          span: "full",
+          placeholder: "Built targeted database\nSet up LinkedIn campaigns",
+        },
+        {
+          key: "services_used",
+          label: "Services Used (one per line)",
+          type: "array",
+          rows: 2,
+          span: "full",
+          placeholder: "Lead Generation\nLinkedIn Outreach",
+        },
         { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "order", label: "Display Order", type: "number" },
       ],
     },
   ],
+
+  // ── Pricing ───────────────────────────────────────────────────────────────
   pricing: [
     {
       table: "pricing_plans",
@@ -237,32 +251,27 @@ const SECTION_CONFIGS: Record<string, TableConfig[]> = {
       orderBy: "order",
       fields: [
         { key: "name", label: "Plan Name", type: "text", required: true },
-        { key: "price", label: "Price", type: "text", required: true, placeholder: "$99/mo" },
+        { key: "price", label: "Price", type: "text", required: true, placeholder: "$999/month" },
         { key: "description", label: "Description", type: "textarea", rows: 2, span: "full" },
         { key: "badge", label: "Badge Text", type: "text", placeholder: "Most Popular" },
-        { key: "features", label: "Features (comma-separated)", type: "textarea", rows: 4, span: "full" },
+        {
+          key: "features",
+          label: "Features (one per line)",
+          type: "array",
+          rows: 5,
+          span: "full",
+          placeholder: "Up to 2,000 leads/month\nAdvanced verification",
+        },
+        { key: "cta_text", label: "CTA Button Text", type: "text", placeholder: "Get Started" },
         { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
         { key: "gradient", label: "Gradient", type: "select", options: GRADIENT_OPTIONS },
         { key: "is_featured", label: "Featured Plan", type: "boolean" },
-        { key: "cta_text", label: "CTA Button Text", type: "text", placeholder: "Get Started" },
-        { key: "order", label: "Display Order", type: "number" },
-      ],
-    },
-    {
-      table: "pricing_addons",
-      label: "Add-On Services",
-      displayField: "name",
-      secondaryField: "price",
-      orderBy: "order",
-      fields: [
-        { key: "name", label: "Add-On Name", type: "text", required: true, span: "full" },
-        { key: "price", label: "Price", type: "text", required: true, placeholder: "$49" },
-        { key: "description", label: "Description", type: "textarea", rows: 2, span: "full" },
-        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
         { key: "order", label: "Display Order", type: "number" },
       ],
     },
   ],
+
+  // ── Feedback / Testimonials ───────────────────────────────────────────────
   feedback: [
     {
       table: "testimonials",
@@ -273,88 +282,23 @@ const SECTION_CONFIGS: Record<string, TableConfig[]> = {
       fields: [
         { key: "quote", label: "Quote", type: "textarea", rows: 3, required: true, span: "full" },
         { key: "author", label: "Author Name", type: "text", required: true },
-        { key: "role", label: "Role / Title", type: "text" },
-        { key: "company", label: "Company", type: "text" },
-        { key: "avatar", label: "Avatar URL", type: "url" },
-        { key: "rating", label: "Rating (1-5)", type: "number" },
-        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "order", label: "Display Order", type: "number" },
-      ],
-    },
-    {
-      table: "industry_sectors",
-      label: "Industry Sectors",
-      displayField: "label",
-      orderBy: "order",
-      fields: [
-        { key: "label", label: "Sector Label", type: "text", required: true },
-        { key: "icon", label: "Icon Emoji", type: "text", placeholder: "💼" },
-        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "order", label: "Display Order", type: "number" },
-      ],
-    },
-  ],
-  about: [
-    {
-      table: "about_content",
-      label: "About Content",
-      displayField: "section_title",
-      fields: [
-        { key: "section_title", label: "Section Title", type: "text", required: true },
-        { key: "headline", label: "Headline", type: "text", span: "full" },
-        { key: "description", label: "Description", type: "textarea", rows: 4, span: "full" },
-        { key: "mission", label: "Mission Statement", type: "textarea", rows: 3, span: "full" },
-        { key: "vision", label: "Vision Statement", type: "textarea", rows: 3, span: "full" },
-        { key: "founded_year", label: "Founded Year", type: "text" },
-        { key: "team_size", label: "Team Size", type: "text" },
-      ],
-    },
-    {
-      table: "team_members",
-      label: "Team Members",
-      displayField: "name",
-      secondaryField: "role",
-      orderBy: "order",
-      fields: [
-        { key: "name", label: "Full Name", type: "text", required: true },
         { key: "role", label: "Role / Title", type: "text", required: true },
-        { key: "bio", label: "Bio", type: "textarea", rows: 3, span: "full" },
+        { key: "company", label: "Company", type: "text" },
         { key: "avatar", label: "Avatar URL", type: "url", span: "full" },
-        { key: "linkedin", label: "LinkedIn URL", type: "url" },
-        { key: "twitter", label: "Twitter URL", type: "url" },
-        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "order", label: "Display Order", type: "number" },
-      ],
-    },
-    {
-      table: "about_values",
-      label: "Core Values",
-      displayField: "title",
-      orderBy: "order",
-      fields: [
-        { key: "title", label: "Value Title", type: "text", required: true },
-        { key: "description", label: "Description", type: "textarea", rows: 3, span: "full" },
-        { key: "icon_name", label: "Icon Name", type: "text", placeholder: "Shield" },
+        { key: "rating", label: "Rating (1–5)", type: "number", placeholder: "5" },
         { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
         { key: "order", label: "Display Order", type: "number" },
       ],
     },
   ],
+
+  // ── About: no tables in the current schema ────────────────────────────────
+  about: [
+    // Add tables (e.g. team_members, about_values) once you create them in Supabase.
+  ],
+
+  // ── Contact ───────────────────────────────────────────────────────────────
   contact: [
-    {
-      table: "contact_info",
-      label: "Contact Information",
-      displayField: "title",
-      orderBy: "order",
-      fields: [
-        { key: "title", label: "Label", type: "text", required: true, placeholder: "Office" },
-        { key: "content", label: "Content", type: "textarea", rows: 2, required: true, span: "full" },
-        { key: "href", label: "Link (href)", type: "text", placeholder: "tel:+91..." },
-        { key: "color", label: "Color", type: "color-select", options: COLOR_OPTIONS },
-        { key: "gradient", label: "Gradient", type: "select", options: GRADIENT_OPTIONS },
-        { key: "order", label: "Display Order", type: "number" },
-      ],
-    },
     {
       table: "contact_submissions",
       label: "Contact Form Submissions",
@@ -364,14 +308,19 @@ const SECTION_CONFIGS: Record<string, TableConfig[]> = {
       fields: [
         { key: "first_name", label: "First Name", type: "text" },
         { key: "last_name", label: "Last Name", type: "text" },
-        { key: "email", label: "Email", type: "email" },
-        { key: "company", label: "Company", type: "text" },
+        { key: "email", label: "Email", type: "email", span: "full" },
+        { key: "company", label: "Company / Website", type: "text" },
         { key: "message", label: "Message", type: "textarea", rows: 4, span: "full" },
-        { key: "status", label: "Status", type: "select", options: [
-          { value: "new", label: "New" },
-          { value: "in_progress", label: "In Progress" },
-          { value: "resolved", label: "Resolved" },
-        ]},
+        {
+          key: "status",
+          label: "Status",
+          type: "select",
+          options: [
+            { value: "new", label: "New" },
+            { value: "in_progress", label: "In Progress" },
+            { value: "resolved", label: "Resolved" },
+          ],
+        },
       ],
     },
   ],
@@ -424,6 +373,20 @@ function FormField({
       <textarea
         rows={field.rows || 3}
         value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={field.placeholder}
+        className={`${baseClass} resize-none`}
+      />
+    );
+  }
+
+  // Arrays (TEXT[] in Postgres) shown as newline-separated strings
+  if (field.type === "array") {
+    const displayValue = Array.isArray(value) ? value.join("\n") : (value || "");
+    return (
+      <textarea
+        rows={field.rows || 3}
+        value={displayValue}
         onChange={(e) => onChange(e.target.value)}
         placeholder={field.placeholder}
         className={`${baseClass} resize-none`}
@@ -691,14 +654,34 @@ function CrudTable({
     fetchRecords();
   }, [fetchRecords]);
 
+  // Convert newline-separated strings back to TEXT[] for array fields before saving
+  const serializeArrayFields = (form: AnyRecord): AnyRecord => {
+    const arrayKeys = ARRAY_FIELDS[config.table] || [];
+    if (arrayKeys.length === 0) return form;
+    const out = { ...form };
+    for (const key of arrayKeys) {
+      if (typeof out[key] === "string") {
+        out[key] = out[key]
+          .split("\n")
+          .map((s: string) => s.trim())
+          .filter(Boolean);
+      }
+    }
+    return out;
+  };
+
   const handleSave = async (form: AnyRecord) => {
     try {
-      if (form.id) {
-        const { error } = await supabase.from(config.table).update(form).eq("id", form.id);
+      const payload = serializeArrayFields(form);
+      if (payload.id) {
+        const { error } = await supabase
+          .from(config.table)
+          .update(payload)
+          .eq("id", payload.id);
         if (error) throw error;
         addToast("Record updated successfully!");
       } else {
-        const { error } = await supabase.from(config.table).insert([form]);
+        const { error } = await supabase.from(config.table).insert([payload]);
         if (error) throw error;
         addToast("Record created successfully!");
       }
@@ -858,9 +841,10 @@ function Dashboard({ setSection }: { setSection: (s: Section) => void }) {
 
   useEffect(() => {
     const fetchStats = async () => {
+      // Only tables that exist in the current Supabase schema
       const tables = [
         "lead_projects", "smm_projects", "case_studies", "testimonials",
-        "pricing_plans", "services", "team_members", "contact_submissions",
+        "pricing_plans", "services", "service_categories", "contact_submissions",
       ];
       const results: Record<string, number> = {};
       await Promise.all(
@@ -880,14 +864,14 @@ function Dashboard({ setSection }: { setSection: (s: Section) => void }) {
   }, []);
 
   const cards = [
-    { label: "Lead Projects", value: stats.lead_projects, color: "emerald", icon: Target, section: "projects" as Section },
-    { label: "SMM Projects", value: stats.smm_projects, color: "blue", icon: TrendingUp, section: "projects" as Section },
-    { label: "Case Studies", value: stats.case_studies, color: "violet", icon: BookOpen, section: "casestudies" as Section },
-    { label: "Testimonials", value: stats.testimonials, color: "amber", icon: Star, section: "feedback" as Section },
-    { label: "Pricing Plans", value: stats.pricing_plans, color: "rose", icon: DollarSign, section: "pricing" as Section },
-    { label: "Services", value: stats.services, color: "cyan", icon: Briefcase, section: "services" as Section },
-    { label: "Team Members", value: stats.team_members, color: "teal", icon: Users, section: "about" as Section },
-    { label: "Form Submissions", value: stats.contact_submissions, color: "pink", icon: Mail, section: "contact" as Section },
+    { label: "Lead Projects",      value: stats.lead_projects,       color: "emerald", icon: Target,    section: "projects"    as Section },
+    { label: "SMM Projects",       value: stats.smm_projects,        color: "blue",    icon: TrendingUp, section: "projects"    as Section },
+    { label: "Case Studies",       value: stats.case_studies,        color: "violet",  icon: BookOpen,  section: "casestudies" as Section },
+    { label: "Testimonials",       value: stats.testimonials,        color: "amber",   icon: Star,      section: "feedback"    as Section },
+    { label: "Pricing Plans",      value: stats.pricing_plans,       color: "rose",    icon: DollarSign, section: "pricing"    as Section },
+    { label: "Services",           value: stats.services,            color: "cyan",    icon: Briefcase, section: "services"    as Section },
+    { label: "Service Categories", value: stats.service_categories,  color: "teal",    icon: Layers,    section: "services"    as Section },
+    { label: "Form Submissions",   value: stats.contact_submissions, color: "pink",    icon: Mail,      section: "contact"     as Section },
   ];
 
   return (
@@ -1111,10 +1095,15 @@ function SectionContent({
   if (section === "settings") return <SettingsPanel addToast={addToast} />;
 
   const tables = SECTION_CONFIGS[section];
-  if (!tables) return (
+  const noTables = !tables || tables.length === 0;
+  if (noTables) return (
     <div className="text-center py-20 text-white/30">
-      <Database className="w-10 h-10 mx-auto mb-3 opacity-30" />
-      <p>No tables configured for this section.</p>
+      <Database className="w-10 h-10 mx-auto mb-4 opacity-30" />
+      <p className="text-white/50 font-medium mb-2">No database tables configured yet</p>
+      <p className="text-sm max-w-sm mx-auto">
+        This section&apos;s content is currently hardcoded. Create the corresponding
+        Supabase tables and add their configs to <code className="text-emerald-500/60">SECTION_CONFIGS</code> to manage them here.
+      </p>
     </div>
   );
 

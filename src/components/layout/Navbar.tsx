@@ -2,7 +2,7 @@
 import { useAppStore, ViewId } from "@/store/appStore";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
-import { Home, Briefcase, FolderKanban, LineChart, Tag, MessageCircle, Users, Mail, Menu, X, LogIn, User as UserIcon, Shield, LogOut } from "lucide-react";
+import { Home, Briefcase, FolderKanban, LineChart, Tag, MessageCircle, Users, Mail, Menu, X, User as UserIcon, Shield, LogOut } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect, useCallback, memo } from "react";
 
@@ -185,29 +185,9 @@ export default function Navbar() {
                 ))}
               </div>
 
-              {/* Auth Section - Desktop - Enhanced */}
+              {/* Auth Section - Desktop - Only show if logged in */}
               <div className="hidden lg:flex items-center gap-3">
-                {!user ? (
-                  <motion.button
-                    onClick={() => handleNavigation("auth")}
-                    whileHover={{ scale: 1.06, y: -2 }}
-                    whileTap={{ scale: 0.96 }}
-                    className="group relative px-6 py-3 rounded-xl overflow-hidden min-h-[50px] border border-emerald-500/30"
-                  >
-                    {/* Animated gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/15 via-cyan-500/15 to-blue-500/15 group-hover:from-emerald-500/25 group-hover:via-cyan-500/25 group-hover:to-blue-500/25 transition-all duration-300" />
-                    
-                    {/* Shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                    
-                    <span className="relative flex items-center gap-2.5">
-                      <LogIn className="w-5 h-5 text-emerald-400" />
-                      <span className="text-[15px] font-bold tracking-wide bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                        Sign In
-                      </span>
-                    </span>
-                  </motion.button>
-                ) : (
+                {user && (
                   <div className="flex items-center gap-3">
                     {userRole === "admin" && (
                       <motion.button
@@ -347,21 +327,9 @@ export default function Navbar() {
                     </motion.button>
                   ))}
                   
-                  {/* Mobile Auth Section - Enhanced */}
-                  <div className="mt-3 pt-3 border-t border-white/10">
-                    {!user ? (
-                      <motion.button
-                        onClick={() => handleNavigation("auth")}
-                        whileTap={{ scale: 0.97 }}
-                        className="group relative w-full flex items-center gap-4 px-5 py-4 rounded-xl overflow-hidden border border-emerald-500/30"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/15 via-cyan-500/15 to-blue-500/15 group-active:from-emerald-500/25 group-active:via-cyan-500/25 group-active:to-blue-500/25 transition-all duration-300" />
-                        <LogIn className="relative w-6 h-6 text-emerald-400" />
-                        <span className="relative font-bold text-[16px] tracking-wide bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                          Sign In
-                        </span>
-                      </motion.button>
-                    ) : (
+                  {/* Mobile Auth Section - Only show if logged in */}
+                  {user && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
                       <div className="space-y-2">
                         {userRole === "admin" && (
                           <motion.button
@@ -399,8 +367,8 @@ export default function Navbar() {
                           </span>
                         </motion.button>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

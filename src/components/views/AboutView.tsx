@@ -275,12 +275,117 @@ function TeamMemberCard({ member, isMobile, index }: {
   );
 }
 
+/* ─── Founder Story Component ───────────────────────────────────────────────── */
+function FounderStory({ isMobile }: { isMobile: boolean }) {
+  const [showFull, setShowFull] = useState(false);
+
+  return (
+    <section className="section-spacing">
+      <div className="container-custom max-w-4xl px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-8 md:mb-12"
+        >
+          <Quote className="w-12 h-12 md:w-16 md:h-16 text-emerald-500/30 mx-auto mb-5" />
+          <h2 className="heading-xl text-white mb-3">The Story Behind Remarketix</h2>
+          <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="feature-card-premium p-8 md:p-12"
+        >
+          <p className="text-xl md:text-2xl font-bold text-white mb-6">
+            Hi, I&apos;m Devan.
+          </p>
+
+          <div className="space-y-5 text-white/70 leading-relaxed text-base md:text-lg">
+            <p>
+              Remarketix was born out of a simple frustration. Businesses were spending too
+              much time chasing leads that never converted.
+            </p>
+
+            <p>
+              What started as a freelance lead generation service by two young professionals
+              from Kolkata quickly grew into something much bigger.
+            </p>
+
+            <p>
+              In the early days, it was just two laptops and a strong focus on finding better
+              ways to connect businesses with the right people. Our first clients trusted us
+              when we had very little, and we delivered. With every project, we refined our
+              process, improved our research and built systems that actually work.
+            </p>
+
+            <motion.blockquote
+              className="border-l-4 border-emerald-500 pl-6 py-4 my-6 bg-emerald-500/5 rounded-r-xl"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <p className="italic text-white/85 text-lg md:text-xl">
+                &ldquo;During this journey, I realized many businesses want to grow but struggle
+                because they don&apos;t have the right data, prospects, or strategy.
+                That&apos;s when I decided to build something better.&rdquo;
+              </p>
+            </motion.blockquote>
+
+            {showFull && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-5"
+              >
+                <p>
+                  By 2022, as businesses started scaling again after COVID, the demand for
+                  structured B2B pipelines increased rapidly. We grew with that demand by
+                  building a team of specialists focused on data accuracy, personalization
+                  and performance.
+                </p>
+                <p>
+                  Today, Remarketix operates from India, supporting clients across the UK,
+                  USA, Canada, India, Asia, Europe and South America.
+                </p>
+                <p>
+                  Each client taught us something new. Each campaign showed us what works
+                  and what doesn&apos;t. Over time, we built a team of specialists who shared
+                  the same vision: to help businesses grow through data, design, and execution.
+                </p>
+              </motion.div>
+            )}
+
+            <button
+              onClick={() => setShowFull((v) => !v)}
+              className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors mt-6 touch-manipulation"
+            >
+              {showFull ? "Show Less" : "Read Full Story"}
+              <ChevronDown className={`w-4 h-4 transition-transform ${showFull ? "rotate-180" : ""}`} />
+            </button>
+
+            <div className="pt-6 border-t border-white/10 mt-8">
+              <p className="text-2xl font-black">
+                <span className="gradient-text-enhanced">That decision became Remarketix.</span>
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Main Component ────────────────────────────────────────────────────────── */
 export default function AboutView() {
   const setView = useAppStore((s) => s.setView);
   const prefersReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
-  const [showFullStory, setShowFullStory] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -460,84 +565,8 @@ export default function AboutView() {
         </div>
       </section>
 
-      {/* ── Founder Story ── */}
-      <section className="section-spacing">
-        <div className="container-custom max-w-4xl px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-8 md:mb-12"
-          >
-            <Quote className="w-12 h-12 md:w-16 md:h-16 text-emerald-500/30 mx-auto mb-5" />
-            <h2 className="heading-xl text-white mb-3">The Story Behind Remarketix</h2>
-            <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="feature-card-premium p-8 md:p-12"
-          >
-            <p className="text-xl md:text-2xl font-bold text-white mb-6">
-              Hi, I&apos;m Devan.
-            </p>
-
-            <div className="space-y-5 text-white/70 leading-relaxed text-base md:text-lg">
-              <p>
-                My journey has been built in silence, in late nights when no one was watching and weekends when everyone else was resting. I didn&apos;t start with a perfect plan — I started with determination.
-              </p>
-
-              <motion.blockquote
-                className="border-l-4 border-emerald-500 pl-6 py-4 my-6 bg-emerald-500/5 rounded-r-xl"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <p className="italic text-white/85 text-lg md:text-xl">
-                  &ldquo;During this journey, I realized many businesses want to grow but struggle because they don&apos;t have the right data, prospects, or strategy. That&apos;s when I decided to build something better.&rdquo;
-                </p>
-              </motion.blockquote>
-
-              {showFullStory && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="space-y-4"
-                >
-                  <p>
-                    I started small — freelancing, learning, failing, and improving. Each client taught me something new. Each campaign showed me what works and what doesn&apos;t.
-                  </p>
-                  <p>
-                    Over time, I built a team of specialists who shared the same vision: to help businesses grow through data, design, and execution.
-                  </p>
-                  <p>
-                    Today, Remarketix serves clients across 12 countries, delivering everything from lead generation to full-scale digital transformation.
-                  </p>
-                </motion.div>
-              )}
-
-              <button
-                onClick={() => setShowFullStory(!showFullStory)}
-                className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors mt-6"
-              >
-                {showFullStory ? "Show Less" : "Read Full Story"}
-                <ChevronDown className={`w-4 h-4 transition-transform ${showFullStory ? "rotate-180" : ""}`} />
-              </button>
-
-              <div className="pt-6 border-t border-white/10 mt-8">
-                <p className="text-2xl font-black">
-                  <span className="gradient-text-enhanced">That decision became Remarketix.</span>
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* ── Founder Story (Updated) ── */}
+      <FounderStory isMobile={isMobile} />
 
       {/* ── Timeline ── */}
       <section className="section-spacing bg-white/[0.01]">
