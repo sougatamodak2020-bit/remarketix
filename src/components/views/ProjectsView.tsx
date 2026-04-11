@@ -2,76 +2,40 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useAppStore } from "@/store/appStore";
+import { supabase } from "@/lib/supabase";
 import Image from "next/image";
-import { ArrowRight, ExternalLink, Sparkles, TrendingUp, BarChart, Users, Target, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ExternalLink, Sparkles, TrendingUp, BarChart, Users, Target, ChevronLeft, ChevronRight, Shield } from "lucide-react";
 
-const leadProjects = [
-  {
-    title: "Exhibitor Marketing Data – Europe",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800",
-    desc: "Verified database of senior marketing leaders across DACH, Nordics, and Eastern Europe.",
-    focus: "CMOs & Heads of Sales",
-    stats: "2,400+ contacts",
-    color: "emerald"
-  },
-  {
-    title: "UK Pub Lead List Building",
-    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&q=80&w=800",
-    desc: "Verified contact list of pub owners and decision-makers in London and surrounding areas.",
-    focus: "Owners & Managers",
-    stats: "1,200+ venues",
-    color: "blue"
-  },
-  {
-    title: "BioPharma Contacts – South Korea",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=800",
-    desc: "Focused list of emerging BioPharma companies targeting R&D professionals.",
-    focus: "Research Directors",
-    stats: "90+ contacts",
-    color: "violet"
-  },
-  {
-    title: "UK Hospitality Chains",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
-    desc: "Mapped UK restaurant and hotel chains with 4+ locations.",
-    focus: "C-Level & Dept Heads",
-    stats: "800+ contacts",
-    color: "cyan"
-  },
-];
+type LeadProject = {
+  id: string;
+  title: string;
+  image: string;
+  desc: string;
+  focus: string;
+  stats: string;
+  color: string;
+  order: number;
+};
 
-const smmProjects = [
-  {
-    title: "Founder Personal Branding",
-    image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=800",
-    stat: "210%",
-    label: "Profile Views Increase",
-    color: "emerald",
-    gradient: "from-emerald-500 to-emerald-600"
-  },
-  {
-    title: "B2B Brand Management",
-    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800",
-    stat: "3x",
-    label: "Engagement Growth",
-    color: "blue",
-    gradient: "from-blue-500 to-blue-600"
-  },
-  {
-    title: "Multi-channel Outreach",
-    image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=800",
-    stat: "15+",
-    label: "Qualified Meetings/Month",
-    color: "violet",
-    gradient: "from-violet-500 to-violet-600"
-  },
-];
+type SMMProject = {
+  id: string;
+  title: string;
+  image: string;
+  stat: string;
+  label: string;
+  color: string;
+  gradient: string;
+  order: number;
+};
 
 export default function ProjectsView() {
-  const setView = useAppStore((s) => s.setView);
+  const { setView, userRole } = useAppStore();
   const smmScrollRef = useRef<HTMLDivElement>(null);
   const leadScrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [leadProjects, setLeadProjects] = useState<LeadProject[]>([]);
+  const [smmProjects, setSmmProjects] = useState<SMMProject[]>([]);
+  const [loading, setLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -81,14 +45,47 @@ export default function ProjectsView() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const [leadData, smmData] = await Promise.all([
+        supabase.from("lead_projects").select("*").order("order"),
+        supabase.from("smm_projects").select("*").order("order"),
+      ]);
+
+      if (leadData.data) setLeadProjects(leadData.data);
+      if (smmData.data) setSmmProjects(smmData.data);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const scrollSMM = (dir: number) => smmScrollRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
   const scrollLead = (dir: number) => leadScrollRef.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
   
   const shouldReduceMotion = prefersReducedMotion || isMobile;
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <motion.div
+          className="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Background - Static on mobile */}
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {!shouldReduceMotion && (
           [...Array(3)].map((_, i) => (
@@ -129,6 +126,22 @@ export default function ProjectsView() {
             <p className="text-body-lg max-w-2xl mx-auto text-white/80 px-4 md:px-0">
               At Remarketix, we deliver more than services. We deliver measurable business impact.
             </p>
+            
+            {/* Admin Access Button */}
+            {userRole === "admin" && (
+              <motion.button
+                onClick={() => setView("admin")}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-8 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-500/30 text-emerald-400 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all flex items-center gap-2 mx-auto"
+              >
+                <Shield className="w-5 h-5" />
+                Admin Panel
+              </motion.button>
+            )}
           </motion.div>
         </div>
       </section>
@@ -152,7 +165,7 @@ export default function ProjectsView() {
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
           </motion.div>
 
-          {/* Mobile: swipe (Native CSS Snap) */}
+          {/* Mobile: swipe */}
           <div className="lg:hidden relative">
             <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">Swipe to explore →</p>
             <div className="relative">
@@ -174,7 +187,7 @@ export default function ProjectsView() {
               >
                 {leadProjects.map((project, i) => (
                   <motion.div
-                    key={project.title}
+                    key={project.id}
                     className="flex-shrink-0 snap-start"
                     style={{ width: "min(85vw, 340px)" }}
                     initial={{ opacity: 0, x: 20 }}
@@ -222,7 +235,7 @@ export default function ProjectsView() {
           <div className="hidden lg:grid lg:grid-cols-2 gap-8">
             {leadProjects.map((project, i) => (
               <motion.div
-                key={project.title}
+                key={project.id}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -285,7 +298,7 @@ export default function ProjectsView() {
             <div className="h-1 w-24 bg-gradient-to-r from-blue-400 to-violet-400 rounded-full mx-auto" />
           </motion.div>
 
-          {/* Mobile: swipe (Native CSS Snap) */}
+          {/* Mobile: swipe */}
           <div className="md:hidden relative">
             <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">Swipe to explore →</p>
             <div className="relative">
@@ -307,7 +320,7 @@ export default function ProjectsView() {
               >
                 {smmProjects.map((project, i) => (
                   <motion.div
-                    key={project.title}
+                    key={project.id}
                     className="flex-shrink-0 snap-start"
                     style={{ width: "min(82vw, 300px)" }}
                     initial={{ opacity: 0, x: 20 }}
@@ -349,7 +362,7 @@ export default function ProjectsView() {
           <div className="hidden md:grid md:grid-cols-3 gap-8">
             {smmProjects.map((project, i) => (
               <motion.div
-                key={project.title}
+                key={project.id}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
