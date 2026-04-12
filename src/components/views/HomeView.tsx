@@ -94,13 +94,14 @@ function SwipeCarousel({
       <div className="flex justify-center gap-2 mt-4">
         {children.map((_, i) => (
           <button key={i} onClick={() => setIdx(i)}
-            className={`h-2 rounded-full transition-all duration-300 touch-manipulation ${i === idx ? "bg-emerald-400 w-8" : "bg-white/30 w-2"}`} />
+            className={`h-2 rounded-full transition-all duration-300 touch-manipulation ${i === idx ? "bg-emerald-400 w-8" : "bg-white/30 w-2"}`} 
+            aria-label={`Go to slide ${i + 1}`} />
         ))}
       </div>
-      <button onClick={prev} className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden">
+      <button onClick={prev} className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden" aria-label="Previous">
         <ChevronLeft className="w-4 h-4 text-white" />
       </button>
-      <button onClick={next} className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden">
+      <button onClick={next} className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden" aria-label="Next">
         <ChevronRight className="w-4 h-4 text-white" />
       </button>
     </div>
@@ -950,8 +951,12 @@ export default function HomeView() {
                 A look at how we help businesses generate leads, build systems and drive consistent growth.
               </p>
             </div>
-            <motion.button onClick={() => setView("projects")} className="btn-secondary-premium group flex-shrink-0"
-              whileHover={!isMobile ? { scale: 1.05 } : {}} whileTap={{ scale: 0.98 }}>
+            <motion.button 
+              onClick={() => setView("casestudies")} 
+              className="btn-secondary-premium group flex-shrink-0"
+              whileHover={!isMobile ? { scale: 1.05 } : {}} 
+              whileTap={{ scale: 0.98 }}
+            >
               View All Work <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.button>
           </motion.div>
@@ -959,7 +964,11 @@ export default function HomeView() {
           {isMobile ? (
             <SwipeCarousel>
               {work.map((item, i) => (
-                <div key={i} className="group relative h-[400px] rounded-2xl overflow-hidden bg-[#0a0f1a]">
+                <div 
+                  key={i} 
+                  className="group relative h-[400px] rounded-2xl overflow-hidden bg-[#0a0f1a] cursor-pointer"
+                  onClick={() => setView("casestudies")}
+                >
                   <div className="absolute inset-0">
                     <Image src={item.image} alt={item.title} fill className="object-cover" sizes="100vw" loading="lazy"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" placeholder="blur" />
@@ -976,11 +985,20 @@ export default function HomeView() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {work.map((item, i) => (
-                <motion.div key={i} className="group relative h-[420px] md:h-[480px]"
-                  initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  transition={{ delay: i * 0.12 }}>
-                  <motion.div className="relative h-full rounded-[1.8rem] overflow-hidden bg-[#0a0f1a] border border-white/5 cursor-pointer"
-                    whileHover={{ y: -10 }} transition={{ duration: 0.35 }}>
+                <motion.div 
+                  key={i} 
+                  className="group relative h-[420px] md:h-[480px]"
+                  initial={{ opacity: 0, y: 40 }} 
+                  whileInView={{ opacity: 1, y: 0 }} 
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.12 }}
+                >
+                  <motion.div 
+                    className="relative h-full rounded-[1.8rem] overflow-hidden bg-[#0a0f1a] border border-white/5 cursor-pointer"
+                    whileHover={{ y: -10 }} 
+                    transition={{ duration: 0.35 }}
+                    onClick={() => setView("casestudies")}
+                  >
                     <div className="absolute inset-0">
                       <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 1200px) 33vw, 33vw" loading="lazy"

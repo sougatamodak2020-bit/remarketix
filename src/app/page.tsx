@@ -9,7 +9,6 @@ import HomeView from "@/components/views/HomeView";
 import { lazy, Suspense, useEffect, useRef, memo, useCallback } from "react";
 
 const ServicesView = lazy(() => import("@/components/views/ServicesView"));
-const ProjectsView = lazy(() => import("@/components/views/ProjectsView"));
 const CaseStudiesView = lazy(() => import("@/components/views/CaseStudiesView"));
 const PricingView = lazy(() => import("@/components/views/PricingView"));
 const FeedbackView = lazy(() => import("@/components/views/FeedbackView"));
@@ -39,7 +38,6 @@ const ViewContent = memo(function ViewContent({ activeView }: { activeView: stri
     <Suspense fallback={<ViewSkeleton />}>
       {activeView === "home" && <HomeView />}
       {activeView === "services" && <ServicesView />}
-      {activeView === "projects" && <ProjectsView />}
       {activeView === "casestudies" && <CaseStudiesView />}
       {activeView === "pricing" && <PricingView />}
       {activeView === "feedback" && <FeedbackView />}

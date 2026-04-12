@@ -2,14 +2,13 @@
 import { useAppStore, ViewId } from "@/store/appStore";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
-import { Home, Briefcase, FolderKanban, LineChart, Tag, MessageCircle, Users, Mail, Menu, X, User as UserIcon, Shield, LogOut } from "lucide-react";
+import { Home, Briefcase, LineChart, Tag, MessageCircle, Users, Mail, Menu, X, User as UserIcon, Shield, LogOut } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect, useCallback, memo } from "react";
 
 const NAV_ITEMS: { id: ViewId; label: string; icon: React.ElementType }[] = [
   { id: "home", label: "Home", icon: Home },
   { id: "services", label: "Services", icon: Briefcase },
-  { id: "projects", label: "Projects", icon: FolderKanban },
   { id: "casestudies", label: "Cases", icon: LineChart },
   { id: "pricing", label: "Pricing", icon: Tag },
   { id: "feedback", label: "Reviews", icon: MessageCircle },

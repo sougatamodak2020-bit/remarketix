@@ -4,7 +4,6 @@ import { User } from "@supabase/supabase-js";
 export type ViewId =
   | "home"
   | "services"
-  | "projects"
   | "casestudies"
   | "pricing"
   | "feedback"

@@ -193,7 +193,7 @@ export default function Footer() {
                 </h3>
                 <div className="flex gap-3">
                   <motion.a
-                    href="https://linkedin.com/company/remarketix"
+                    href="https://www.linkedin.com/company/remarketix-research-insight/posts/?feedView=all"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="LinkedIn"

@@ -300,10 +300,6 @@ function FounderStory({ isMobile }: { isMobile: boolean }) {
           transition={{ delay: 0.2 }}
           className="feature-card-premium p-8 md:p-12"
         >
-          <p className="text-xl md:text-2xl font-bold text-white mb-6">
-            Hi, I&apos;m Devan.
-          </p>
-
           <div className="space-y-5 text-white/70 leading-relaxed text-base md:text-lg">
             <p>
               Remarketix was born out of a simple frustration. Businesses were spending too
