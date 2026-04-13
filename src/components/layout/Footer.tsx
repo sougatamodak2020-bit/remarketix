@@ -24,10 +24,10 @@ function FooterLink({ label, onClick }: { label: string; onClick: () => void }) 
     <li>
       <button
         onClick={onClick}
-        className="group flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-sm py-1 w-full text-left"
+        className="group flex items-center gap-2 text-slate-400 hover:text-white transition-all duration-300 text-sm py-2 w-full text-left rounded-lg hover:bg-white/[0.02] px-2 -mx-2"
       >
         <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-emerald-400 flex-shrink-0" />
-        {label}
+        <span className="group-hover:translate-x-0.5 transition-transform">{label}</span>
       </button>
     </li>
   );
@@ -46,107 +46,134 @@ export default function Footer() {
     { label: "About Us", id: "about" as ViewId },
     { label: "Services", id: "services" as ViewId },
     { label: "Our Work", id: "casestudies" as ViewId },
-    { label: "Projects", id: "projects" as ViewId },
+    { label: "Pricing", id: "pricing" as ViewId },
   ];
+
   const RES = [
-    { label: "Pricing Plans", id: "pricing" as ViewId },
+    { label: "Case Studies", id: "casestudies" as ViewId },
     { label: "Reviews", id: "feedback" as ViewId },
     { label: "Contact", id: "contact" as ViewId },
-    { label: "About", id: "about" as ViewId },
+    { label: "Get Started", id: "contact" as ViewId },
   ];
 
   return (
-    <footer className="relative bg-[var(--bg-primary)] border-t border-white/5 overflow-hidden">
+    <footer className="relative bg-[#0a0e1a] border-t border-white/5 overflow-hidden">
+      {/* Premium Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-emerald-500/3 rounded-full blur-3xl" />
-        <div className="absolute top-0 right-0 w-72 h-72 bg-blue-500/3 rounded-full blur-3xl" />
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.015]" />
+        {/* Ambient glows */}
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/[0.03] rounded-full blur-[120px]" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/[0.03] rounded-full blur-[120px]" />
+        
+        {/* Subtle grid */}
+        <div className="absolute inset-0 bg-grid-dense opacity-[0.012]" />
+        
+        {/* Noise texture */}
+        <div 
+          className="absolute inset-0 opacity-[0.015] mix-blend-overlay"
+          style={{ 
+            backgroundImage: `url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+          }}
+        />
       </div>
+
       <div className="container-custom relative z-10">
-        <div className="py-14 md:py-20">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
-            {/* Brand */}
+        <div className="py-16 md:py-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-10">
+            {/* Brand Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.6 }}
               className="sm:col-span-2 lg:col-span-4"
             >
-              <button onClick={() => nav("home")} className="mb-5 inline-block group">
-                <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+              <motion.button 
+                onClick={() => nav("home")} 
+                className="mb-6 inline-block group"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-300 via-cyan-300 to-blue-300 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-cyan-200 group-hover:to-blue-200 transition-all duration-300">
                   Remarketix
                 </span>
-              </button>
-              <p className="text-white/55 leading-relaxed mb-6 max-w-sm text-sm">
-                A B2B growth partner helping businesses scale through data, outreach, content and digital execution.
+              </motion.button>
+              
+              <p className="text-slate-400 leading-relaxed mb-8 max-w-sm text-[15px]">
+                Your B2B growth partner. We help businesses scale through strategic data, outreach, content and digital execution.
               </p>
-              <div className="space-y-3">
+
+              {/* Contact Info */}
+              <div className="space-y-4">
                 <a
                   href="mailto:info@remarketix.in"
-                  className="flex items-center gap-3 text-white/55 hover:text-emerald-400 transition-colors group"
+                  className="flex items-center gap-3 text-slate-400 hover:text-emerald-400 transition-all duration-300 group"
                 >
-                  <div className="w-8 h-8 min-w-[32px] rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors flex-shrink-0">
-                    <Mail className="w-4 h-4" />
+                  <div className="w-9 h-9 min-w-[36px] rounded-xl bg-emerald-500/8 border border-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/15 group-hover:border-emerald-500/30 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] transition-all duration-300">
+                    <Mail className="w-4 h-4 text-emerald-400" />
                   </div>
-                  <span className="text-sm break-all">info@remarketix.in</span>
+                  <span className="text-[14px] break-all group-hover:translate-x-0.5 transition-transform">
+                    info@remarketix.in
+                  </span>
                 </a>
+
                 <a
                   href="tel:+918759839140"
-                  className="flex items-center gap-3 text-white/55 hover:text-cyan-400 transition-colors group"
+                  className="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-all duration-300 group"
                 >
-                  <div className="w-8 h-8 min-w-[32px] rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/20 transition-colors flex-shrink-0">
-                    <Phone className="w-4 h-4" />
+                  <div className="w-9 h-9 min-w-[36px] rounded-xl bg-cyan-500/8 border border-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/15 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] transition-all duration-300">
+                    <Phone className="w-4 h-4 text-cyan-400" />
                   </div>
-                  <span className="text-sm">+91 8759839140</span>
+                  <span className="text-[14px] group-hover:translate-x-0.5 transition-transform">
+                    +91 8759839140
+                  </span>
                 </a>
-                <div className="flex items-start gap-3 text-white/50">
-                  <div className="w-8 h-8 min-w-[32px] rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4" />
+
+                <div className="flex items-start gap-3 text-slate-400">
+                  <div className="w-9 h-9 min-w-[36px] rounded-xl bg-blue-500/8 border border-blue-500/20 flex items-center justify-center">
+                    <MapPin className="w-4 h-4 text-blue-400" />
                   </div>
-                  <span className="text-sm leading-snug">
-                    Ecospace Business Park, Newtown
-                    <br />
+                  <span className="text-[14px] leading-snug pt-0.5">
+                    Ecospace Business Park, Newtown<br />
                     Kolkata, 700156, India
                   </span>
                 </div>
               </div>
             </motion.div>
 
-            {/* Company */}
+            {/* Company Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.08 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
               className="lg:col-span-2"
             >
-              <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-5 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+              <h3 className="text-white font-bold text-[11px] uppercase tracking-widest mb-6 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                 Company
               </h3>
-              <ul className="space-y-1">
+              <ul className="space-y-0.5">
                 {CO.map((l) => (
                   <FooterLink key={l.id + l.label} label={l.label} onClick={() => nav(l.id)} />
                 ))}
               </ul>
             </motion.div>
 
-            {/* Resources */}
+            {/* Resources Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.14 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-2"
             >
-              <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-5 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+              <h3 className="text-white font-bold text-[11px] uppercase tracking-widest mb-6 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
                 Resources
               </h3>
-              <ul className="space-y-1">
+              <ul className="space-y-0.5">
                 {RES.map((l) => (
-                  <FooterLink key={l.id} label={l.label} onClick={() => nav(l.id)} />
+                  <FooterLink key={l.id + l.label} label={l.label} onClick={() => nav(l.id)} />
                 ))}
               </ul>
             </motion.div>
@@ -156,39 +183,62 @@ export default function Footer() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="sm:col-span-2 lg:col-span-4 space-y-8"
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="sm:col-span-2 lg:col-span-4 space-y-10"
             >
+              {/* Account Section */}
               <div>
-                <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" />
+                <h3 className="text-white font-bold text-[11px] uppercase tracking-widest mb-5 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-cyan-400 to-blue-400 shadow-[0_0_8px_rgba(6,182,212,0.5)]" />
                   Account
                 </h3>
                 {!user ? (
-                  <>
-                    <button
+                  <div>
+                    <motion.button
                       onClick={() => nav("auth" as ViewId)}
-                      className="group flex items-center gap-3 px-5 py-3 rounded-xl border border-emerald-500/30 bg-emerald-500/8 hover:bg-emerald-500/15 hover:border-emerald-500/50 transition-all touch-manipulation w-full md:w-auto"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="group relative px-6 py-3.5 rounded-xl border border-emerald-500/25 bg-gradient-to-r from-emerald-500/8 to-cyan-500/8 hover:from-emerald-500/15 hover:to-cyan-500/15 hover:border-emerald-500/40 transition-all duration-300 w-full md:w-auto overflow-hidden"
                     >
-                      <LogIn className="w-5 h-5 text-emerald-400" />
-                      <span className="text-sm font-bold text-emerald-400">Sign In to Your Account</span>
-                    </button>
-                    <p className="text-xs text-white/30 mt-3 leading-relaxed">
-                      Access your dashboard, manage campaigns and track results.
+                      {/* Shimmer effect using Tailwind arbitrary values for performance */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div 
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_2s_infinite]"
+                          style={{ backgroundSize: "200% 100%" }}
+                        />
+                      </div>
+                      
+                      <span className="relative flex items-center gap-3">
+                        <LogIn className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                        <span className="text-[15px] font-bold bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+                          Sign In to Your Account
+                        </span>
+                      </span>
+                    </motion.button>
+                    <p className="text-xs text-slate-500 mt-4 leading-relaxed">
+                      Access your dashboard, manage campaigns and track results in real-time.
                     </p>
-                  </>
+                  </div>
                 ) : (
-                  <p className="text-sm text-white/55">
-                    You&apos;re signed in.{" "}
-                    <button onClick={() => nav("contact" as ViewId)} className="text-emerald-400 hover:text-emerald-300 transition-colors">
-                      Go to Contact
-                    </button>
-                  </p>
+                  <div className="px-5 py-4 rounded-xl bg-white/[0.02] border border-white/10 backdrop-blur-sm">
+                    <p className="text-sm text-slate-300 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                      You&apos;re signed in.{" "}
+                      <button 
+                        onClick={() => nav("contact" as ViewId)} 
+                        className="text-emerald-400 hover:text-emerald-300 transition-colors underline underline-offset-2"
+                      >
+                        Contact us
+                      </button>
+                    </p>
+                  </div>
                 )}
               </div>
+
+              {/* Social Section */}
               <div>
-                <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0" />
+                <h3 className="text-white font-bold text-[11px] uppercase tracking-widest mb-5 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-400 to-purple-400 shadow-[0_0_8px_rgba(139,92,246,0.5)]" />
                   Connect
                 </h3>
                 <div className="flex gap-3">
@@ -197,24 +247,25 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="LinkedIn"
-                    title="LinkedIn"
-                    className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl border bg-[#0077B5]/10 border-[#0077B5]/25 hover:bg-[#0077B5]/20 hover:border-[#0077B5]/50 text-[#0A66C2] flex items-center justify-center transition-all"
-                    whileHover={{ y: -3, scale: 1.08 }}
-                    whileTap={{ scale: 0.94 }}
+                    title="Follow us on LinkedIn"
+                    className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl border bg-[#0077B5]/8 border-[#0077B5]/20 hover:bg-[#0077B5]/15 hover:border-[#0077B5]/40 text-[#0A66C2] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_25px_rgba(10,102,194,0.25)]"
+                    whileHover={{ y: -4, scale: 1.08 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <LinkedInIcon className="w-[18px] h-[18px]" />
+                    <LinkedInIcon className="w-5 h-5" />
                   </motion.a>
+                  
                   <motion.a
                     href="https://wa.me/918759839140"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="WhatsApp"
-                    title="WhatsApp"
-                    className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl border bg-[#25D366]/10 border-[#25D366]/25 hover:bg-[#25D366]/20 hover:border-[#25D366]/50 text-[#25D366] flex items-center justify-center transition-all"
-                    whileHover={{ y: -3, scale: 1.08 }}
-                    whileTap={{ scale: 0.94 }}
+                    title="Chat on WhatsApp"
+                    className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl border bg-[#25D366]/8 border-[#25D366]/20 hover:bg-[#25D366]/15 hover:border-[#25D366]/40 text-[#25D366] flex items-center justify-center transition-all duration-300 hover:shadow-[0_0_25px_rgba(37,211,102,0.25)]"
+                    whileHover={{ y: -4, scale: 1.08 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <WhatsAppIcon className="w-[18px] h-[18px]" />
+                    <WhatsAppIcon className="w-5 h-5" />
                   </motion.a>
                 </div>
               </div>
@@ -222,32 +273,50 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom */}
+        {/* Bottom Bar */}
         <div className="border-t border-white/[0.06] py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-white/30 text-xs flex items-center gap-1.5 order-3 md:order-1">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-5">
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-slate-500 text-[13px] flex items-center gap-2 order-3 md:order-1"
+            >
               © {currentYear} Remarketix. Made with
-              <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 flex-shrink-0" />
+              <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" />
               All rights reserved.
-            </p>
-            <div className="flex items-center gap-5 text-xs order-2">
-              <button
+            </motion.p>
+            
+            <div className="flex items-center gap-6 text-[13px] order-2">
+              <motion.button
                 onClick={() => nav("privacy" as ViewId)}
-                className="text-white/35 hover:text-white/70 transition-colors flex items-center gap-1"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 group"
               >
-                Privacy Policy <ExternalLink className="w-3 h-3" />
-              </button>
-              <button
+                <span className="group-hover:underline underline-offset-2">Privacy Policy</span>
+                <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100" />
+              </motion.button>
+              
+              <motion.button
                 onClick={() => nav("terms" as ViewId)}
-                className="text-white/35 hover:text-white/70 transition-colors flex items-center gap-1"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 group"
               >
-                Terms of Service <ExternalLink className="w-3 h-3" />
-              </button>
+                <span className="group-hover:underline underline-offset-2">Terms of Service</span>
+                <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100" />
+              </motion.button>
             </div>
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/35 to-transparent" />
+
+      {/* Gradient Line at Bottom - SITS FLUSH */}
+      <div className="absolute bottom-0 left-0 right-0 h-px">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent blur-sm" />
+      </div>
     </footer>
   );
 }

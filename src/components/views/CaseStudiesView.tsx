@@ -445,6 +445,61 @@ const CASES = [
     color: "fuchsia",
   },
 
+  /* ── 10 ── NEW: Multi-ICP LinkedIn Outreach — Global Founders */
+  {
+    id: 10,
+    filter: "Outreach",
+    clientType:  "Global | Early-Stage Businesses & Founders",
+    service:     "LinkedIn Outreach & ICP Targeting",
+    result:      "2,000+ leads built across 3 ICP segments in 5 key geographies",
+    shortDesc:   "Targeted non-technical founders and early-stage business owners across US, UK, India, Australia and Canada through segmented LinkedIn outreach strategies.",
+    client:  "Web Solutions Client",
+    region:  "US, UK, India, Australia, Canada",
+    problem: "The client wanted to target founders and small business owners who either didn't have a tech team, were in early-stage or stealth mode, or had a strong need for digital/web solutions. Key challenges: identifying non-obvious prospects with no website or tech presence; segmenting multiple ICPs with different behaviours; maintaining high relevance across global markets.",
+    solution: [
+      "Defined 3 high-intent ICP segments: non-technical businesses, stealth & early-stage founders, and industry-specific small businesses (retail, hospitality, etc.)",
+      "Built lead lists using LinkedIn Sales Navigator filters, startup databases & directories, and Apollo for enrichment",
+      "Focused targeting on Founder / Owner / MD-level roles with small teams (self-employed to 1–10 employees)",
+      "Filtered for active LinkedIn profiles only",
+      "Created separate outreach strategy for each ICP segment",
+      "Personalised messaging based on business stage and digital maturity",
+      "Daily connection requests with structured follow-ups and central tracking via Google Sheet",
+    ],
+    results: [
+      "2,000+ leads built across 3 distinct ICP segments",
+      "Coverage across 5 key geographies: US, UK, India, Australia, Canada",
+      "High-relevance outreach maintained across all segments",
+      "Repeatable multi-ICP campaign system established",
+    ],
+    process: [
+      "ICP segmentation and sourcing logic definition",
+      "Lead list building via LinkedIn Sales Navigator and Apollo",
+      "Personalised message sequence creation per ICP",
+      "Daily outreach execution + real-time tracking",
+    ],
+    services: ["LinkedIn Outreach", "ICP Targeting", "Lead Research", "Messaging Strategy"],
+    stats: [
+      { v: "2,000+", l: "Leads Built"       },
+      { v: "3",      l: "ICP Segments"      },
+      { v: "5",      l: "Key Geographies"   },
+    ],
+    extraFields: {
+      label: "ICP Segments Targeted",
+      items: [
+        "Non-technical businesses (no website / no tech team)",
+        "Stealth & early-stage founders",
+        "Industry-specific small businesses (retail, hospitality, etc.)",
+      ],
+    },
+    extraQualification: [
+      "Founder / Owner / MD-level roles",
+      "Small teams (self-employed to 1–10 employees)",
+      "Active LinkedIn profiles",
+      "US, UK, India, Australia or Canada based",
+    ],
+    color: "sky",
+  },
+
 ];
 
 type Case = typeof CASES[number];
@@ -463,6 +518,7 @@ const CM: Record<string, { text: string; bg: string; border: string; badge: stri
   indigo:  { text:"text-indigo-400",  bg:"bg-indigo-500/10",  border:"border-indigo-500/25",  badge:"bg-indigo-500/15  border-indigo-500/25  text-indigo-400",  dot:"bg-indigo-400",  grad:"from-indigo-500 to-violet-500"  },
   orange:  { text:"text-orange-400",  bg:"bg-orange-500/10",  border:"border-orange-500/25",  badge:"bg-orange-500/15  border-orange-500/25  text-orange-400",  dot:"bg-orange-400",  grad:"from-orange-500 to-amber-500"   },
   fuchsia: { text:"text-fuchsia-400", bg:"bg-fuchsia-500/10", border:"border-fuchsia-500/25", badge:"bg-fuchsia-500/15 border-fuchsia-500/25 text-fuchsia-400", dot:"bg-fuchsia-400", grad:"from-fuchsia-500 to-violet-500"  },
+  sky:     { text:"text-sky-400",     bg:"bg-sky-500/10",     border:"border-sky-500/25",     badge:"bg-sky-500/15     border-sky-500/25     text-sky-400",     dot:"bg-sky-400",     grad:"from-sky-500 to-cyan-500"        },
 };
 
 /* ══════════════════════════════════════════════════════════════════════════════
@@ -879,7 +935,7 @@ export default function CaseStudiesView() {
           {/* Stats strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 md:mt-14 max-w-4xl mx-auto">
             {[
-              { n:"10+",    l:"Case Studies"      },
+              { n:"11+",    l:"Case Studies"      },
               { n:"99%",    l:"Data Accuracy"     },
               { n:"12",     l:"Countries Served"  },
               { n:"4,500+", l:"Verified Contacts" },
