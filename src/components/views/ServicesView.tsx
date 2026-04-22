@@ -175,6 +175,8 @@ const accentGradMap: Record<string, string> = {
 /* ─── Service Card ───────────────────────────────────────────────────────────── */
 function ServiceCard({ service, isMobile }: { service: typeof CATEGORIES[0]["services"][0]; isMobile: boolean }) {
   const c = colorMap[service.color];
+  const setView = useAppStore((s) => s.setView);
+  
   return (
     <motion.div
       className="group relative feature-card-premium h-full flex flex-col"
@@ -215,6 +217,16 @@ function ServiceCard({ service, isMobile }: { service: typeof CATEGORIES[0]["ser
             ))}
           </ul>
         </div>
+
+        {/* FIX #7: Make arrow button clickable */}
+        <motion.button
+          onClick={() => setView("services")}
+          className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white transition-colors group/arrow touch-manipulation"
+          whileHover={!isMobile ? { x: 4 } : {}}
+        >
+          View Details
+          <ArrowRight className="w-4 h-4 group-hover/arrow:translate-x-1 transition-transform" />
+        </motion.button>
       </div>
     </motion.div>
   );
@@ -321,9 +333,9 @@ export default function ServicesView() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen text-white">
+    <div className="relative min-h-screen text-white flex flex-col">
       {/* Static background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
         {!prefersReducedMotion && !isMobile && (
           <>
             <div className="absolute top-0 right-0 w-[500px] h-[500px]"

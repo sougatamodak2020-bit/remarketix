@@ -2,11 +2,12 @@
 import { useAppStore, ViewId } from "@/store/appStore";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, ArrowRight, Heart, ExternalLink, LogIn } from "lucide-react";
+import Image from "next/image";
 
 function LinkedInIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
     </svg>
   );
 }
@@ -14,29 +15,27 @@ function LinkedInIcon({ className }: { className?: string }) {
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
     </svg>
   );
 }
 
 function FooterLink({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <li>
-      <button
-        onClick={onClick}
-        className="group flex items-center gap-2 text-slate-400 hover:text-white transition-all duration-300 text-sm py-2 w-full text-left rounded-lg hover:bg-white/[0.02] px-2 -mx-2"
-      >
-        <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-emerald-400 flex-shrink-0" />
-        <span className="group-hover:translate-x-0.5 transition-transform">{label}</span>
-      </button>
-    </li>
+    <button
+      onClick={onClick}
+      className="group flex items-center gap-2 text-slate-400 hover:text-white transition-all duration-300 text-sm py-2 w-full text-left rounded-lg hover:bg-white/[0.02] px-2 -mx-2"
+    >
+      {label}
+      <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+    </button>
   );
 }
 
 export default function Footer() {
   const { setView, user } = useAppStore();
   const currentYear = new Date().getFullYear();
-
+  
   const nav = (id: ViewId) => {
     setView(id);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -57,12 +56,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative bg-[#0a0e1a] border-t border-white/5 overflow-hidden">
+    <footer className="relative overflow-hidden">
       {/* Premium Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Ambient glows */}
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/[0.03] rounded-full blur-[120px]" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/[0.03] rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] rounded-full bg-emerald-500/5 blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-blue-500/5 blur-[100px]" />
         
         {/* Subtle grid */}
         <div className="absolute inset-0 bg-grid-dense opacity-[0.012]" />
@@ -71,7 +70,7 @@ export default function Footer() {
         <div 
           className="absolute inset-0 opacity-[0.015] mix-blend-overlay"
           style={{ 
-            backgroundImage: `url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
           }}
         />
       </div>
@@ -87,15 +86,20 @@ export default function Footer() {
               transition={{ duration: 0.6 }}
               className="sm:col-span-2 lg:col-span-4"
             >
+              {/* FIX #19: Replace text with logo */}
               <motion.button 
                 onClick={() => nav("home")} 
                 className="mb-6 inline-block group"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-300 via-cyan-300 to-blue-300 bg-clip-text text-transparent group-hover:from-emerald-200 group-hover:via-cyan-200 group-hover:to-blue-200 transition-all duration-300">
-                  Remarketix
-                </span>
+                <Image
+                  src="https://i.postimg.cc/t4msmVH7/Remarketix-logo.png"
+                  alt="Remarketix"
+                  width={140}
+                  height={42}
+                  className="h-auto w-auto max-h-10 transition-all duration-300"
+                />
               </motion.button>
               
               <p className="text-slate-400 leading-relaxed mb-8 max-w-sm text-[15px]">
@@ -133,7 +137,7 @@ export default function Footer() {
                     <MapPin className="w-4 h-4 text-blue-400" />
                   </div>
                   <span className="text-[14px] leading-snug pt-0.5">
-                    Ecospace Business Park, Newtown<br />
+                    Ecospace Business Park, Newtown <br />
                     Kolkata, 700156, India
                   </span>
                 </div>
@@ -200,7 +204,7 @@ export default function Footer() {
                       whileTap={{ scale: 0.98 }}
                       className="group relative px-6 py-3.5 rounded-xl border border-emerald-500/25 bg-gradient-to-r from-emerald-500/8 to-cyan-500/8 hover:from-emerald-500/15 hover:to-cyan-500/15 hover:border-emerald-500/40 transition-all duration-300 w-full md:w-auto overflow-hidden"
                     >
-                      {/* Shimmer effect using Tailwind arbitrary values for performance */}
+                      {/* Shimmer effect */}
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                         <div 
                           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_2s_infinite]"
@@ -312,7 +316,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Gradient Line at Bottom - SITS FLUSH */}
+      {/* Gradient Line at Bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-px">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent blur-sm" />

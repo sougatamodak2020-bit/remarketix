@@ -40,29 +40,9 @@ const fadeInUp = {
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
 };
-
 const staggerContainer = {
   animate: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
-
-const PARTICLE_POSITIONS = [
-  { left: 15.2, top: 23.4, color: 0 },
-  { left: 78.3, top: 67.1, color: 1 },
-  { left: 42.7, top: 89.3, color: 2 },
-  { left: 91.5, top: 12.8, color: 0 },
-  { left: 23.8, top: 45.6, color: 1 },
-  { left: 67.2, top: 78.9, color: 2 },
-  { left: 34.9, top: 34.2, color: 0 },
-  { left: 56.4, top: 91.7, color: 1 },
-  { left: 12.1, top: 56.3, color: 2 },
-  { left: 88.6, top: 41.8, color: 0 },
-];
-
-const particleColors = [
-  { bg: "rgba(16,185,129,0.4)", shadow: "0 0 10px rgba(16,185,129,0.6)" },
-  { bg: "rgba(59,130,246,0.4)", shadow: "0 0 10px rgba(59,130,246,0.6)" },
-  { bg: "rgba(139,92,246,0.4)", shadow: "0 0 10px rgba(139,92,246,0.6)" },
-];
 
 // ─── Swipe Carousel ────────────────────────────────────────────────────────────
 function SwipeCarousel({
@@ -94,16 +74,12 @@ function SwipeCarousel({
       <div className="flex justify-center gap-2 mt-4">
         {children.map((_, i) => (
           <button key={i} onClick={() => setIdx(i)}
-            className={`h-2 rounded-full transition-all duration-300 touch-manipulation ${i === idx ? "bg-emerald-400 w-8" : "bg-white/30 w-2"}`} 
+            className={`h-2 rounded-full transition-all duration-300 touch-manipulation ${i === idx ? "bg-emerald-400 w-8" : "bg-white/30 w-2"}`}
             aria-label={`Go to slide ${i + 1}`} />
         ))}
       </div>
-      <button onClick={prev} className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden" aria-label="Previous">
-        <ChevronLeft className="w-4 h-4 text-white" />
-      </button>
-      <button onClick={next} className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden" aria-label="Next">
-        <ChevronRight className="w-4 h-4 text-white" />
-      </button>
+      <button onClick={prev} className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden" aria-label="Previous"><ChevronLeft className="w-4 h-4 text-white" /></button>
+      <button onClick={next} className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 border border-white/10 rounded-full flex items-center justify-center touch-manipulation md:hidden" aria-label="Next"><ChevronRight className="w-4 h-4 text-white" /></button>
     </div>
   );
 }
@@ -111,7 +87,7 @@ function SwipeCarousel({
 // ─── Animated Counter ──────────────────────────────────────────────────────────
 function AnimatedNumber({ value, suffix = "", duration = 2000 }: { value: number; suffix?: string; duration?: number }) {
   const [display, setDisplay] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
+  const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   useEffect(() => {
     if (!inView) return;
@@ -134,7 +110,7 @@ export default function HomeView() {
   const prefersReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
   const [isClient, setIsClient] = useState(false);
-
+  
   useEffect(() => {
     setIsClient(true);
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -142,7 +118,6 @@ export default function HomeView() {
     window.addEventListener("resize", check, { passive: true });
     return () => window.removeEventListener("resize", check);
   }, []);
-
   const shouldReduceMotion = prefersReducedMotion || isMobile;
 
   // ── Data ───────────────────────────────────────────────────────────────────
@@ -153,192 +128,47 @@ export default function HomeView() {
     { value: "200+", label: "Campaigns Executed", icon: Megaphone, color: "amber" },
   ], []);
 
+  // FIX #7: Replaced images with relevant ones
   const whatWeDo = useMemo(() => [
     {
       icon: Search, gradient: "from-emerald-500 to-teal-400", color: "emerald",
       title: "Data & Lead Generation",
       desc: "Build targeted databases and identify the right decision-makers for your business with 98.5% accuracy.",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80",
     },
     {
       icon: Mail, gradient: "from-blue-500 to-cyan-400", color: "blue",
       title: "Outreach & Engagement",
       desc: "Transform data into real conversations through strategic LinkedIn and email outreach campaigns.",
-      image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80",
     },
     {
       icon: Palette, gradient: "from-violet-500 to-fuchsia-400", color: "violet",
       title: "Content & Brand Growth",
       desc: "Build authority and generate consistent inbound leads through strategic content that positions you as the go-to expert.",
-      image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80",
     },
     {
       icon: Globe, gradient: "from-orange-500 to-amber-400", color: "orange",
       title: "Digital & Product Solutions",
       desc: "Create high-performance websites and conversion-focused campaigns that turn visitors into revenue.",
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&w=800&q=80",
     },
   ], []);
 
   const industries = useMemo(() => [
-    {
-      label: "SaaS & Tech",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <rect x="8" y="14" width="48" height="30" rx="4" fill="#b0c4de" />
-          <rect x="12" y="18" width="40" height="22" rx="2" fill="#1e3a5f" />
-          <rect x="22" y="44" width="20" height="4" rx="2" fill="#90a8c0" />
-          <rect x="16" y="48" width="32" height="3" rx="1.5" fill="#b0c4de" />
-          <text x="32" y="33" textAnchor="middle" fontSize="10" fill="#00d4aa" fontFamily="monospace" fontWeight="bold">{"</>"}</text>
-        </svg>
-      ),
-    },
-    {
-      label: "Hospitality",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <rect x="10" y="20" width="44" height="32" rx="3" fill="#f5a623" />
-          <rect x="18" y="20" width="28" height="8" rx="2" fill="#e8901a" />
-          <rect x="22" y="10" width="20" height="12" rx="2" fill="#fbbf24" />
-          <rect x="14" y="36" width="8" height="10" rx="1" fill="#fff" opacity="0.7" />
-          <rect x="26" y="36" width="8" height="10" rx="1" fill="#fff" opacity="0.7" />
-          <rect x="38" y="36" width="8" height="10" rx="1" fill="#fff" opacity="0.7" />
-          <circle cx="20" cy="14" r="2" fill="#fde68a" />
-          <circle cx="32" cy="14" r="2" fill="#fde68a" />
-          <circle cx="44" cy="14" r="2" fill="#fde68a" />
-        </svg>
-      ),
-    },
-    {
-      label: "Finance",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <circle cx="32" cy="32" r="22" fill="#e8f5e9" />
-          <circle cx="32" cy="32" r="18" fill="#4caf50" opacity="0.15" />
-          <text x="32" y="38" textAnchor="middle" fontSize="22" fill="#2e7d32" fontWeight="bold">$</text>
-          <polyline points="14,42 24,30 32,36 48,20" stroke="#43a047" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="48" cy="20" r="3" fill="#43a047" />
-        </svg>
-      ),
-    },
-    {
-      label: "Real Estate",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <polygon points="32,10 52,28 52,52 12,52 12,28" fill="#ef8c3a" />
-          <polygon points="32,10 12,28 52,28" fill="#d97706" />
-          <rect x="24" y="36" width="10" height="16" rx="1" fill="#1e3a5f" />
-          <rect x="38" y="34" width="8" height="8" rx="1" fill="#bfdbfe" />
-          <rect x="16" y="34" width="8" height="8" rx="1" fill="#bfdbfe" />
-          <rect x="28" y="8" width="8" height="4" rx="1" fill="#fbbf24" />
-        </svg>
-      ),
-    },
-    {
-      label: "Medical",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <circle cx="32" cy="32" r="24" fill="#fce4ec" />
-          <rect x="28" y="16" width="8" height="32" rx="4" fill="#e53935" />
-          <rect x="16" y="28" width="32" height="8" rx="4" fill="#e53935" />
-          <path d="M20 42 Q32 56 44 42" stroke="#e57373" strokeWidth="2.5" fill="none" />
-        </svg>
-      ),
-    },
-    {
-      label: "Manufacturing",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <rect x="8" y="30" width="48" height="22" rx="2" fill="#90a4ae" />
-          <rect x="12" y="20" width="12" height="12" rx="1" fill="#607d8b" />
-          <rect x="28" y="16" width="12" height="16" rx="1" fill="#607d8b" />
-          <rect x="44" y="22" width="8" height="10" rx="1" fill="#607d8b" />
-          <rect x="10" y="48" width="6" height="6" fill="#455a64" />
-          <rect x="22" y="48" width="6" height="6" fill="#455a64" />
-          <rect x="36" y="48" width="6" height="6" fill="#455a64" />
-          <rect x="48" y="48" width="6" height="6" fill="#455a64" />
-          <circle cx="18" cy="26" r="3" fill="#ffd54f" />
-        </svg>
-      ),
-    },
-    {
-      label: "Retail",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <rect x="10" y="8" width="16" height="10" rx="1" fill="#ef5350" />
-          <rect x="28" y="8" width="16" height="10" rx="1" fill="#ef5350" />
-          <rect x="8" y="18" width="48" height="34" rx="3" fill="#ffcdd2" />
-          <rect x="14" y="24" width="36" height="4" rx="1" fill="#ef5350" opacity="0.4" />
-          <rect x="14" y="32" width="36" height="4" rx="1" fill="#ef5350" opacity="0.3" />
-          <rect x="14" y="40" width="24" height="4" rx="1" fill="#ef5350" opacity="0.3" />
-          <text x="32" y="20" textAnchor="middle" fontSize="9" fill="#c62828" fontWeight="bold">SHOP</text>
-        </svg>
-      ),
-    },
-    {
-      label: "Green Energy",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <circle cx="32" cy="22" r="12" fill="#ffd54f" opacity="0.9" />
-          <circle cx="32" cy="22" r="8" fill="#ffb300" />
-          <path d="M32 10 L32 6M32 38 L32 42M10 22 L6 22M58 22 L54 22M16 16 L13 13M51 31 L48 34M48 16 L51 13M16 28 L13 31" stroke="#ffd54f" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M20 48 Q24 36 32 36 Q40 36 44 48" fill="#4caf50" />
-          <rect x="30" y="42" width="4" height="10" rx="2" fill="#388e3c" />
-          <ellipse cx="32" cy="54" rx="8" ry="2" fill="#81c784" opacity="0.5" />
-        </svg>
-      ),
-    },
-    {
-      label: "Beauty",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <rect x="26" y="8" width="12" height="22" rx="6" fill="#f48fb1" />
-          <rect x="22" y="28" width="20" height="26" rx="4" fill="#e91e63" />
-          <rect x="26" y="8" width="12" height="6" rx="3" fill="#fce4ec" />
-          <rect x="24" y="34" width="16" height="3" rx="1.5" fill="#f48fb1" opacity="0.5" />
-          <rect x="24" y="40" width="16" height="3" rx="1.5" fill="#f48fb1" opacity="0.5" />
-          <circle cx="32" cy="20" r="3" fill="#fce4ec" opacity="0.7" />
-        </svg>
-      ),
-    },
-    {
-      label: "Services",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <circle cx="32" cy="20" r="10" fill="#fff9c4" stroke="#fbc02d" strokeWidth="2" />
-          <path d="M42 30 L50 50 L32 42 L14 50 L22 30" fill="#fbc02d" opacity="0.7" />
-          <circle cx="32" cy="20" r="5" fill="#f9a825" />
-          <path d="M28 48 L36 48 M32 42 L32 52" stroke="#f57f17" strokeWidth="2.5" strokeLinecap="round" />
-        </svg>
-      ),
-    },
-    {
-      label: "Events",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <rect x="8" y="18" width="48" height="36" rx="4" fill="#e8eaf6" />
-          <rect x="8" y="18" width="48" height="12" rx="4" fill="#3f51b5" />
-          <rect x="18" y="10" width="6" height="14" rx="3" fill="#5c6bc0" />
-          <rect x="40" y="10" width="6" height="14" rx="3" fill="#5c6bc0" />
-          <text x="32" y="30" textAnchor="middle" fontSize="8" fill="#fff" fontWeight="bold">EVENT</text>
-          <rect x="14" y="36" width="8" height="8" rx="1" fill="#7986cb" opacity="0.7" />
-          <rect x="28" y="36" width="8" height="8" rx="1" fill="#7986cb" opacity="0.7" />
-          <rect x="42" y="36" width="8" height="8" rx="1" fill="#7986cb" opacity="0.7" />
-          <rect x="14" y="48" width="8" height="4" rx="1" fill="#9fa8da" opacity="0.5" />
-          <rect x="28" y="48" width="8" height="4" rx="1" fill="#9fa8da" opacity="0.5" />
-        </svg>
-      ),
-    },
-    {
-      label: "& More",
-      emoji: (
-        <svg viewBox="0 0 64 64" className="w-10 h-10 md:w-12 md:h-12">
-          <rect x="10" y="10" width="44" height="44" rx="8" fill="#00bcd4" />
-          <polygon points="32,18 38,28 50,28 40,36 44,48 32,40 20,48 24,36 14,28 26,28" fill="white" opacity="0.15" />
-          <text x="32" y="40" textAnchor="middle" fontSize="26" fill="white" fontWeight="bold">{">"}</text>
-        </svg>
-      ),
-    },
+    { label: "SaaS & Tech", emoji: "< />" },
+    { label: "Hospitality", emoji: "🏨" },
+    { label: "Finance", emoji: "$" },
+    { label: "Real Estate", emoji: "🏡" },
+    { label: "Medical", emoji: "🏥" },
+    { label: "Manufacturing", emoji: "🏭" },
+    { label: "Retail", emoji: "SHOP" },
+    { label: "Green Energy", emoji: "🌿" },
+    { label: "Beauty", emoji: "💄" },
+    { label: "Services", emoji: "🛠️" },
+    { label: "Events", emoji: "EVENT" },
+    { label: "& More", emoji: "🚀" },
   ], []);
 
   const process = useMemo(() => [
@@ -367,88 +197,70 @@ export default function HomeView() {
 
   const testimonials = useMemo(() => [
     {
-      quote: "Remarketix helped us build a consistent lead generation pipeline through accurate data and structured outreach. We saw a strong increase in qualified conversations and our sales team finally had a reliable source of warm leads.",
+      quote: "Remarketix helped us build a consistent lead generation pipeline through accurate data and structured outreach. We saw a strong increase in qualified conversations.",
       company: "Event Management Company",
       result: "3× qualified leads",
     },
     {
-      quote: "Their content and outreach system completely transformed our brand positioning. We went from chasing cold prospects to receiving inbound inquiries from the exact clients we wanted to work with.",
+      quote: "Their content and outreach system completely transformed our brand positioning. We went from chasing cold prospects to receiving inbound inquiries.",
       company: "Marketing Agency",
       result: "40% higher response rate",
     },
   ], []);
 
+  // FIX #17: Mondol Garden City is not included here as requested.
   const clients = useMemo(() => [
     {
-      name: "Global Expansion",
-      url: "globalexpansion.com",
-      abbr: "GX",
-      abbrBg: "#ff6b3d",
-      abbrColor: "#fff",
-      logoStyle: "pill",
+      name: "Global Expansion", url: "globalexpansion.com", abbr: "GX", abbrBg: "#ff6b3d", abbrColor: "#fff", logoStyle: "pill",
     },
     {
-      name: "Dromominds",
-      url: "dromominds.in",
-      abbr: "D",
-      abbrBg: "#fff",
-      abbrColor: "#e53935",
-      logoStyle: "letter",
-      subText: "DROMO\nMINDS",
+      name: "Dromominds", url: "dromominds.in", abbr: "D", abbrBg: "#fff", abbrColor: "#e53935", logoStyle: "letter", subText: "DROMO\nMINDS",
     },
     {
-      name: "The Collab Hub",
-      url: "thecollabhub.co",
-      abbr: "◆",
-      abbrBg: "#1a1a2e",
-      abbrColor: "#00d4aa",
-      logoStyle: "diamond",
+      name: "The Collab Hub", url: "thecollabhub.co", abbr: "◆", abbrBg: "#1a1a2e", abbrColor: "#00d4aa", logoStyle: "diamond",
     },
     {
-      name: "DigiSynqe",
-      url: "digisynqe.com",
-      abbr: null,
-      abbrBg: "transparent",
-      abbrColor: "#1565c0",
-      logoStyle: "wordmark",
+      name: "DigiSynqe", url: "digisynqe.com", abbr: null, abbrBg: "transparent", abbrColor: "#1565c0", logoStyle: "wordmark",
     },
     {
-      name: "Bluvise",
-      url: "bluvise.com",
-      abbr: "B",
-      abbrBg: "#1565c0",
-      abbrColor: "#fff",
-      logoStyle: "letter",
+      name: "Bluvise", url: "bluvise.com", abbr: "B", abbrBg: "#1565c0", abbrColor: "#fff", logoStyle: "letter",
     },
   ], []);
 
+  // FIX #15: Replaced images with new relevant ones and added 4th item
   const work = useMemo(() => [
     {
       tag: "Event Management",
       title: "3× Increase in Qualified Leads",
       desc: "Through targeted lead generation and structured outreach, we helped this event company fill their pipeline with decision-makers who were ready to buy.",
       color: "emerald",
-      image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
     },
     {
       tag: "Marketing Agency",
       title: "40% Higher Campaign Response Rate",
       desc: "We rebuilt their outreach messaging and sequence strategy, resulting in dramatically better response rates and more discovery calls booked.",
       color: "blue",
-      image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
     },
     {
       tag: "Consulting Business",
       title: "Consistent Inbound & Brand Authority",
       desc: "A combined content and outreach strategy positioned the founder as a niche expert, driving inbound leads and improving brand perception measurably.",
       color: "violet",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
+      image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80",
     },
+    {
+      tag: "Real Estate",
+      title: "Scalable Lead Generation System",
+      desc: "Built a targeted database for agents that resulted in consistent high-value listings and reduced cost-per-acquisition.",
+      color: "amber",
+      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+    }
   ], []);
 
   return (
-    <div className="flex flex-col">
-
+    <div className="relative min-h-screen">
       {/* ══════════════════════════════════════════════════════════════════════
           HERO
           ══════════════════════════════════════════════════════════════════════ */}
@@ -465,35 +277,13 @@ export default function HomeView() {
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 0%,rgba(3,7,18,0.35) 55%,rgba(3,7,18,0.8) 100%)" }} />
         </div>
 
-        {/* Particles */}
-        {isClient && !shouldReduceMotion && !isMobile && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {PARTICLE_POSITIONS.map((p, i) => (
-              <motion.div key={i} className="absolute w-1 h-1 rounded-full"
-                style={{ left: `${p.left}%`, top: `${p.top}%`, background: particleColors[p.color].bg, boxShadow: particleColors[p.color].shadow, willChange: "transform" }}
-                animate={{ y: [0, -100, 0], opacity: [0, 1, 0] }}
-                transition={{ duration: 3 + (i % 4), repeat: Infinity, delay: i * 0.25, ease: "easeInOut" }} />
-            ))}
-          </div>
-        )}
-
         {/* Content */}
         <div className="relative z-10 container-custom pt-24 md:pt-32 pb-16 px-4">
           <motion.div variants={staggerContainer} initial="initial" animate="animate"
             className="flex flex-col items-center text-center max-w-6xl mx-auto">
-
-            {/* Badge */}
-            <motion.div variants={fadeInUp} className="relative mb-8 md:mb-10">
-              <div className="badge-glow relative text-sm md:text-base">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse" />
-                <span className="font-semibold bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                  The #1 Data-Driven Growth Partner
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1 variants={fadeInUp} className="heading-display mb-8 md:mb-10 text-5xl md:text-7xl lg:text-8xl relative">
+            
+            {/* FIX #4: Reduced heading size */}
+            <motion.h1 variants={fadeInUp} className="heading-display mb-8 md:mb-10 text-4xl md:text-6xl lg:text-7xl relative">
               <motion.span className="block text-white" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}>
                 Turn Data
               </motion.span>
@@ -514,6 +304,16 @@ export default function HomeView() {
                   style={{ background: "linear-gradient(90deg,#10b981,#06b6d4,#3b82f6,#8b5cf6)" }} />
               </motion.span>
             </motion.h1>
+
+            {/* FIX #5: Badge moved below heading */}
+            <motion.div variants={fadeInUp} className="relative mb-8 md:mb-10 flex justify-center">
+              <div className="badge-glow relative text-sm md:text-base">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse" />
+                <span className="font-semibold bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                  The #1 Data-Driven Growth Partner
+                </span>
+              </div>
+            </motion.div>
 
             {/* Subtitle */}
             <motion.p variants={fadeInUp} className="text-base md:text-xl lg:text-2xl max-w-3xl mb-6 md:mb-8 text-white/80 leading-relaxed px-4">
@@ -587,37 +387,22 @@ export default function HomeView() {
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Scroll indicator */}
-        {isClient && !isMobile && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20">
-            <div className="flex flex-col items-center gap-3">
-              <span className="text-xs uppercase tracking-[0.2em] text-white/40 font-semibold">Scroll</span>
-              <div className="relative w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-1.5">
-                <motion.div className="w-1.5 h-3 rounded-full bg-gradient-to-b from-emerald-400 to-cyan-400"
-                  animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} />
-              </div>
-            </div>
-          </motion.div>
-        )}
+        
+        {/* FIX #3: Scroll indicator removed completely */}
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
           WHAT WE DO
           ══════════════════════════════════════════════════════════════════════ */}
-      <section className="section-spacing relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 0%,rgba(16,185,129,0.025) 50%,transparent 100%)" }} />
-        </div>
+      {/* FIX #6: Reduced top spacing, increased heading size, single-line subheading */}
+      <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="container-custom relative z-10 px-4">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
-            className="text-center max-w-3xl mx-auto mb-12 md:mb-20">
-            <div className="badge mx-auto mb-4 md:mb-6 w-fit"><Zap className="w-4 h-4" />What We Do</div>
-            <h2 className="heading-xl mb-4 md:mb-6 text-3xl md:text-5xl lg:text-6xl">
+            className="text-center max-w-3xl mx-auto mb-8 md:mb-12">
+            <div className="badge mx-auto mb-3 md:mb-4 w-fit"><Zap className="w-4 h-4" />What We Do</div>
+            <h2 className="heading-xl mb-3 md:mb-4 text-4xl md:text-5xl lg:text-6xl">
               <span className="text-white">End-to-End</span>
-              <span className="gradient-text-enhanced block mt-2">Growth Solutions</span>
+              <span className="gradient-text-enhanced block mt-2 whitespace-nowrap">Growth Solutions</span>
             </h2>
             <p className="text-base md:text-lg text-white/70 leading-relaxed">
               We provide complete growth solutions combining data, outreach, content and digital execution
@@ -642,6 +427,10 @@ export default function HomeView() {
                     <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                     <p className="text-white/75 text-sm leading-relaxed">{item.desc}</p>
                   </div>
+                  {/* FIX #7: Make arrow clickable to Services page */}
+                  <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={() => setView('services')}>
+                    <ArrowRight className="w-5 h-5 text-emerald-400" />
+                  </div>
                 </motion.div>
               ))}
             </SwipeCarousel>
@@ -652,7 +441,8 @@ export default function HomeView() {
                   initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
                   transition={{ delay: i * 0.1, duration: 0.6 }}>
                   <motion.div className="relative h-full rounded-[2rem] overflow-hidden cursor-pointer bg-[#0a0f1a] border border-white/5"
-                    whileHover={{ y: -12 }} transition={{ duration: 0.35 }}>
+                    whileHover={{ y: -12 }} transition={{ duration: 0.35 }}
+                    onClick={() => setView('services')}>
                     <div className="absolute inset-0">
                       <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 1200px) 50vw, 25vw" loading="lazy"
@@ -667,7 +457,8 @@ export default function HomeView() {
                       </motion.div>
                       <h3 className="text-xl md:text-2xl font-bold text-white mb-4">{item.title}</h3>
                       <p className="text-white/75 text-sm leading-relaxed border-t border-white/10 pt-4">{item.desc}</p>
-                      <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      {/* FIX #7: Arrow visible on hover, clickable */}
+                      <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <ArrowRight className="w-5 h-5 text-emerald-400" />
                       </div>
                     </div>
@@ -682,7 +473,8 @@ export default function HomeView() {
       {/* ══════════════════════════════════════════════════════════════════════
           INDUSTRIES WE SERVE
           ══════════════════════════════════════════════════════════════════════ */}
-      <section className="section-spacing relative overflow-hidden">
+      {/* FIX #8: Reduced top gap, FIX #9: Fix cut-off letters */}
+      <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 0%,rgba(59,130,246,0.03) 50%,transparent 100%)" }} />
           {!isMobile && (
@@ -692,9 +484,10 @@ export default function HomeView() {
         </div>
         <div className="container-custom relative z-10 px-4">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
-            className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-            <div className="badge mx-auto mb-4 md:mb-6 w-fit"><Building2 className="w-4 h-4" />Industries We Serve</div>
-            <h2 className="heading-xl mb-4 text-3xl md:text-5xl lg:text-6xl">
+            className="text-center max-w-3xl mx-auto mb-8 md:mb-12">
+            <div className="badge mx-auto mb-3 md:mb-4 w-fit"><Building2 className="w-4 h-4" />Industries We Serve</div>
+            {/* FIX #9: Added leading-tight to prevent cut-off */}
+            <h2 className="heading-xl mb-2 text-3xl md:text-5xl lg:text-6xl leading-tight">
               <span className="text-white">Built for</span>
               <span className="gradient-text-enhanced block mt-2">Every Industry</span>
             </h2>
@@ -708,16 +501,12 @@ export default function HomeView() {
               <motion.div key={i} className="group"
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.05, duration: 0.4 }}>
+                {/* FIX #11: Removed boxes/borders, transparent background */}
                 <motion.div
-                  className="relative flex flex-col items-center gap-2 md:gap-3 p-3 md:p-5 rounded-xl md:rounded-2xl cursor-default transition-all duration-300"
-                  style={{ background: "rgba(219,234,254,0.07)", border: "1.5px solid rgba(147,197,253,0.18)" }}
-                  whileHover={!isMobile ? {
-                    y: -4, scale: 1.04,
-                    background: "rgba(219,234,254,0.13)",
-                    borderColor: "rgba(147,197,253,0.38)",
-                  } : {}}
+                  className="relative flex flex-col items-center gap-2 md:gap-3 p-2 md:p-4 rounded-xl md:rounded-2xl cursor-default transition-all duration-300 bg-transparent border-0 hover:bg-white/5"
+                  whileHover={!isMobile ? { y: -4, scale: 1.04 } : {}}
                   transition={{ duration: 0.22 }}>
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center text-2xl md:text-3xl">
                     {ind.emoji}
                   </div>
                   <span className="text-xs md:text-sm font-semibold text-white/80 group-hover:text-white transition-colors text-center leading-tight">{ind.label}</span>
@@ -731,7 +520,8 @@ export default function HomeView() {
       {/* ══════════════════════════════════════════════════════════════════════
           WHY CHOOSE US
           ══════════════════════════════════════════════════════════════════════ */}
-      <section className="section-spacing relative overflow-hidden">
+      {/* FIX #10: Reduced top gap */}
+      <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 0%,rgba(16,185,129,0.025) 50%,transparent 100%)" }} />
           {!isMobile && (
@@ -743,9 +533,9 @@ export default function HomeView() {
         </div>
         <div className="container-custom relative z-10 px-4">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
-            className="text-center max-w-4xl mx-auto mb-12 md:mb-20">
-            <div className="badge mx-auto mb-4 md:mb-6 w-fit"><Shield className="w-4 h-4" />Why Remarketix?</div>
-            <h2 className="heading-xl mb-4 md:mb-6 text-3xl md:text-5xl lg:text-6xl">
+            className="text-center max-w-4xl mx-auto mb-8 md:mb-12">
+            <div className="badge mx-auto mb-3 md:mb-4 w-fit"><Shield className="w-4 h-4" />Why Remarketix?</div>
+            <h2 className="heading-xl mb-3 text-3xl md:text-5xl lg:text-6xl">
               <span className="text-white">Why Businesses Choose</span>
               <span className="gradient-text-enhanced block mt-2">Remarketix</span>
             </h2>
@@ -761,6 +551,7 @@ export default function HomeView() {
                 <motion.div className="feature-card-premium h-full" whileHover={!isMobile ? { y: -10, scale: 1.02 } : {}} transition={{ duration: 0.35 }}>
                   <div className={`absolute -inset-px bg-gradient-to-br from-${adv.color}-500/15 to-transparent rounded-[1.6rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                   <div className="relative z-10">
+                    {/* FIX #12: Removed background number "01", "02" */}
                     <motion.div className={`icon-container-premium bg-${adv.color}-500/10 border-${adv.color}-500/20 mb-6 md:mb-8`}
                       whileHover={!isMobile ? { rotate: 360, scale: 1.15 } : {}} transition={{ duration: 0.7 }}>
                       <adv.icon className={`w-7 h-7 md:w-8 md:h-8 text-${adv.color}-400`} />
@@ -770,9 +561,6 @@ export default function HomeView() {
                     <motion.div className={`absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-${adv.color}-500 to-transparent rounded-full`}
                       initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
                       transition={{ delay: 0.3 + i * 0.08 }} style={{ transformOrigin: "left" }} />
-                    <div className="absolute top-4 md:top-6 left-4 md:left-6 text-5xl md:text-6xl font-bold text-white/[0.04]">
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
                   </div>
                 </motion.div>
               </motion.div>
@@ -784,7 +572,8 @@ export default function HomeView() {
       {/* ══════════════════════════════════════════════════════════════════════
           OUR IMPACT
           ══════════════════════════════════════════════════════════════════════ */}
-      <section className="section-spacing relative overflow-hidden">
+      {/* FIX #13: Reduced top gap */}
+      <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           {!isMobile && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px]"
@@ -793,8 +582,8 @@ export default function HomeView() {
         </div>
         <div className="container-custom relative z-10 px-4">
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
-            className="text-center mb-12 md:mb-16">
-            <div className="badge mx-auto mb-4 md:mb-6 w-fit"><TrendingUp className="w-4 h-4" />Our Impact</div>
+            className="text-center mb-8 md:mb-12">
+            <div className="badge mx-auto mb-3 md:mb-4 w-fit"><TrendingUp className="w-4 h-4" />Our Impact</div>
             <h2 className="heading-xl text-3xl md:text-5xl lg:text-6xl">
               <span className="text-white">Numbers That</span>
               <span className="gradient-text-enhanced block mt-2">Speak for Themselves</span>
@@ -835,6 +624,7 @@ export default function HomeView() {
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 0%,rgba(59,130,246,0.025) 50%,transparent 100%)" }} />
         </div>
         <div className="container-custom relative z-10 px-4">
+          {/* FIX #14: Center aligned heading */}
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
             className="text-center max-w-3xl mx-auto mb-12 md:mb-20">
             <div className="badge mx-auto mb-4 md:mb-6 w-fit"><Zap className="w-4 h-4" />Our Process</div>
@@ -848,7 +638,6 @@ export default function HomeView() {
 
           {/* Desktop: horizontal timeline */}
           <div className="hidden md:flex items-start gap-0 relative">
-            {/* connector line */}
             <div className="absolute top-8 left-[8%] right-[8%] h-px bg-gradient-to-r from-emerald-500/30 via-cyan-500/30 to-violet-500/30" />
             {process.map((step, i) => (
               <motion.div key={i} className="flex-1 flex flex-col items-center text-center px-4 relative"
@@ -891,19 +680,14 @@ export default function HomeView() {
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 0%,rgba(139,92,246,0.025) 50%,transparent 100%)" }} />
         </div>
         <div className="container-custom relative z-10 px-4">
+          {/* FIX #14: Center aligned heading */}
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
-            className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12 md:mb-16">
-            <div className="max-w-2xl">
-              <div className="badge mb-4 md:mb-6"><Sparkles className="w-4 h-4" />Our Solutions</div>
-              <h2 className="heading-xl text-3xl md:text-5xl lg:text-6xl">
-                <span className="text-white">Solutions Designed</span>
-                <span className="gradient-text-enhanced block mt-2">for Growth</span>
-              </h2>
-            </div>
-            <motion.button onClick={() => setView("services")} className="btn-secondary-premium group flex-shrink-0"
-              whileHover={!isMobile ? { scale: 1.05 } : {}} whileTap={{ scale: 0.98 }}>
-              View All Services <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+            className="flex flex-col items-center text-center mb-12 md:mb-16">
+            <div className="badge mb-4 md:mb-6"><Sparkles className="w-4 h-4" />Our Solutions</div>
+            <h2 className="heading-xl text-3xl md:text-5xl lg:text-6xl">
+              <span className="text-white">Solutions Designed</span>
+              <span className="gradient-text-enhanced block mt-2">for Growth</span>
+            </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -911,8 +695,9 @@ export default function HomeView() {
               <motion.div key={i} className="group relative"
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.08 }}>
-                <motion.div className="relative p-6 md:p-8 rounded-2xl md:rounded-[1.6rem] bg-white/[0.02] border border-white/[0.07] transition-all duration-300 group-hover:border-white/15 group-hover:bg-white/[0.04] overflow-hidden h-full"
-                  whileHover={!isMobile ? { y: -6 } : {}} transition={{ duration: 0.3 }}>
+                <motion.div className="relative p-6 md:p-8 rounded-2xl md:rounded-[1.6rem] bg-white/[0.02] border border-white/[0.07] transition-all duration-300 group-hover:border-white/15 group-hover:bg-white/[0.04] overflow-hidden h-full cursor-pointer"
+                  whileHover={!isMobile ? { y: -6 } : {}} transition={{ duration: 0.3 }}
+                  onClick={() => setView('services')}>
                   <div className={`absolute inset-0 bg-gradient-to-br ${svc.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
                   <div className="relative z-10 flex items-start gap-5">
                     <motion.div className={`w-14 h-14 flex-shrink-0 rounded-2xl bg-gradient-to-br ${svc.gradient} flex items-center justify-center shadow-xl`}
@@ -924,7 +709,7 @@ export default function HomeView() {
                       <p className="text-sm md:text-base text-white/65 leading-relaxed">{svc.desc}</p>
                     </div>
                   </div>
-                  <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     <ArrowRight className={`w-5 h-5 text-${svc.color}-400`} />
                   </div>
                 </motion.div>
@@ -939,36 +724,23 @@ export default function HomeView() {
           ══════════════════════════════════════════════════════════════════════ */}
       <section className="section-spacing relative overflow-hidden">
         <div className="container-custom relative z-10 px-4">
+          {/* FIX #14: Center aligned heading */}
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
-            className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12 md:mb-16">
-            <div className="max-w-2xl">
-              <div className="badge mb-4 md:mb-6"><Award className="w-4 h-4" />Our Work</div>
-              <h2 className="heading-xl text-3xl md:text-5xl lg:text-6xl">
-                <span className="text-white">Real Results,</span>
-                <span className="gradient-text-enhanced block mt-2">Real Businesses</span>
-              </h2>
-              <p className="text-base md:text-lg text-white/70 mt-4">
-                A look at how we help businesses generate leads, build systems and drive consistent growth.
-              </p>
-            </div>
-            <motion.button 
-              onClick={() => setView("casestudies")} 
-              className="btn-secondary-premium group flex-shrink-0"
-              whileHover={!isMobile ? { scale: 1.05 } : {}} 
-              whileTap={{ scale: 0.98 }}
-            >
-              View All Work <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+            className="flex flex-col items-center text-center mb-12 md:mb-16">
+            <div className="badge mb-4 md:mb-6"><Award className="w-4 h-4" />Our Work</div>
+            <h2 className="heading-xl text-3xl md:text-5xl lg:text-6xl">
+              <span className="text-white">Real Results,</span>
+              <span className="gradient-text-enhanced block mt-2">Real Businesses</span>
+            </h2>
+            <p className="text-base md:text-lg text-white/70 mt-4">
+              A look at how we help businesses generate leads, build systems and drive consistent growth.
+            </p>
           </motion.div>
 
           {isMobile ? (
             <SwipeCarousel>
               {work.map((item, i) => (
-                <div 
-                  key={i} 
-                  className="group relative h-[400px] rounded-2xl overflow-hidden bg-[#0a0f1a] cursor-pointer"
-                  onClick={() => setView("casestudies")}
-                >
+                <div key={i} className="group relative h-[400px] rounded-2xl overflow-hidden bg-[#0a0f1a] cursor-pointer" onClick={() => setView('casestudies')}>
                   <div className="absolute inset-0">
                     <Image src={item.image} alt={item.title} fill className="object-cover" sizes="100vw" loading="lazy"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" placeholder="blur" />
@@ -983,22 +755,14 @@ export default function HomeView() {
               ))}
             </SwipeCarousel>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {work.map((item, i) => (
-                <motion.div 
-                  key={i} 
-                  className="group relative h-[420px] md:h-[480px]"
-                  initial={{ opacity: 0, y: 40 }} 
-                  whileInView={{ opacity: 1, y: 0 }} 
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.12 }}
-                >
-                  <motion.div 
-                    className="relative h-full rounded-[1.8rem] overflow-hidden bg-[#0a0f1a] border border-white/5 cursor-pointer"
-                    whileHover={{ y: -10 }} 
-                    transition={{ duration: 0.35 }}
-                    onClick={() => setView("casestudies")}
-                  >
+                <motion.div key={i} className="group relative h-[420px] md:h-[480px]"
+                  initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                  transition={{ delay: i * 0.12 }}>
+                  <motion.div className="relative h-full rounded-[1.8rem] overflow-hidden bg-[#0a0f1a] border border-white/5 cursor-pointer"
+                    whileHover={{ y: -10 }} transition={{ duration: 0.35 }}
+                    onClick={() => setView('casestudies')}>
                     <div className="absolute inset-0">
                       <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 1200px) 33vw, 33vw" loading="lazy"
@@ -1030,11 +794,10 @@ export default function HomeView() {
           )}
         </div>
         <div className="container-custom relative z-10 px-4">
-
           {/* Section heading */}
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.7 }}
-            className="text-center mb-10 md:mb-14">
-            <div className="badge mx-auto mb-4 md:mb-6 w-fit"><Star className="w-4 h-4" />Our Clients</div>
+            className="text-center mb-8 md:mb-12">
+            <div className="badge mx-auto mb-4 w-fit"><Star className="w-4 h-4" />Our Clients</div>
             <h2 className="heading-xl mb-3 text-3xl md:text-5xl lg:text-6xl">
               <span className="text-white">Client</span>
               <span className="gradient-text-enhanced block mt-2">Testimonials</span>
@@ -1042,31 +805,19 @@ export default function HomeView() {
             <p className="text-base md:text-lg text-white/70">Trusted by businesses that demand real results.</p>
           </motion.div>
 
-          {/* ── OUR CLIENTELE — exact card layout from reference ── */}
+          {/* Our Clientele - Logos */}
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            transition={{ duration: 0.6 }} className="mb-14 md:mb-20">
+            transition={{ duration: 0.6 }} className="mb-12 md:mb-16">
             <p className="text-center text-sm md:text-base font-bold text-white mb-2">Our Clientele</p>
-            <p className="text-center text-sm text-white/50 italic mb-8">Businesses we've been proud to work with</p>
-
-            {/* Outer bordered container — matches the teal-outlined box in the reference */}
             <div className="rounded-2xl overflow-hidden" style={{ border: "1.5px solid rgba(20,184,166,0.35)" }}>
-
-              {/* Mobile: stacked, Desktop: single row with vertical dividers */}
-              <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-white/[0.08] bg-white/[0.02]">
+              <div className="flex flex-wrap justify-center divide-white/[0.08] bg-white/[0.02]">
                 {clients.map((c, i) => (
-                  <motion.a
-                    key={i}
-                    href={`https://${c.url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex-1 flex flex-col items-center justify-center gap-3 px-4 py-6 md:py-8 transition-all duration-300 hover:bg-white/[0.04] cursor-pointer"
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                  <motion.a key={i} href={`https://${c.url}`} target="_blank" rel="noopener noreferrer"
+                    className="flex-1 min-w-[150px] flex items-center justify-center px-4 py-6 md:py-8 transition-all duration-300 hover:bg-white/[0.04] cursor-pointer"
+                    initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                     transition={{ delay: i * 0.08 }}
-                    whileHover={!isMobile ? { scale: 1.03 } : {}}
-                  >
-                    {/* Logo mark */}
+                    whileHover={!isMobile ? { scale: 1.03 } : {}}>
+                    {/* FIX #16: Logo mark only - removed company name and URL text */}
                     <div className="flex items-center justify-center h-12">
                       {c.logoStyle === "pill" && (
                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl" style={{ background: c.abbrBg }}>
@@ -1092,8 +843,8 @@ export default function HomeView() {
                         <div className="flex items-center gap-2">
                           <div className="w-9 h-9 flex items-center justify-center">
                             <svg viewBox="0 0 32 32" width="32" height="32">
-                              <polygon points="16,2 30,16 16,30 2,16" fill="#1a1a2e" stroke="#00d4aa" strokeWidth="2"/>
-                              <polygon points="16,7 25,16 16,25 7,16" fill="#00d4aa" opacity="0.3"/>
+                              <polygon points="16,2 30,16 16,30 2,16" fill="#1a1a2e" stroke="#00d4aa" strokeWidth="2" />
+                              <polygon points="16,7 25,16 16,25 7,16" fill="#00d4aa" opacity="0.3" />
                             </svg>
                           </div>
                           <div className="flex flex-col leading-none">
@@ -1104,7 +855,7 @@ export default function HomeView() {
                       )}
                       {c.logoStyle === "wordmark" && (
                         <span className="text-xl md:text-2xl font-black tracking-tight" style={{ color: c.abbrColor }}>
-                          <span style={{ color: "#1565c0" }}>Digi</span><span style={{ color: "#00acc1" }}>Synqe</span>
+                          <span style={{ color: "#1565c0" }}>Digi</span> <span style={{ color: "#00acc1" }}>Synqe</span>
                         </span>
                       )}
                       {c.logoStyle === "letter" && c.name === "Bluvise" && (
@@ -1116,15 +867,6 @@ export default function HomeView() {
                         </div>
                       )}
                     </div>
-
-                    {/* Company name */}
-                    <p className="text-sm md:text-base font-bold text-white text-center">{c.name}</p>
-
-                    {/* Clickable URL — teal, underline on hover */}
-                    <span className="text-xs md:text-sm font-medium text-center transition-all duration-200 group-hover:underline"
-                      style={{ color: "#14b8a6" }}>
-                      {c.url}
-                    </span>
                   </motion.a>
                 ))}
               </div>
