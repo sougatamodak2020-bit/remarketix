@@ -34,30 +34,6 @@ export default function ContactView() {
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
-  // FIX #18: Handle browser back button properly
-  useEffect(() => {
-    // Push a new history state when component mounts
-    const initialState = { page: 'contact', timestamp: Date.now() };
-    window.history.pushState(initialState, '');
-
-    const handlePopState = (event: PopStateEvent) => {
-      // If we're on contact page and back is pressed, go to home
-      if (window.location.hash.includes('contact') || document.title.includes('Contact')) {
-        // Navigate to home view
-        const homeEvent = new CustomEvent('navigate-to-home');
-        window.dispatchEvent(homeEvent);
-        // Also try direct scroll
-        window.scrollTo({ top: 0, behavior: 'instant' });
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, []);
-
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -68,32 +44,40 @@ export default function ContactView() {
   const shouldReduceMotion = prefersReducedMotion || isMobile;
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen flex flex-col">
       {/* Background - Static on mobile */}
-      {!shouldReduceMotion &&
-        [...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-64 h-64 md:w-96 md:h-96 rounded-full"
-            style={{
-              background: `radial-gradient(circle, ${i === 0 ? "rgba(16, 185, 129, 0.1)" : i === 1 ? "rgba(59, 130, 246, 0.1)" : "rgba(139, 92, 246, 0.1)"}, transparent 70%)`,
-              filter: "blur(80px)",
-              top: `${5 + i * 30}%`,
-              left: `${5 + i * 25}%`,
-            }}
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 20 + i * 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 2,
-            }}
-          />
-        ))}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {!shouldReduceMotion &&
+          [...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-64 h-64 md:w-96 md:h-96 rounded-full"
+              style={{
+                background: `radial-gradient(circle, ${
+                  i === 0
+                    ? "rgba(16, 185, 129, 0.1)"
+                    : i === 1
+                    ? "rgba(59, 130, 246, 0.1)"
+                    : "rgba(139, 92, 246, 0.1)"
+                }, transparent 70%)`,
+                filter: "blur(80px)",
+                top: `${5 + i * 30}%`,
+                left: `${5 + i * 25}%`,
+              }}
+              animate={{
+                x: [0, 100, 0],
+                y: [0, -50, 0],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 20 + i * 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 2,
+              }}
+            />
+          ))}
+      </div>
 
       <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-32">
         {/* Header */}
@@ -157,7 +141,9 @@ export default function ContactView() {
                   <div className="relative z-10 flex items-start gap-4 w-full">
                     <motion.div
                       className={`w-12 h-12 bg-gradient-to-br ${info.gradient} opacity-20 rounded-xl flex items-center justify-center flex-shrink-0 border border-${info.color}-500/30`}
-                      whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
+                      whileHover={
+                        !isMobile ? { rotate: 360, scale: 1.1 } : {}
+                      }
                       transition={{ duration: 0.6 }}
                     >
                       <info.icon

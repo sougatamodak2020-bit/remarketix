@@ -1,31 +1,32 @@
 ﻿"use client";
 import { motion, useReducedMotion } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAppStore } from "@/store/appStore";
 import Image from "next/image";
 import {
-  Zap,
-  Crosshair,
-  Palette,
-  BarChart2,
-  ShieldCheck,
-  Quote,
-  ArrowRight,
-  Sparkles,
-  Heart,
-  ChevronLeft,
-  ChevronRight,
-  Users,
-  Target,
-  TrendingUp,
-  Award,
-  Rocket,
-  Globe,
-  Check,
-  ChevronDown,
+  Zap, Crosshair, Palette, BarChart2, ShieldCheck,
+  Quote, ArrowRight, Sparkles, Heart, Check,
+  ChevronDown, Users, Target, Award, Globe,
 } from "lucide-react";
 
-/* ─── Data ──────────────────────────────────────────────────────────────────── */
+// ─── Fade-up animation config — used everywhere so it's consistent & minimal ──
+const FADE_UP = {
+  initial:    { opacity: 0, y: 20 },
+  whileInView:{ opacity: 1, y: 0 },
+  viewport:   { once: true, margin: "-60px" },
+  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+} as const;
+
+// Lightweight fade-in (no y-shift) for items inside already-visible containers
+const FADE_IN = {
+  initial:    { opacity: 0 },
+  whileInView:{ opacity: 1 },
+  viewport:   { once: true, margin: "-40px" },
+  transition: { duration: 0.4 },
+} as const;
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
 const team = [
   {
     name: "Devan",
@@ -78,291 +79,183 @@ const team = [
 ];
 
 const values = [
-  {
-    icon: Crosshair,
-    color: "emerald",
-    title: "Precision",
-    desc: "Data that targets real buyers",
-    gradient: "from-emerald-500 to-emerald-600",
-    features: ["Triple-verified data", "ICP alignment", "Decision-maker focus"],
-  },
-  {
-    icon: Palette,
-    color: "blue",
-    title: "Creativity",
-    desc: "Design and ads that stand out",
-    gradient: "from-blue-500 to-blue-600",
-    features: ["Unique campaigns", "Brand storytelling", "Visual excellence"],
-  },
-  {
-    icon: BarChart2,
-    color: "violet",
-    title: "Performance",
-    desc: "Pipeline and revenue impact",
-    gradient: "from-violet-500 to-violet-600",
-    features: ["Measurable results", "ROI tracking", "Growth metrics"],
-  },
-  {
-    icon: ShieldCheck,
-    color: "rose",
-    title: "Trust",
-    desc: "We grow when you grow",
-    gradient: "from-rose-500 to-rose-600",
-    features: ["Client partnerships", "Transparent process", "Long-term focus"],
-  },
+  { icon: Crosshair, color: "emerald", title: "Precision",    desc: "Data that targets real buyers",    gradient: "from-emerald-500 to-emerald-600", features: ["Triple-verified data", "ICP alignment", "Decision-maker focus"] },
+  { icon: Palette,   color: "blue",    title: "Creativity",   desc: "Design and ads that stand out",    gradient: "from-blue-500 to-blue-600",       features: ["Unique campaigns", "Brand storytelling", "Visual excellence"]  },
+  { icon: BarChart2, color: "violet",  title: "Performance",  desc: "Pipeline and revenue impact",      gradient: "from-violet-500 to-violet-600",   features: ["Measurable results", "ROI tracking", "Growth metrics"]        },
+  { icon: ShieldCheck,color:"rose",    title: "Trust",        desc: "We grow when you grow",            gradient: "from-rose-500 to-rose-600",        features: ["Client partnerships", "Transparent process", "Long-term focus"]},
 ];
 
 const milestones = [
-  { year: "2020", title: "Founded", desc: "Started with a vision to transform B2B growth" },
+  { year: "2020", title: "Founded",      desc: "Started with a vision to transform B2B growth" },
   { year: "2021", title: "100+ Clients", desc: "Expanded across multiple industries" },
   { year: "2022", title: "Global Reach", desc: "Serving clients in 12 countries" },
-  { year: "2023", title: "500+ Projects", desc: "Delivered consistent growth results" },
+  { year: "2023", title: "500+ Projects",desc: "Delivered consistent growth results" },
 ];
 
-const colorMap: Record<string, { bg: string; border: string; text: string; dot: string }> = {
-  emerald: { bg: "bg-emerald-500/10", border: "border-emerald-500/25", text: "text-emerald-400", dot: "bg-emerald-400" },
-  blue:    { bg: "bg-blue-500/10",    border: "border-blue-500/25",    text: "text-blue-400",    dot: "bg-blue-400"    },
-  violet:  { bg: "bg-violet-500/10",  border: "border-violet-500/25",  text: "text-violet-400",  dot: "bg-violet-400"  },
-  cyan:    { bg: "bg-cyan-500/10",    border: "border-cyan-500/25",    text: "text-cyan-400",    dot: "bg-cyan-400"    },
-  pink:    { bg: "bg-pink-500/10",    border: "border-pink-500/25",    text: "text-pink-400",    dot: "bg-pink-400"    },
-  amber:   { bg: "bg-amber-500/10",   border: "border-amber-500/25",   text: "text-amber-400",   dot: "bg-amber-400"   },
-  rose:    { bg: "bg-rose-500/10",    border: "border-rose-500/25",    text: "text-rose-400",    dot: "bg-rose-400"    },
+const colorMap: Record<string, { bg: string; border: string; text: string }> = {
+  emerald: { bg: "bg-emerald-500/10", border: "border-emerald-500/25", text: "text-emerald-400"  },
+  blue:    { bg: "bg-blue-500/10",    border: "border-blue-500/25",    text: "text-blue-400"     },
+  violet:  { bg: "bg-violet-500/10",  border: "border-violet-500/25",  text: "text-violet-400"   },
+  cyan:    { bg: "bg-cyan-500/10",    border: "border-cyan-500/25",    text: "text-cyan-400"     },
+  pink:    { bg: "bg-pink-500/10",    border: "border-pink-500/25",    text: "text-pink-400"     },
+  amber:   { bg: "bg-amber-500/10",   border: "border-amber-500/25",   text: "text-amber-400"    },
+  rose:    { bg: "bg-rose-500/10",    border: "border-rose-500/25",    text: "text-rose-400"     },
 };
 
-/* ─── Value Card ────────────────────────────────────────────────────────────── */
-function ValueCard({ value, isMobile, index }: {
-  value: typeof values[0];
-  isMobile: boolean;
-  index: number;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
+// ─── Value Card ───────────────────────────────────────────────────────────────
+// Pure CSS hover — no framer-motion on the card itself
+function ValueCard({ value, index }: { value: typeof values[0]; index: number }) {
+  const [open, setOpen] = useState(false);
   const c = colorMap[value.color];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="group"
-    >
-      <motion.div
-        className="feature-card-premium h-full flex flex-col cursor-pointer"
-        whileHover={!isMobile ? { y: -6, scale: 1.02 } : {}}
-        transition={{ duration: 0.3 }}
-        onClick={() => setIsOpen(!isOpen)}
+    <motion.div {...FADE_UP} transition={{ duration: 0.5, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}>
+      <div
+        className="feature-card-premium h-full flex flex-col cursor-pointer
+                   transition-transform duration-300 ease-out
+                   hover:-translate-y-1.5 will-change-transform"
+        onClick={() => setOpen((v) => !v)}
       >
-        {/* Icon + gradient overlay */}
-        <div className="relative mb-5">
-          <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} opacity-10 rounded-2xl blur-xl group-hover:opacity-20 transition-opacity`} />
-          <div className={`relative w-14 h-14 rounded-2xl ${c.bg} border ${c.border} flex items-center justify-center`}>
-            <value.icon className={`w-7 h-7 ${c.text}`} />
-          </div>
+        {/* Icon */}
+        <div className={`relative w-14 h-14 rounded-2xl ${c.bg} border ${c.border} flex items-center justify-center mb-5 flex-shrink-0`}>
+          <value.icon className={`w-7 h-7 ${c.text}`} />
         </div>
 
-        {/* Title + desc */}
-        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all">
-          {value.title}
-        </h3>
+        <h3 className="text-lg font-bold text-white mb-2">{value.title}</h3>
         <p className="text-sm text-white/60 mb-4">{value.desc}</p>
 
-        {/* Expandable features */}
+        {/* Expandable */}
         <div className="mt-auto">
           <button
             className={`flex items-center gap-2 text-xs font-semibold ${c.text} hover:opacity-80 transition-opacity`}
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(!isOpen);
-            }}
+            onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
           >
-            {isOpen ? "Hide" : "Show"} Details
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+            {open ? "Hide" : "Show"} Details
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
           </button>
 
-          {isOpen && (
-            <motion.ul
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mt-3 space-y-2 border-t border-white/10 pt-3"
-            >
+          {/* Height-based reveal — no layout animation needed */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-out ${open ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}
+          >
+            <ul className="mt-3 space-y-2 border-t border-white/10 pt-3">
               {value.features.map((f) => (
                 <li key={f} className="flex items-center gap-2 text-xs text-white/70">
                   <Check className={`w-3 h-3 ${c.text} flex-shrink-0`} />
                   {f}
                 </li>
               ))}
-            </motion.ul>
-          )}
+            </ul>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
 
-/* ─── Team Member Card ──────────────────────────────────────────────────────── */
-function TeamMemberCard({ member, isMobile, index }: {
-  member: typeof team[0];
-  isMobile: boolean;
-  index: number;
-}) {
+// ─── Team Card ────────────────────────────────────────────────────────────────
+// Single reveal animation per card; CSS hover only
+function TeamMemberCard({ member, index }: { member: typeof team[0]; index: number }) {
   const c = colorMap[member.color];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: (index % 3) * 0.1, duration: 0.6 }}
-      className="group h-full"
+      {...FADE_UP}
+      transition={{ duration: 0.5, delay: (index % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
+      className="h-full"
     >
-      <motion.div
-        className="feature-card-premium h-full flex flex-col relative overflow-hidden"
-        whileHover={!isMobile ? { y: -8, scale: 1.03 } : {}}
-        transition={{ duration: 0.35 }}
+      <div
+        className="feature-card-premium h-full flex flex-col relative overflow-hidden
+                   transition-transform duration-300 ease-out
+                   hover:-translate-y-2 will-change-transform"
       >
-        {/* Top accent line */}
-        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${c.text.replace("text-", "from-")} to-transparent`} />
+        {/* Top accent */}
+        <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${value_gradient(member.color)} to-transparent`} />
 
         <div className="relative z-10 flex flex-col h-full items-center text-center p-6">
-          {/* Image */}
-          <motion.div
-            className="relative mb-5"
-            whileHover={!isMobile ? { scale: 1.1, rotate: 3 } : {}}
-            transition={{ duration: 0.4 }}
-          >
-            <div className={`absolute -inset-2 bg-gradient-to-br ${c.text.replace("text-", "from-")} ${c.text.replace("text-", "to-")}-600 opacity-20 rounded-full blur-xl`} />
+          {/* Avatar — CSS scale only */}
+          <div className="relative mb-5 flex-shrink-0">
             <Image
               src={member.image}
               alt={member.name}
-              width={120}
-              height={120}
-              className={`relative w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 ${c.border} group-hover:border-opacity-50 transition-all`}
+              width={128}
+              height={128}
+              className={`w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 ${c.border}
+                         transition-transform duration-300 ease-out group-hover:scale-105`}
               unoptimized
             />
-          </motion.div>
+          </div>
 
-          {/* Name + Role */}
           <h3 className="text-lg md:text-xl font-bold text-white mb-1">{member.name}</h3>
-          <p className={`text-xs md:text-sm font-semibold uppercase tracking-wider mb-4 ${c.text}`}>
-            {member.role}
-          </p>
+          <p className={`text-xs md:text-sm font-semibold uppercase tracking-wider mb-4 ${c.text}`}>{member.role}</p>
 
-          {/* Divider */}
-          <div className={`w-16 h-1 rounded-full bg-gradient-to-r ${c.text.replace("text-", "from-")} ${c.text.replace("text-", "to-")}-600 mb-4`} />
+          <div className={`w-16 h-0.5 rounded-full bg-gradient-to-r ${value_gradient(member.color)} mb-4 flex-shrink-0`} />
 
-          {/* Bio */}
           <p className="text-sm text-white/65 leading-relaxed mb-5 flex-grow">{member.bio}</p>
 
-          {/* Achievements */}
           <div className={`w-full pt-4 border-t ${c.border}`}>
             <p className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">Key Impact</p>
             <div className="flex flex-wrap gap-2 justify-center">
               {member.achievements.map((ach) => (
-                <span
-                  key={ach}
-                  className={`text-xs px-2.5 py-1 rounded-full ${c.bg} border ${c.border} ${c.text} font-semibold`}
-                >
+                <span key={ach} className={`text-xs px-2.5 py-1 rounded-full ${c.bg} border ${c.border} ${c.text} font-semibold`}>
                   {ach}
                 </span>
               ))}
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
 
-/* ─── Founder Story Component ───────────────────────────────────────────────── */
-function FounderStory({ isMobile }: { isMobile: boolean }) {
+// Small helper — avoids string interpolation producing dynamic Tailwind classes
+function value_gradient(color: string) {
+  const map: Record<string, string> = {
+    emerald: "from-emerald-400", blue: "from-blue-400", violet: "from-violet-400",
+    cyan: "from-cyan-400", pink: "from-pink-400", amber: "from-amber-400", rose: "from-rose-400",
+  };
+  return map[color] ?? "from-emerald-400";
+}
+
+// ─── Founder Story ────────────────────────────────────────────────────────────
+function FounderStory() {
   const [showFull, setShowFull] = useState(false);
 
   return (
     <section className="section-spacing">
       <div className="container-custom max-w-4xl px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-8 md:mb-12"
-        >
+        <motion.div {...FADE_UP} className="text-center mb-8 md:mb-12">
           <Quote className="w-12 h-12 md:w-16 md:h-16 text-emerald-500/30 mx-auto mb-5" />
           <h2 className="heading-xl text-white mb-3">The Story Behind Remarketix</h2>
           <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="feature-card-premium p-8 md:p-12"
-        >
+        <motion.div {...FADE_IN} className="feature-card-premium p-8 md:p-12">
           <div className="space-y-5 text-white/70 leading-relaxed text-base md:text-lg">
-            <p>
-              Remarketix was born out of a simple frustration. Businesses were spending too
-              much time chasing leads that never converted.
-            </p>
+            <p>Remarketix was born out of a simple frustration. Businesses were spending too much time chasing leads that never converted.</p>
+            <p>What started as a freelance lead generation service by two young professionals from Kolkata quickly grew into something much bigger.</p>
+            <p>In the early days, it was just two laptops and a strong focus on finding better ways to connect businesses with the right people. Our first clients trusted us when we had very little, and we delivered.</p>
 
-            <p>
-              What started as a freelance lead generation service by two young professionals
-              from Kolkata quickly grew into something much bigger.
-            </p>
-
-            <p>
-              In the early days, it was just two laptops and a strong focus on finding better
-              ways to connect businesses with the right people. Our first clients trusted us
-              when we had very little, and we delivered. With every project, we refined our
-              process, improved our research and built systems that actually work.
-            </p>
-
-            <motion.blockquote
-              className="border-l-4 border-emerald-500 pl-6 py-4 my-6 bg-emerald-500/5 rounded-r-xl"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
+            <blockquote className="border-l-4 border-emerald-500 pl-6 py-4 my-6 bg-emerald-500/5 rounded-r-xl">
               <p className="italic text-white/85 text-lg md:text-xl">
-                &ldquo;During this journey, I realized many businesses want to grow but struggle
-                because they don&apos;t have the right data, prospects, or strategy.
-                That&apos;s when I decided to build something better.&rdquo;
+                &ldquo;During this journey, I realized many businesses want to grow but struggle because they don&apos;t have the right data, prospects, or strategy. That&apos;s when I decided to build something better.&rdquo;
               </p>
-            </motion.blockquote>
+            </blockquote>
 
-            {showFull && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.5 }}
-                className="space-y-5"
-              >
-                <p>
-                  By 2022, as businesses started scaling again after COVID, the demand for
-                  structured B2B pipelines increased rapidly. We grew with that demand by
-                  building a team of specialists focused on data accuracy, personalization
-                  and performance.
-                </p>
-                <p>
-                  Today, Remarketix operates from India, supporting clients across the UK,
-                  USA, Canada, India, Asia, Europe and South America.
-                </p>
-                <p>
-                  Each client taught us something new. Each campaign showed us what works
-                  and what doesn&apos;t. Over time, we built a team of specialists who shared
-                  the same vision: to help businesses grow through data, design, and execution.
-                </p>
-              </motion.div>
-            )}
+            {/* CSS height transition — no framer height animation */}
+            <div className={`overflow-hidden transition-all duration-500 ease-out space-y-5 ${showFull ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
+              <p>By 2022, as businesses started scaling again after COVID, the demand for structured B2B pipelines increased rapidly.</p>
+              <p>Today, Remarketix operates from India, supporting clients across the UK, USA, Canada, India, Asia, Europe and South America.</p>
+              <p>Each client taught us something new. Over time, we built a team of specialists who shared the same vision: to help businesses grow through data, design, and execution.</p>
+            </div>
 
             <button
               onClick={() => setShowFull((v) => !v)}
               className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors mt-6 touch-manipulation"
             >
               {showFull ? "Show Less" : "Read Full Story"}
-              <ChevronDown className={`w-4 h-4 transition-transform ${showFull ? "rotate-180" : ""}`} />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showFull ? "rotate-180" : ""}`} />
             </button>
 
             <div className="pt-6 border-t border-white/10 mt-8">
@@ -377,10 +270,10 @@ function FounderStory({ isMobile }: { isMobile: boolean }) {
   );
 }
 
-/* ─── Main Component ────────────────────────────────────────────────────────── */
+// ─── Main Component ───────────────────────────────────────────────────────────
 export default function AboutView() {
-  const setView = useAppStore((s) => s.setView);
-  const prefersReducedMotion = useReducedMotion();
+  const setView    = useAppStore((s) => s.setView);
+  const prefersRM  = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -390,44 +283,32 @@ export default function AboutView() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  const noAnim = prefersRM || isMobile;
+
   return (
     <div className="flex flex-col min-h-screen text-white">
-      {/* Animated Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {!prefersReducedMotion && !isMobile && (
+
+      {/* Background — static on mobile, two blobs on desktop only */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        {!noAnim && (
           <>
-            <motion.div
-              className="absolute top-0 left-1/4 w-[500px] h-[500px]"
+            {/* Blobs use transform only (compositor-safe), no filter animation */}
+            <div
+              className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full"
               style={{
-                background: "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(16,185,129,0.12),transparent 70%)",
+                background: "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(16,185,129,0.1),transparent 70%)",
                 filter: "blur(100px)",
-              }}
-              animate={{
-                x: [0, 50, 0],
-                y: [0, 30, 0],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: "easeInOut",
+                willChange: "transform",
+                animation: "blob-drift-1 20s ease-in-out infinite",
               }}
             />
-            <motion.div
-              className="absolute bottom-0 right-1/4 w-[400px] h-[400px]"
+            <div
+              className="absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full"
               style={{
-                background: "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(59,130,246,0.1),transparent 70%)",
+                background: "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(59,130,246,0.09),transparent 70%)",
                 filter: "blur(100px)",
-              }}
-              animate={{
-                x: [0, -40, 0],
-                y: [0, -40, 0],
-                scale: [1, 1.15, 1],
-              }}
-              transition={{
-                duration: 25,
-                repeat: Infinity,
-                ease: "easeInOut",
+                willChange: "transform",
+                animation: "blob-drift-2 25s ease-in-out infinite",
               }}
             />
           </>
@@ -435,10 +316,30 @@ export default function AboutView() {
         <div className="absolute inset-0 bg-grid-dense opacity-[0.015]" />
       </div>
 
+      {/* CSS keyframes injected once */}
+      <style>{`
+        @keyframes blob-drift-1 {
+          0%,100% { transform: translate(0,0) scale(1); }
+          50%      { transform: translate(40px,25px) scale(1.08); }
+        }
+        @keyframes blob-drift-2 {
+          0%,100% { transform: translate(0,0) scale(1); }
+          50%      { transform: translate(-35px,-35px) scale(1.12); }
+        }
+        @keyframes pulse-gentle {
+          0%,100% { transform: scale(1); }
+          50%      { transform: scale(1.08); }
+        }
+      `}</style>
+
       {/* ── Hero ── */}
       <section className="relative section-spacing pt-16 md:pt-24">
         <div className="container-custom relative z-10 text-center px-4">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
             <div className="badge-glow mx-auto mb-6 w-fit">
               <Sparkles className="w-4 h-4" />
               About Remarketix
@@ -453,17 +354,21 @@ export default function AboutView() {
             </p>
           </motion.div>
 
-          {/* Quick stats */}
+          {/* Stats grid — stagger via CSS delay, not JS */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 md:mt-14 max-w-3xl mx-auto">
             {[
-              { icon: Target,    v: "500+", l: "Projects Delivered" },
-              { icon: Users,     v: "100+", l: "Active Clients" },
-              { icon: Globe,     v: "12",   l: "Countries" },
-              { icon: Award,     v: "99%",  l: "Success Rate" },
+              { icon: Target, v: "500+", l: "Projects Delivered" },
+              { icon: Users,  v: "100+", l: "Active Clients"     },
+              { icon: Globe,  v: "12",   l: "Countries"           },
+              { icon: Award,  v: "99%",  l: "Success Rate"        },
             ].map((s, i) => (
-              <motion.div key={s.l} className="stat-card-premium"
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + i * 0.08 }}>
+              <motion.div
+                key={s.l}
+                className="stat-card-premium"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 + i * 0.07, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <s.icon className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
                 <div className="stat-value text-xl md:text-2xl mb-0.5">{s.v}</div>
                 <div className="stat-label text-xs">{s.l}</div>
@@ -473,17 +378,11 @@ export default function AboutView() {
         </div>
       </section>
 
-      {/* ── Mission Statement ── */}
+      {/* ── Mission ── */}
       <section className="section-spacing">
         <div className="container-custom px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-            {/* Text */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <motion.div {...FADE_UP}>
               <div className="badge mb-5">
                 <Zap className="w-4 h-4" />
                 Our Mission
@@ -498,26 +397,22 @@ export default function AboutView() {
               <p className="text-base text-white/65 leading-relaxed mb-8">
                 From ICP-aligned data and powerful websites to product advertising and social outreach, we deliver a complete growth system that drives real business results.
               </p>
-              <motion.button
+              <button
                 onClick={() => setView("services")}
                 className="btn-secondary-premium group"
-                whileHover={!isMobile ? { scale: 1.05 } : {}}
-                whileTap={{ scale: 0.98 }}
               >
                 Explore Our Services
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
+              </button>
             </motion.div>
 
-            {/* Image */}
+            {/* Image — no motion wrapper, just CSS */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              {...FADE_UP}
+              transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="relative"
             >
-              <div className="absolute -inset-6 bg-gradient-to-r from-emerald-500/20 via-cyan-500/15 to-blue-500/20 blur-3xl rounded-3xl" />
+              <div className="absolute -inset-6 bg-gradient-to-r from-emerald-500/15 via-cyan-500/10 to-blue-500/15 blur-3xl rounded-3xl pointer-events-none" />
               <div className="relative rounded-2xl overflow-hidden border border-white/10">
                 <Image
                   src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80"
@@ -527,7 +422,7 @@ export default function AboutView() {
                   className="w-full h-auto object-cover"
                   unoptimized
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1a] via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
           </div>
@@ -537,13 +432,7 @@ export default function AboutView() {
       {/* ── Core Values ── */}
       <section className="section-spacing bg-white/[0.01]">
         <div className="container-custom px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-10 md:mb-14"
-          >
+          <motion.div {...FADE_UP} className="text-center mb-10 md:mb-14">
             <h2 className="heading-xl text-white mb-3">
               Core <span className="gradient-text-enhanced">Values</span>
             </h2>
@@ -555,52 +444,45 @@ export default function AboutView() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {values.map((value, i) => (
-              <ValueCard key={value.title} value={value} isMobile={isMobile} index={i} />
+              <ValueCard key={value.title} value={value} index={i} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Founder Story (Updated) ── */}
-      <FounderStory isMobile={isMobile} />
+      {/* ── Founder Story ── */}
+      <FounderStory />
 
       {/* ── Timeline ── */}
       <section className="section-spacing bg-white/[0.01]">
         <div className="container-custom px-4 max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10 md:mb-14"
-          >
+          <motion.div {...FADE_UP} className="text-center mb-10 md:mb-14">
             <h2 className="heading-xl text-white mb-3">Our Journey</h2>
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
           </motion.div>
 
           <div className="relative">
             {/* Vertical line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-500/50 via-cyan-500/50 to-blue-500/50" />
+            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-500/40 via-cyan-500/40 to-blue-500/40" />
 
             <div className="space-y-8 md:space-y-12">
-              {milestones.map((milestone, i) => (
+              {milestones.map((m, i) => (
                 <motion.div
-                  key={milestone.year}
-                  initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.5 }}
+                  key={m.year}
+                  {...FADE_UP}
+                  transition={{ duration: 0.45, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   className={`relative flex items-center ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
                 >
-                  {/* Year badge */}
+                  {/* Year bubble */}
                   <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border-4 border-[#0a0f1a] flex items-center justify-center z-10">
-                    <span className="text-sm font-black text-emerald-400">{milestone.year}</span>
+                    <span className="text-sm font-black text-emerald-400">{m.year}</span>
                   </div>
 
                   {/* Content */}
                   <div className={`flex-1 pl-24 md:pl-0 ${i % 2 === 0 ? "md:pr-12" : "md:pl-12"}`}>
                     <div className="feature-card-premium p-5 md:p-6">
-                      <h3 className="text-lg md:text-xl font-bold text-white mb-2">{milestone.title}</h3>
-                      <p className="text-sm md:text-base text-white/65">{milestone.desc}</p>
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-2">{m.title}</h3>
+                      <p className="text-sm md:text-base text-white/65">{m.desc}</p>
                     </div>
                   </div>
 
@@ -615,12 +497,7 @@ export default function AboutView() {
       {/* ── Team ── */}
       <section className="section-spacing">
         <div className="container-custom px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10 md:mb-14"
-          >
+          <motion.div {...FADE_UP} className="text-center mb-10 md:mb-14">
             <h2 className="heading-xl text-white mb-3">Meet the Team</h2>
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto mb-4" />
             <p className="text-body-lg text-white/60 max-w-2xl mx-auto">
@@ -628,19 +505,22 @@ export default function AboutView() {
             </p>
           </motion.div>
 
-          {/* Desktop: Grid */}
+          {/* Desktop grid */}
           <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {team.map((member, i) => (
-              <TeamMemberCard key={member.name} member={member} isMobile={isMobile} index={i} />
+              <TeamMemberCard key={member.name} member={member} index={i} />
             ))}
           </div>
 
-          {/* Mobile: Swipe carousel */}
+          {/* Mobile: native scroll — no JS carousel */}
           <div className="md:hidden">
-            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 scrollbar-hide">
+            <div
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4"
+              style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+            >
               {team.map((member, i) => (
-                <div key={member.name} className="flex-shrink-0 snap-start" style={{ width: "min(85vw, 320px)" }}>
-                  <TeamMemberCard member={member} isMobile={isMobile} index={i} />
+                <div key={member.name} className="flex-shrink-0 snap-start" style={{ width: "min(85vw, 300px)" }}>
+                  <TeamMemberCard member={member} index={i} />
                 </div>
               ))}
             </div>
@@ -652,19 +532,17 @@ export default function AboutView() {
       <section className="section-spacing-sm">
         <div className="container-custom px-4">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            {...FADE_UP}
             className="card-glass-premium max-w-4xl mx-auto text-center p-8 md:p-12 lg:p-16"
           >
-            <motion.div
+            {/* Pulse via CSS — no framer loop */}
+            <div
               className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center"
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              style={{ animation: "pulse-gentle 2.5s ease-in-out infinite" }}
             >
               <Heart className="w-8 h-8 md:w-10 md:h-10 text-emerald-400 fill-emerald-400" />
-            </motion.div>
+            </div>
+
             <h2 className="heading-xl mb-5">
               <span className="text-white">One partner.</span>
               <span className="block gradient-text-enhanced mt-2">Endless growth.</span>
@@ -672,16 +550,14 @@ export default function AboutView() {
             <p className="text-body-lg max-w-2xl mx-auto mb-8 text-white/75">
               The complete growth system behind modern B2B brands. Let&apos;s build yours.
             </p>
-            <motion.button
+            <button
               onClick={() => setView("contact")}
               className="btn-cta-premium group w-full sm:w-auto"
-              whileHover={!isMobile ? { scale: 1.05, y: -2 } : {}}
-              whileTap={{ scale: 0.98 }}
             >
               <Sparkles className="w-5 h-5" />
               Start Growing Today
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+            </button>
           </motion.div>
         </div>
       </section>
