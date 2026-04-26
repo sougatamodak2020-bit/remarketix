@@ -37,7 +37,7 @@ const sectors = [
   { icon: "🍽️", label: "Hospitality",      color: "amber"   },
 ];
 
-// Sector color accent map — pre-built to avoid dynamic Tailwind class generation
+// Sector color accent map
 const sectorAccent: Record<string, string> = {
   emerald: "group-hover:text-emerald-400",
   blue:    "group-hover:text-blue-400",
@@ -49,7 +49,7 @@ const sectorAccent: Record<string, string> = {
   amber:   "group-hover:text-amber-400",
 };
 
-// ─── Testimonial Card — pure HTML/CSS, zero framer ───────────────────────────
+// ─── Testimonial Card ─────────────────────────────────────────────────────────
 function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
   return (
     <div
@@ -58,13 +58,11 @@ function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
                  group transition-transform duration-300 ease-out
                  hover:-translate-y-1.5 will-change-transform"
     >
-      {/* Hover glow — CSS only, no JS */}
       <div className={`absolute -inset-1 bg-gradient-to-r from-${t.color}-500/15
                        to-transparent rounded-3xl opacity-0 group-hover:opacity-100
                        transition-opacity duration-400 pointer-events-none`} />
 
       <div className="relative z-10 flex flex-col h-full">
-        {/* Stars */}
         <div className="flex gap-1 mb-6">
           {[0,1,2,3,4].map((j) => (
             <Star key={j} className="w-4 h-4 fill-emerald-400 text-emerald-400" />
@@ -86,7 +84,7 @@ function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
   );
 }
 
-// ─── Sector Card — CSS hover only ────────────────────────────────────────────
+// ─── Sector Card ──────────────────────────────────────────────────────────────
 function SectorCard({ sector }: { sector: typeof sectors[0] }) {
   const accent = sectorAccent[sector.color] ?? "group-hover:text-white";
   return (
@@ -96,7 +94,6 @@ function SectorCard({ sector }: { sector: typeof sectors[0] }) {
                  hover:-translate-y-2 will-change-transform"
     >
       <div className="relative z-10">
-        {/* Emoji — CSS scale on group hover */}
         <div className="text-4xl md:text-5xl mb-3 inline-block
                         transition-transform duration-300 ease-out
                         group-hover:scale-110">
@@ -132,7 +129,7 @@ export default function FeedbackView() {
   return (
     <div className="flex flex-col min-h-screen">
 
-      {/* Background blobs — CSS keyframes, no framer, no opacity animation */}
+      {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         {!noAnim && (
           <>
@@ -158,7 +155,6 @@ export default function FeedbackView() {
         )}
       </div>
 
-      {/* CSS keyframes — transform only, compositor-safe */}
       <style>{`
         @keyframes fb-blob-1 {
           0%,100% { transform: translate(0,0) scale(1);      }
@@ -170,8 +166,8 @@ export default function FeedbackView() {
         }
       `}</style>
 
-      {/* ── Hero ── */}
-      <section className="relative section-spacing pt-32">
+      {/* ── Hero — ✅ FIXED: pt-16 md:pt-20 ── */}
+      <section className="relative section-spacing pt-16 md:pt-20">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -188,7 +184,6 @@ export default function FeedbackView() {
               <span className="block gradient-text-enhanced mt-2 md:mt-3">Clients Say</span>
             </h1>
 
-            {/* Static bar — no width animation (avoids layout recalc every frame) */}
             <div className="h-1.5 w-32 mx-auto bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 rounded-full mb-6 md:mb-8" />
 
             <p className="text-body-lg max-w-2xl mx-auto text-white/80 px-4 md:px-0">
@@ -202,7 +197,7 @@ export default function FeedbackView() {
       <section className="section-spacing pt-0">
         <div className="container-custom px-4">
 
-          {/* Mobile: native CSS snap scroll */}
+          {/* Mobile */}
           <div className="md:hidden relative">
             <p className="text-center text-white/40 text-xs mb-4 tracking-wider uppercase">
               Swipe to read more →
@@ -246,7 +241,7 @@ export default function FeedbackView() {
             </div>
           </div>
 
-          {/* Desktop: grid — one reveal per card, no scale animation */}
+          {/* Desktop */}
           <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((t, i) => (
               <motion.div
@@ -266,7 +261,7 @@ export default function FeedbackView() {
       {/* ── Industries ── */}
       <section className="section-spacing bg-white/[0.02]">
         <div className="container-custom px-4">
-          <motion.div {...FADE_UP} className="text-center mb-10 md:mb-16">
+          <motion.div {...FADE_UP} className="text-center mb-6 md:mb-10">
             <div className="badge mx-auto mb-4">
               <Users className="w-4 h-4" />
               Industries We Serve
@@ -275,7 +270,6 @@ export default function FeedbackView() {
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
           </motion.div>
 
-          {/* Grid — single parent fade-up, no per-card stagger animations */}
           <motion.div
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6"
             initial={{ opacity: 0, y: 20 }}
@@ -295,9 +289,8 @@ export default function FeedbackView() {
         <div className="container-custom px-4 md:px-6">
           <motion.div
             {...FADE_UP}
-            className="card-glass-premium max-w-4xl mx-auto text-center p-8 md:p-12 lg:p-16"
+            className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-8"
           >
-            {/* Icon — CSS hover only */}
             <div
               className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 rounded-2xl
                          bg-gradient-to-br from-emerald-500/20 to-cyan-500/20

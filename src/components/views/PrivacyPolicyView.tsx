@@ -133,8 +133,8 @@ export default function PrivacyPolicyView() {
         <div className="absolute inset-0 bg-grid-dense opacity-[0.015]" />
       </div>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-16 md:pt-40 md:pb-20">
+      {/* Hero Section — ✅ FIXED: pt-20 md:pt-24 */}
+      <section className="relative pt-20 md:pt-24 pb-16 md:pb-20">
         <div className="container-custom relative z-10 px-4">
           <motion.button
             onClick={() => setView("home")}

@@ -79,13 +79,14 @@ export default function ContactView() {
           ))}
       </div>
 
-      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-32">
+      {/* ✅ Updated: pt-32 → pt-16 md:pt-20 */}
+      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-16 md:pt-20">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-10 md:mb-16"
+          className="text-center mb-6 md:mb-10"
         >
           <div className="badge-glow mx-auto mb-6 md:mb-8">
             <Sparkles className="w-4 h-4" />
@@ -200,7 +201,7 @@ export default function ContactView() {
           >
             {sent ? (
               <motion.div
-                className="card-glass-premium p-8 md:p-12 text-center"
+                className="card-glass-premium p-5 md:p-7 text-center"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
               >
@@ -227,7 +228,7 @@ export default function ContactView() {
               </motion.div>
             ) : (
               <form
-                className="card-glass-premium p-6 md:p-8 lg:p-10"
+                className="card-glass-premium p-5 md:p-7"
                 onSubmit={(e) => {
                   e.preventDefault();
                   setSent(true);

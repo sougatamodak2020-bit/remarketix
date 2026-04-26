@@ -231,7 +231,7 @@ function FounderStory() {
           <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
         </motion.div>
 
-        <motion.div {...FADE_IN} className="feature-card-premium p-8 md:p-12">
+        <motion.div {...FADE_IN} className="feature-card-premium p-5 md:p-8">
           <div className="space-y-5 text-white/70 leading-relaxed text-base md:text-lg">
             <p>Remarketix was born out of a simple frustration. Businesses were spending too much time chasing leads that never converted.</p>
             <p>What started as a freelance lead generation service by two young professionals from Kolkata quickly grew into something much bigger.</p>
@@ -333,7 +333,7 @@ export default function AboutView() {
       `}</style>
 
       {/* ── Hero ── */}
-      <section className="relative section-spacing pt-16 md:pt-24">
+      <section className="relative section-spacing pt-16 md:pt-20">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -432,7 +432,7 @@ export default function AboutView() {
       {/* ── Core Values ── */}
       <section className="section-spacing bg-white/[0.01]">
         <div className="container-custom px-4">
-          <motion.div {...FADE_UP} className="text-center mb-10 md:mb-14">
+          <motion.div {...FADE_UP} className="text-center mb-6 md:mb-10">
             <h2 className="heading-xl text-white mb-3">
               Core <span className="gradient-text-enhanced">Values</span>
             </h2>
@@ -456,7 +456,7 @@ export default function AboutView() {
       {/* ── Timeline ── */}
       <section className="section-spacing bg-white/[0.01]">
         <div className="container-custom px-4 max-w-4xl">
-          <motion.div {...FADE_UP} className="text-center mb-10 md:mb-14">
+          <motion.div {...FADE_UP} className="text-center mb-6 md:mb-10">
             <h2 className="heading-xl text-white mb-3">Our Journey</h2>
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
           </motion.div>
@@ -497,7 +497,7 @@ export default function AboutView() {
       {/* ── Team ── */}
       <section className="section-spacing">
         <div className="container-custom px-4">
-          <motion.div {...FADE_UP} className="text-center mb-10 md:mb-14">
+          <motion.div {...FADE_UP} className="text-center mb-6 md:mb-10">
             <h2 className="heading-xl text-white mb-3">Meet the Team</h2>
             <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto mb-4" />
             <p className="text-body-lg text-white/60 max-w-2xl mx-auto">
@@ -533,7 +533,7 @@ export default function AboutView() {
         <div className="container-custom px-4">
           <motion.div
             {...FADE_UP}
-            className="card-glass-premium max-w-4xl mx-auto text-center p-8 md:p-12 lg:p-16"
+            className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-8"
           >
             {/* Pulse via CSS — no framer loop */}
             <div

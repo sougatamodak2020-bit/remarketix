@@ -68,7 +68,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     -webkit-text-size-adjust: 100%;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     scroll-padding-top: 80px;
-    /* ✅ Matches sticky header height */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -82,7 +81,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     overflow-x: hidden;
     font-family: var(--font-family-sans);
     position: relative;
-    contain: layout style paint;
   }
 
   body::before {
@@ -296,7 +294,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
 @layer components {
 
   /* ────────────────────────────────────────
-     ✅ TRUE STICKY HEADER (Zero Lag, iOS Optimized)
+     ✅ NAVBAR STYLES (Zero Lag, iOS Optimized)
      ───────────────────────────────────────── */
   .header {
     position: sticky;
@@ -312,129 +310,90 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     background: var(--nav-bg);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 0;
-    padding: 0.5rem;
-    margin: 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .header--scrolled {
     background: var(--nav-bg-scrolled);
-    box-shadow: 0 1px 0 0 rgba(16, 185, 129, 0.15),
-      0 20px 40px -15px rgba(0, 0, 0, 0.6);
+    border-bottom-color: rgba(16, 185, 129, 0.12);
+    box-shadow: 0 4px 24px -8px rgba(0, 0, 0, 0.5);
   }
 
-  .nav-bar-matched {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    border-radius: 1.25rem;
-    background: transparent;
-    border: 1px solid var(--nav-border);
-    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.05), 0 20px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  /* ── Desktop Navigation Dropdown ── */
+  .nav-dropdown-wrapper {
     position: relative;
-    overflow: hidden;
   }
 
-  @media (min-width:768px) {
-    .nav-bar-matched {
-      padding: 0.625rem;
-      border-radius: 1.5rem;
-    }
-  }
-
-  .nav-bar-matched::before {
-    content: "";
+  .nav-dropdown-menu {
     position: absolute;
-    inset: -2px;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
-    background-size: 300% 300%;
-    border-radius: inherit;
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 280px;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    background: rgba(15, 20, 31, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.6), 
+                0 0 0 1px rgba(16, 185, 129, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
     opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: -1;
-    animation: gradient-shift 8s ease infinite;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    z-index: 100;
   }
 
-  .nav-bar-matched:hover::before {
-    opacity: 0.3;
+  .nav-dropdown-wrapper:hover .nav-dropdown-menu,
+  .nav-dropdown-wrapper:focus-within .nav-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
   }
 
-  .nav-bar-matched.scrolled {
-    border-color: var(--nav-border-scrolled);
-    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1), 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 60px -15px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  .nav-dropdown-chevron {
+    transition: transform 0.2s ease;
   }
 
-  .nav-item-matched {
-    position: relative;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 10px !important;
-    padding: 0.625rem 0.875rem;
-    border-radius: 0.875rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    cursor: pointer;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    line-height: 1 !important;
+  .nav-dropdown-wrapper:hover .nav-dropdown-chevron {
+    transform: rotate(180deg);
   }
 
-  .nav-item-matched:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.04);
-  }
-
-  .nav-item-matched.active {
-    color: white;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08));
-    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.2), 0 8px 24px -8px rgba(16, 185, 129, 0.3);
-  }
-
-  .nav-item-mobile {
-    position: relative;
+  .nav-dropdown-item {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 0.875rem;
-    padding: 0.875rem 1rem;
-    border-radius: 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    cursor: pointer;
-    letter-spacing: 0.01em;
+    gap: 0.75rem;
     width: 100%;
-    line-height: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
   }
 
-  .nav-item-mobile:hover {
+  .nav-dropdown-item:hover {
     color: var(--text-primary);
     background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.08);
-    transform: translateX(4px);
   }
 
-  .nav-item-mobile:active {
-    background: rgba(255, 255, 255, 0.08);
-    transform: scale(0.98) translateX(4px);
+  .dropdown-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.6);
+    flex-shrink: 0;
   }
 
-  .nav-item-mobile.active {
-    color: white;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.1));
-    border-color: rgba(16, 185, 129, 0.25);
-    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.2), 0 8px 24px -8px rgba(16, 185, 129, 0.25);
-  }
-
-  /* [Rest of your original component styles remain untouched for performance & design consistency] */
+  /* ── CONTAINER & SPACING ── */
   .container-custom {
     width: 100%;
     max-width: 1400px;
@@ -467,39 +426,57 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   }
 
   .section-spacing {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
   }
 
   .section-spacing-sm {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    padding-top: 1.75rem;
+    padding-bottom: 1.75rem;
   }
 
   @media (min-width: 768px) {
     .section-spacing {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
+      padding-top: 4rem;
+      padding-bottom: 4rem;
     }
 
     .section-spacing-sm {
-      padding-top: 4rem;
-      padding-bottom: 4rem;
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .section-spacing {
-      padding-top: 8rem;
-      padding-bottom: 8rem;
+      padding-top: 5rem;
+      padding-bottom: 5rem;
     }
 
     .section-spacing-sm {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
     }
   }
 
+  /* ✅ FIXED: Optimized hero section spacing */
+  .hero-section-pt {
+    padding-top: 5.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero-section-pt {
+      padding-top: 6.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-section-pt {
+      padding-top: 7rem;
+    }
+  }
+
+  /* ── TYPOGRAPHY ── */
   .heading-display {
     font-size: clamp(1.75rem, 8vw, 5rem);
     font-weight: 700;
@@ -551,6 +528,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     line-height: 1.6;
   }
 
+  /* ── GRADIENT TEXT ── */
   .gradient-text {
     background-clip: text;
     -webkit-background-clip: text;
@@ -584,6 +562,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     isolation: isolate;
   }
 
+  /* ── BADGES ── */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -611,6 +590,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
   }
 
+  /* ── CARDS ── */
   .card {
     position: relative;
     border-radius: 1rem;
@@ -672,6 +652,105 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     transform: translateY(-4px);
   }
 
+  .card-glass-premium {
+    position: relative;
+    border-radius: 1.125rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  @media (min-width:768px) {
+    .card-glass-premium {
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 1.75rem;
+      border-radius: 1.25rem;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%);
+    }
+  }
+
+  .feature-card-premium {
+    position: relative;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .feature-card-premium:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.4);
+  }
+
+  .service-card {
+    position: relative;
+    padding: 1rem;
+    border-radius: 0.875rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    overflow: hidden;
+  }
+
+  .service-card:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-3px);
+  }
+
+  .pricing-card {
+    position: relative;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    overflow: hidden;
+  }
+
+  .pricing-card-featured {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05));
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 60px -20px rgba(16, 185, 129, 0.3);
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-6px);
+  }
+
+  .testimonial-card {
+    position: relative;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+    overflow: hidden;
+  }
+
+  .testimonial-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+  }
+
+  .stat-card-premium {
+    position: relative;
+    padding: 0.875rem 1rem;
+    border-radius: 0.875rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .stat-card-premium:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+  }
+
+  /* ── STATS ── */
   .stat-value {
     font-size: clamp(1.75rem, 8vw, 2.5rem);
     font-weight: 800;
@@ -690,6 +769,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     text-transform: uppercase;
   }
 
+  /* ── INPUTS ── */
   .input {
     padding: 0.875rem 1.25rem;
     background: rgba(255, 255, 255, 0.04);
@@ -715,21 +795,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
   }
 
-  .testimonial-card {
-    position: relative;
-    padding: 1.5rem;
-    border-radius: 1.25rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: border-color 0.25s ease, transform 0.25s ease;
-    overflow: hidden;
-  }
-
-  .testimonial-card:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-4px);
-  }
-
+  /* ── BUTTONS ── */
   .btn-primary-premium {
     position: relative;
     display: inline-flex;
@@ -838,54 +904,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     transform: translateY(0) translateZ(0);
   }
 
-  .stat-card-premium {
-    position: relative;
-    padding: 1.5rem;
-    border-radius: 1.25rem;
-    text-align: center;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: border-color 0.25s ease, transform 0.25s ease;
-  }
-
-  .stat-card-premium:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-4px);
-  }
-
-  .card-glass-premium {
-    position: relative;
-    border-radius: 1.5rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  @media (min-width:768px) {
-    .card-glass-premium {
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      padding: 3rem;
-      border-radius: 2rem;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%);
-    }
-  }
-
-  .feature-card-premium {
-    position: relative;
-    padding: 1.75rem;
-    border-radius: 1.5rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-  }
-
-  .feature-card-premium:hover {
-    border-color: rgba(255, 255, 255, 0.14);
-    box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.4);
-  }
-
+  /* ── ICONS ── */
   .icon-container-premium {
     position: relative;
     width: 4rem;
@@ -906,6 +925,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     }
   }
 
+  /* ── BACKGROUNDS ── */
   .surface-elevated {
     background: linear-gradient(135deg, rgba(26, 35, 50, 0.9) 0%, rgba(21, 27, 38, 0.9) 100%);
     backdrop-filter: blur(20px);
@@ -940,41 +960,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     background-size: 40px 40px;
   }
 
-  .service-card {
-    position: relative;
-    padding: 1.5rem;
-    border-radius: 1.25rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    transition: border-color 0.25s ease, transform 0.25s ease;
-    overflow: hidden;
-  }
-
-  .service-card:hover {
-    border-color: rgba(255, 255, 255, 0.14);
-    transform: translateY(-4px);
-  }
-
-  .pricing-card {
-    position: relative;
-    padding: 2rem;
-    border-radius: 1.5rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: border-color 0.25s ease, transform 0.25s ease;
-    overflow: hidden;
-  }
-
-  .pricing-card-featured {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05));
-    border-color: rgba(16, 185, 129, 0.3);
-    box-shadow: 0 0 60px -20px rgba(16, 185, 129, 0.3);
-  }
-
-  .pricing-card:hover {
-    transform: translateY(-6px);
-  }
-
+  /* ── UTILITIES ── */
   .animate-slide-down-mobile {
     animation: slideDownMobile 0.2s ease-out forwards;
   }
@@ -982,123 +968,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   .divider-glow {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.3), transparent);
-  }
-
-  @media (max-width:767px) {
-    body::before {
-      opacity: 0.5;
-      will-change: auto;
-    }
-
-    .badge,
-    .badge-glow,
-    .card-glass,
-    .card-glass-premium,
-    .feature-card-premium,
-    .testimonial-card {
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    .nav-bar-matched {
-      backdrop-filter: blur(12px) !important;
-      -webkit-backdrop-filter: blur(12px) !important;
-    }
-
-    .nav-bar-matched::before {
-      animation: none !important;
-    }
-
-    .bg-blob-animated {
-      animation: none !important;
-      will-change: auto !important;
-    }
-
-    .section-spacing {
-      padding-top: 3rem;
-      padding-bottom: 3rem;
-    }
-
-    .section-spacing-sm {
-      padding-top: 2rem;
-      padding-bottom: 2rem;
-    }
-
-    .card-glass-premium {
-      padding: 1.25rem;
-    }
-
-    .stat-card-premium {
-      padding: 1rem;
-    }
-
-    .feature-card-premium {
-      padding: 1.25rem;
-    }
-
-    .service-card {
-      padding: 1.25rem;
-    }
-
-    .pricing-card {
-      padding: 1.5rem;
-    }
-
-    .btn-primary-premium,
-    .btn-secondary-premium {
-      padding: 0.875rem 1.5rem;
-      font-size: 0.9375rem;
-      min-height: 44px;
-    }
-
-    .btn-cta-premium {
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      min-height: 48px;
-    }
-
-    .stat-value {
-      font-size: 1.5rem !important;
-    }
-
-    .heading-display {
-      font-size: clamp(1.5rem, 9vw, 3.5rem);
-    }
-
-    .heading-xl {
-      font-size: clamp(1.25rem, 7vw, 2rem);
-    }
-
-    .nav-bar-matched {
-      padding: 0.25rem;
-      border-radius: 0.875rem;
-    }
-
-    .nav-item-matched {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.75rem;
-      min-height: 36px;
-    }
-
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-  @media (max-width:480px) {
-    .container-custom {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
-
-    .nav-bar-matched {
-      padding: 0.25rem;
-    }
   }
 
   .swipe-row {
@@ -1185,6 +1054,106 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     contain-intrinsic-size: 0 500px;
   }
 
+  /* ── MOBILE OPTIMIZATIONS ── */
+  @media (max-width:767px) {
+    body::before {
+      opacity: 0.5;
+      will-change: auto;
+    }
+
+    .badge,
+    .badge-glow,
+    .card-glass,
+    .card-glass-premium,
+    .feature-card-premium,
+    .testimonial-card {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    .nav-dropdown-menu {
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+    }
+
+    .bg-blob-animated {
+      animation: none !important;
+      will-change: auto !important;
+    }
+
+    .section-spacing {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+
+    .section-spacing-sm {
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .card-glass-premium {
+      padding: 1.25rem;
+    }
+
+    .stat-card-premium {
+      padding: 1rem;
+    }
+
+    .feature-card-premium {
+      padding: 1.25rem;
+    }
+
+    .service-card {
+      padding: 1.25rem;
+    }
+
+    .pricing-card {
+      padding: 1.5rem;
+    }
+
+    .btn-primary-premium,
+    .btn-secondary-premium {
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9375rem;
+      min-height: 44px;
+    }
+
+    .btn-cta-premium {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      min-height: 48px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem !important;
+    }
+
+    .heading-display {
+      font-size: clamp(1.5rem, 9vw, 3.5rem);
+    }
+
+    .heading-xl {
+      font-size: clamp(1.25rem, 7vw, 2rem);
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  @media (max-width:480px) {
+    .container-custom {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  }
+
+  /* ── ACCESSIBILITY ── */
   @media (prefers-reduced-motion: reduce) {
 
     *,
@@ -1197,10 +1166,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     }
 
     body::before {
-      animation: none !important;
-    }
-
-    .nav-bar-matched::before {
       animation: none !important;
     }
 

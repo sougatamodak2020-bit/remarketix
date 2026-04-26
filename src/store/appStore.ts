@@ -32,7 +32,14 @@ export const useAppStore = create<AppState>((set) => ({
   user: null,
   userRole: null,
   currency: "USD",
-  setView: (activeView) => set({ activeView }),
+  setView: (activeView) => {
+    set({ activeView });
+    // Push a history entry on every view change so the browser back button
+    // has something to intercept instead of leaving the site entirely.
+    if (typeof window !== "undefined") {
+      window.history.pushState({ view: activeView }, "", window.location.pathname);
+    }
+  },
   setUser: (user) => set({ user }),
   setUserRole: (userRole) => set({ userRole }),
   setCurrency: (currency) => set({ currency }),

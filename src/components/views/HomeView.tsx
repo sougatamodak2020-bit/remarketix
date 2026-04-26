@@ -107,7 +107,7 @@ function SwipeCarousel({
 function AnimatedNumber({
   value,
   suffix = "",
-  duration = 2000,
+  duration = 1800,
 }: {
   value: number;
   suffix?: string;
@@ -118,16 +118,17 @@ function AnimatedNumber({
   const inView = useInView(ref, { once: true });
   useEffect(() => {
     if (!inView) return;
-    let start = 0;
-    const step = value / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= value) {
-        setDisplay(value);
-        clearInterval(timer);
-      } else setDisplay(Math.floor(start));
-    }, 16);
-    return () => clearInterval(timer);
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutExpo
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setDisplay(Math.floor(eased * value));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    const raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
   }, [inView, value, duration]);
   return <span ref={ref}>{display}{suffix}</span>;
 }
@@ -272,7 +273,6 @@ export default function HomeView() {
     []
   );
 
-  // FIX #12: Removed background numbers from "Why Us" section
   const whyUs = useMemo(
     () => [
       {
@@ -373,7 +373,6 @@ export default function HomeView() {
     []
   );
 
-  // FIX #17: Mondol Garden City removed. FIX #16: Text removed from display logic.
   const clients = useMemo(
     () => [
       {
@@ -421,7 +420,6 @@ export default function HomeView() {
     []
   );
 
-  // FIX #15: Replaced images with new relevant ones
   const work = useMemo(
     () => [
       {
@@ -463,11 +461,12 @@ export default function HomeView() {
   return (
     <div className="relative min-h-screen">
       {/* ══════════════════════════════════════════════════════════════════════
-          HERO
+          HERO - ✅ FIXED: Reduced top padding
           ══════════════════════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24"
+        style={{ transform: "translateZ(0)" }}
       >
         {/* BG */}
         <div className="absolute inset-0 pointer-events-none">
@@ -500,15 +499,13 @@ export default function HomeView() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 container-custom pt-24 md:pt-32 pb-16 px-4">
+        <div className="relative z-10 container-custom pt-4 md:pt-8 pb-16 px-4">
           <motion.div
             variants={staggerContainer}
             initial="initial"
             animate="animate"
             className="flex flex-col items-center text-center max-w-6xl mx-auto"
           >
-            {/* FIX #4: Reduced heading size via class/inline */}
-            {/* FIX #5: Moved Heading ABOVE Badge */}
             <motion.h1
               variants={fadeInUp}
               className="heading-display mb-6 md:mb-8 text-4xl md:text-6xl lg:text-7xl relative"
@@ -554,7 +551,6 @@ export default function HomeView() {
               </motion.span>
             </motion.h1>
 
-            {/* FIX #5: Badge moved below heading */}
             <motion.div
               variants={fadeInUp}
               className="relative mb-8 md:mb-10 flex justify-center"
@@ -567,7 +563,6 @@ export default function HomeView() {
               </div>
             </motion.div>
 
-            {/* Subtitle */}
             <motion.p
               variants={fadeInUp}
               className="text-base md:text-xl lg:text-2xl max-w-3xl mb-6 md:mb-8 text-white/80 leading-relaxed px-4"
@@ -589,7 +584,6 @@ export default function HomeView() {
               .
             </motion.p>
 
-            {/* Trust line */}
             <motion.p
               variants={fadeInUp}
               className="text-sm md:text-base text-white/50 mb-10 md:mb-12 italic"
@@ -598,7 +592,6 @@ export default function HomeView() {
               Consulting industries.
             </motion.p>
 
-            {/* CTAs */}
             <motion.div
               variants={fadeInUp}
               className="flex flex-col sm:flex-row gap-4 mb-14 md:mb-16 w-full sm:w-auto px-4"
@@ -624,7 +617,6 @@ export default function HomeView() {
               </motion.button>
             </motion.div>
 
-            {/* Trust badges */}
             <motion.div
               variants={fadeInUp}
               className="flex flex-wrap items-center justify-center gap-4 mb-16 md:mb-20 px-4"
@@ -650,7 +642,6 @@ export default function HomeView() {
               ))}
             </motion.div>
 
-            {/* Stats */}
             <motion.div variants={fadeInUp} className="w-full max-w-5xl px-4">
               {isMobile ? (
                 <SwipeCarousel>
@@ -680,7 +671,7 @@ export default function HomeView() {
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.9 + i * 0.1 }}
-                      whileHover={{ y: -8, scale: 1.05 }}
+                      whileHover={{ y: -5 }}
                     >
                       <div
                         className={`w-12 h-12 mx-auto mb-4 rounded-xl bg-${stat.color}-500/10 border border-${stat.color}-500/20 flex items-center justify-center`}
@@ -698,14 +689,11 @@ export default function HomeView() {
             </motion.div>
           </motion.div>
         </div>
-
-        {/* FIX #3: Scroll indicator removed completely */}
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
           WHAT WE DO
           ══════════════════════════════════════════════════════════════════════ */}
-      {/* FIX #6: Reduced top spacing, increased heading size, single-line subheading */}
       <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="container-custom relative z-10 px-4">
           <motion.div
@@ -769,7 +757,6 @@ export default function HomeView() {
                       {item.desc}
                     </p>
                   </div>
-                  {/* FIX #7: Make arrow clickable to Services page */}
                   <div
                     className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                     onClick={() => setView("services")}
@@ -826,7 +813,6 @@ export default function HomeView() {
                       <p className="text-white/75 text-sm leading-relaxed border-t border-white/10 pt-4">
                         {item.desc}
                       </p>
-                      {/* FIX #7: Arrow visible on hover, clickable */}
                       <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <ArrowRight className="w-5 h-5 text-emerald-400" />
                       </div>
@@ -842,7 +828,6 @@ export default function HomeView() {
       {/* ══════════════════════════════════════════════════════════════════════
           INDUSTRIES WE SERVE
           ══════════════════════════════════════════════════════════════════════ */}
-      {/* FIX #8: Reduced top gap, FIX #9: Fix cut-off letters */}
       <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div
@@ -875,7 +860,6 @@ export default function HomeView() {
               <Building2 className="w-4 h-4" />
               Industries We Serve
             </div>
-            {/* FIX #9: Added leading-tight to prevent cut-off */}
             <h2 className="heading-xl mb-2 text-3xl md:text-5xl lg:text-6xl leading-tight">
               <span className="text-white">Built for</span>
               <span className="gradient-text-enhanced block mt-2">
@@ -898,7 +882,6 @@ export default function HomeView() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: i * 0.05, duration: 0.4 }}
               >
-                {/* FIX #11: Removed boxes/borders, transparent background */}
                 <motion.div
                   className="relative flex flex-col items-center gap-2 md:gap-3 p-2 md:p-4 rounded-xl md:rounded-2xl cursor-default transition-all duration-300 bg-transparent border-0 hover:bg-white/5"
                   whileHover={!isMobile ? { y: -4, scale: 1.04 } : {}}
@@ -920,7 +903,6 @@ export default function HomeView() {
       {/* ══════════════════════════════════════════════════════════════════════
           WHY CHOOSE US
           ══════════════════════════════════════════════════════════════════════ */}
-      {/* FIX #10: Reduced top gap */}
       <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div
@@ -990,14 +972,13 @@ export default function HomeView() {
               >
                 <motion.div
                   className="feature-card-premium h-full"
-                  whileHover={!isMobile ? { y: -10, scale: 1.02 } : {}}
+                  whileHover={!isMobile ? { y: -6 } : {}}
                   transition={{ duration: 0.35 }}
                 >
                   <div
                     className={`absolute -inset-px bg-gradient-to-br from-${adv.color}-500/15 to-transparent rounded-[1.6rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
                   />
                   <div className="relative z-10">
-                    {/* FIX #12: Removed background number "01", "02" */}
                     <motion.div
                       className={`icon-container-premium bg-${adv.color}-500/10 border-${adv.color}-500/20 mb-6 md:mb-8`}
                       whileHover={!isMobile ? { rotate: 360, scale: 1.15 } : {}}
@@ -1032,7 +1013,6 @@ export default function HomeView() {
       {/* ══════════════════════════════════════════════════════════════════════
           OUR IMPACT
           ══════════════════════════════════════════════════════════════════════ */}
-      {/* FIX #13: Reduced top gap */}
       <section className="section-spacing pt-2 md:pt-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           {!isMobile && (
@@ -1047,7 +1027,6 @@ export default function HomeView() {
           )}
         </div>
         <div className="container-custom relative z-10 px-4">
-          {/* FIX #14: Center aligned heading */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1146,7 +1125,6 @@ export default function HomeView() {
           />
         </div>
         <div className="container-custom relative z-10 px-4">
-          {/* FIX #14: Center aligned heading */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1167,7 +1145,6 @@ export default function HomeView() {
             </p>
           </motion.div>
 
-          {/* Desktop: horizontal timeline */}
           <div className="hidden md:flex items-start gap-0 relative">
             <div className="absolute top-8 left-[8%] right-[8%] h-px bg-gradient-to-r from-emerald-500/30 via-cyan-500/30 to-violet-500/30" />
             {process.map((step, i) => (
@@ -1200,7 +1177,6 @@ export default function HomeView() {
             ))}
           </div>
 
-          {/* Mobile: vertical list */}
           <div className="md:hidden space-y-4">
             {process.map((step, i) => (
               <motion.div
@@ -1244,7 +1220,6 @@ export default function HomeView() {
           />
         </div>
         <div className="container-custom relative z-10 px-4">
-          {/* FIX #14: Center aligned heading */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1317,7 +1292,6 @@ export default function HomeView() {
           ══════════════════════════════════════════════════════════════════════ */}
       <section className="section-spacing relative overflow-hidden">
         <div className="container-custom relative z-10 px-4">
-          {/* FIX #14: Center aligned heading */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1453,7 +1427,6 @@ export default function HomeView() {
           )}
         </div>
         <div className="container-custom relative z-10 px-4">
-          {/* Section heading */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1476,7 +1449,6 @@ export default function HomeView() {
             </p>
           </motion.div>
 
-          {/* Our Clientele - Logos */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1502,7 +1474,6 @@ export default function HomeView() {
                     transition={{ delay: i * 0.08 }}
                     whileHover={!isMobile ? { scale: 1.03 } : {}}
                   >
-                    {/* FIX #16: Logo mark only - removed company name and URL text */}
                     <div className="flex items-center justify-center h-12">
                       {c.logoStyle === "pill" && (
                         <div
@@ -1610,7 +1581,6 @@ export default function HomeView() {
             </div>
           </motion.div>
 
-          {/* Testimonials */}
           {isMobile ? (
             <SwipeCarousel>
               {testimonials.map((t, i) => (
@@ -1646,7 +1616,7 @@ export default function HomeView() {
                 >
                   <motion.div
                     className="p-6 md:p-8 rounded-2xl md:rounded-[1.8rem] bg-white/[0.03] border border-white/[0.07] transition-all duration-300 group-hover:border-white/15 group-hover:bg-white/[0.05] h-full flex flex-col"
-                    whileHover={{ y: -6 }}
+                    style={{ willChange: "transform" }} whileHover={{ y: -5 }}
                   >
                     <Quote className="w-10 h-10 text-emerald-400/40 mb-6" />
                     <p className="text-white/80 text-base md:text-lg leading-relaxed italic flex-1 mb-6">
@@ -1692,9 +1662,9 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8 }}
-            className="relative max-w-5xl mx-auto"
+            className="relative max-w-3xl mx-auto"
           >
-            <div className="card-glass-premium text-center p-8 md:p-12 lg:p-20 relative overflow-hidden">
+            <div className="card-glass-premium text-center p-5 md:p-8 relative overflow-hidden">
               <div
                 className="absolute inset-0 rounded-2xl md:rounded-[2rem] pointer-events-none"
                 style={{

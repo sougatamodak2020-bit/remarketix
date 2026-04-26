@@ -301,14 +301,15 @@ export default function PricingView() {
         )}
       </div>
 
-      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-32">
+      {/* ✅ FIXED: Reduced top padding from pt-32 to pt-16 md:pt-20 */}
+      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-16 md:pt-20">
         
         {/* 🎯 Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
+          className="text-center max-w-3xl mx-auto mb-6 md:mb-10"
         >
           <div className="badge-glow mx-auto mb-6 md:mb-8">
             <Sparkles className="w-4 h-4" />
@@ -564,7 +565,7 @@ export default function PricingView() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center mb-16 md:mb-20"
+          className="text-center mb-8 md:mb-12"
         >
           <p className="text-white/50 text-sm md:text-base italic">
             👉 Final pricing may vary based on scope, volume and complexity
@@ -585,7 +586,7 @@ export default function PricingView() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6 }}
-                className="text-center mb-10 md:mb-14"
+                className="text-center mb-6 md:mb-10"
               >
                 <div className="inline-flex items-center gap-3 mb-5 md:mb-6">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center">
@@ -708,7 +709,7 @@ export default function PricingView() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="card-glass-premium max-w-4xl mx-auto text-center p-8 md:p-12 lg:p-16 mt-20 md:mt-28"
+          className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-8 mt-20 md:mt-28"
         >
           <motion.div
             className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 md:mb-8 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center"

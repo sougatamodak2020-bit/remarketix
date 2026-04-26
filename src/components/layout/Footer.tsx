@@ -1,7 +1,7 @@
 "use client";
 import { useAppStore, ViewId } from "@/store/appStore";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, ArrowRight, Heart, ExternalLink, LogIn } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, ExternalLink, LogIn } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
 
@@ -92,13 +92,23 @@ export default function Footer() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Image
-                  src="https://i.postimg.cc/t4msmVH7/Remarketix-logo.png"
-                  alt="Remarketix"
-                  width={140}
-                  height={42}
-                  className="h-auto w-auto max-h-10 transition-all duration-300"
-                />
+                <div className="flex items-center gap-3">
+                  <Image
+                    src="https://i.postimg.cc/t4msmVH7/Remarketix-logo.png"
+                    alt="Remarketix"
+                    width={180}
+                    height={54}
+                    className="h-auto w-auto max-h-14 transition-all duration-300 drop-shadow-[0_0_16px_rgba(255,255,255,0.08)] group-hover:drop-shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+                  />
+                  <div className="flex flex-col leading-none gap-1.5">
+                    <span className="text-[17px] font-bold text-white tracking-tight">
+                      Remarketix
+                    </span>
+                    <span className="text-[12px] font-medium tracking-wide" style={{ color: "rgba(52,211,153,0.8)" }}>
+                      Turn data into growth
+                    </span>
+                  </div>
+                </div>
               </motion.button>
 
               <p className="text-slate-400 leading-relaxed mb-8 max-w-sm text-[15px]">
@@ -275,11 +285,9 @@ export default function Footer() {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="text-slate-500 text-[13px] flex items-center gap-2 order-3 md:order-1"
+              className="text-slate-500 text-[13px] order-3 md:order-1"
             >
-              © {currentYear} Remarketix. Made with
-              <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" />
-              All rights reserved.
+              © {currentYear} Remarketix. All rights reserved.
             </motion.p>
 
             <div className="flex items-center gap-6 text-[13px] order-2">

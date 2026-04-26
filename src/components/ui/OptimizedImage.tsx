@@ -43,7 +43,7 @@ export default function OptimizedImage({
         className={`${className} transition-opacity duration-300 ${
           isLoading ? "opacity-0" : "opacity-100"
         }`}
-        onLoadingComplete={() => setIsLoading(false)}
+        onLoad={() => setIsLoading(false)}
         sizes={
           fill
             ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

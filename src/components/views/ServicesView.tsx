@@ -1,11 +1,11 @@
 ﻿"use client";
 import { motion, useReducedMotion } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { useAppStore } from "@/store/appStore";
 import {
   Users, Database, Crosshair, Keyboard, Link2, UserRound, Send,
   SearchCheck, CloudDownload, Building2, Code2, Wand2, ArrowRight,
-  Sparkles, Check, ChevronLeft, ChevronRight, ChevronDown,
+  Sparkles, Check, ChevronDown,
   BarChart3, Globe, Target, Zap
 } from "lucide-react";
 
@@ -172,22 +172,24 @@ const accentGradMap: Record<string, string> = {
   orange:  "from-orange-500 to-amber-500",
 };
 
+/* ─── Sticky nav height constant — keep in sync with Tailwind class ─────────── */
+// top-20 = 80px (main header) + the sticky nav itself (~52px) = ~132px total offset
+const SCROLL_OFFSET = 136;
+
 /* ─── Service Card ───────────────────────────────────────────────────────────── */
 function ServiceCard({ service, isMobile }: { service: typeof CATEGORIES[0]["services"][0]; isMobile: boolean }) {
   const c = colorMap[service.color];
   const setView = useAppStore((s) => s.setView);
-  
+
   return (
     <motion.div
       className="group relative feature-card-premium h-full flex flex-col"
       whileHover={!isMobile ? { y: -6, scale: 1.015 } : {}}
       transition={{ duration: 0.3 }}
     >
-      {/* top accent line */}
       <div className={`absolute top-0 left-0 right-0 h-0.5 rounded-t-xl bg-gradient-to-r ${c.text.replace("text-", "from-")} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
 
       <div className="relative z-10 flex flex-col h-full">
-        {/* Icon + subtitle */}
         <div className="flex items-start justify-between mb-4">
           <div className={`w-12 h-12 ${c.bg} border ${c.border} rounded-xl flex items-center justify-center flex-shrink-0`}>
             <service.icon className={`w-6 h-6 ${c.text}`} />
@@ -197,15 +199,12 @@ function ServiceCard({ service, isMobile }: { service: typeof CATEGORIES[0]["ser
           </span>
         </div>
 
-        {/* Title */}
         <h3 className="text-white font-bold text-base md:text-lg leading-snug mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/60 transition-all duration-300">
           {service.title}
         </h3>
 
-        {/* Description */}
         <p className="text-white/55 text-sm leading-relaxed mb-5 flex-grow">{service.desc}</p>
 
-        {/* Features */}
         <div className="border-t border-white/[0.06] pt-4">
           <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.12em] mb-3">Includes</p>
           <ul className="space-y-2">
@@ -218,13 +217,12 @@ function ServiceCard({ service, isMobile }: { service: typeof CATEGORIES[0]["ser
           </ul>
         </div>
 
-        {/* FIX #7: Make arrow button clickable */}
         <motion.button
-          onClick={() => setView("services")}
+          onClick={() => setView("contact")}
           className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white transition-colors group/arrow touch-manipulation"
           whileHover={!isMobile ? { x: 4 } : {}}
         >
-          View Details
+          Get Quote
           <ArrowRight className="w-4 h-4 group-hover/arrow:translate-x-1 transition-transform" />
         </motion.button>
       </div>
@@ -233,12 +231,17 @@ function ServiceCard({ service, isMobile }: { service: typeof CATEGORIES[0]["ser
 }
 
 /* ─── Category Section ───────────────────────────────────────────────────────── */
-function CategorySection({ cat, isMobile, scrollRef }: {
+function CategorySection({
+  cat,
+  isMobile,
+  isOpen,
+  onToggle,
+}: {
   cat: typeof CATEGORIES[0];
   isMobile: boolean;
-  scrollRef: React.RefObject<HTMLDivElement | null>;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
-  const [open, setOpen] = useState(true);
   const ac = accentMap[cat.accent];
   const acBg = accentBgMap[cat.accent];
   const acGrad = accentGradMap[cat.accent];
@@ -251,11 +254,10 @@ function CategorySection({ cat, isMobile, scrollRef }: {
       transition={{ duration: 0.55 }}
       className="mb-16 md:mb-24"
     >
-      {/* Category header */}
       <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full text-left mb-8 md:mb-10 group"
-        aria-expanded={open}
+        onClick={onToggle}
+        className="w-full text-left mb-8 md:mb-10 group touch-manipulation"
+        aria-expanded={isOpen}
       >
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -263,30 +265,27 @@ function CategorySection({ cat, isMobile, scrollRef }: {
               <cat.icon className="w-5 h-5 md:w-6 md:h-6" />
             </div>
             <div>
-              <h2 className={`text-xl md:text-2xl font-bold text-white`}>{cat.label}</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-white">{cat.label}</h2>
               <p className={`text-sm ${ac} font-medium`}>{cat.intro}</p>
             </div>
           </div>
-          <div className={`w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ${acBg} transition-transform duration-300 ${open ? "rotate-180" : ""}`}>
+          <div className={`w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ${acBg} transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>
             <ChevronDown className="w-4 h-4" />
           </div>
         </div>
-        {/* Accent line */}
         <div className={`mt-5 h-px bg-gradient-to-r ${acGrad} to-transparent opacity-40`} />
       </button>
 
-      {/* Cards */}
-      {open && (
+      {isOpen && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.35 }}
         >
-          {/* Mobile swipe */}
+          {/* Mobile: horizontal scroll */}
           <div className="md:hidden">
             <div
-              ref={scrollRef}
               className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 scrollbar-hide"
               style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
             >
@@ -298,7 +297,7 @@ function CategorySection({ cat, isMobile, scrollRef }: {
             </div>
           </div>
 
-          {/* Desktop grid */}
+          {/* Desktop: grid */}
           <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             {cat.services.map((s, i) => (
               <motion.div
@@ -323,7 +322,15 @@ export default function ServicesView() {
   const setView = useAppStore((s) => s.setView);
   const prefersReducedMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(false);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    data: true,
+    outreach: true,
+    content: true,
+    digital: true,
+  });
+
+  // Track which category is currently being scrolled to
+  const pendingScrollId = useRef<string | null>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -332,9 +339,61 @@ export default function ServicesView() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  // After state updates (section opens), scroll to the pending target
+  useEffect(() => {
+    if (!pendingScrollId.current) return;
+    const id = pendingScrollId.current;
+    pendingScrollId.current = null;
+
+    // rAF ensures the DOM has painted the expanded section before we measure
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`cat-${id}`);
+        if (!el) return;
+        const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+        window.scrollTo({ top, behavior: "smooth" });
+      });
+    });
+  }, [openSections]); // runs every time openSections changes
+
+  // Handle URL hash on mount
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const categoryId = hash.replace("#cat-", "");
+    if (!CATEGORIES.find((c) => c.id === categoryId)) return;
+    navigateToCategory(categoryId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const navigateToCategory = useCallback((categoryId: string) => {
+    // Queue the scroll — it fires in the useEffect above after state settles
+    pendingScrollId.current = categoryId;
+    setOpenSections((prev) => {
+      // If already open, the useEffect won't fire because state didn't change.
+      // Scroll directly in that case.
+      if (prev[categoryId]) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const el = document.getElementById(`cat-${categoryId}`);
+            if (!el) return;
+            const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+            window.scrollTo({ top, behavior: "smooth" });
+          });
+        });
+        pendingScrollId.current = null;
+        return prev; // no state change needed
+      }
+      return { ...prev, [categoryId]: true };
+    });
+  }, []);
+
+  const toggleSection = useCallback((id: string) => {
+    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
+  }, []);
+
   return (
     <div className="relative min-h-screen text-white flex flex-col">
-      {/* Static background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
         {!prefersReducedMotion && !isMobile && (
           <>
@@ -348,7 +407,7 @@ export default function ServicesView() {
       </div>
 
       {/* ── Hero ── */}
-      <section className="relative section-spacing pt-16 md:pt-24">
+      <section className="relative section-spacing pt-20 md:pt-24">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="badge-glow mx-auto mb-6 w-fit">
@@ -365,7 +424,6 @@ export default function ServicesView() {
             </p>
           </motion.div>
 
-          {/* Quick stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 md:mt-14 max-w-3xl mx-auto">
             {[
               { icon: Target,    v: "12+", l: "Services" },
@@ -390,12 +448,19 @@ export default function ServicesView() {
         <div className="container-custom px-4">
           <div className="flex gap-1 md:gap-2 overflow-x-auto py-3 scrollbar-hide">
             {CATEGORIES.map((cat) => (
-              <a key={cat.id} href={`#cat-${cat.id}`}
-                className={`flex-shrink-0 flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border transition-all touch-manipulation ${accentBgMap[cat.accent]}`}>
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => {
+                  window.history.pushState(null, "", `#cat-${cat.id}`);
+                  navigateToCategory(cat.id);
+                }}
+                className={`flex-shrink-0 flex items-center gap-1.5 px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border transition-all touch-manipulation cursor-pointer hover:scale-105 active:scale-95 ${accentBgMap[cat.accent]}`}
+              >
                 <cat.icon className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">{cat.label}</span>
                 <span className="sm:hidden">{cat.label.split(" ")[0]}</span>
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -405,8 +470,14 @@ export default function ServicesView() {
       <section className="section-spacing">
         <div className="container-custom px-4">
           {CATEGORIES.map((cat) => (
-            <div id={`cat-${cat.id}`} key={cat.id} className="scroll-mt-32">
-              <CategorySection cat={cat} isMobile={isMobile} scrollRef={scrollRef} />
+            // scroll-mt value must match SCROLL_OFFSET constant above
+            <div id={`cat-${cat.id}`} key={cat.id} style={{ scrollMarginTop: `${SCROLL_OFFSET}px` }}>
+              <CategorySection
+                cat={cat}
+                isMobile={isMobile}
+                isOpen={openSections[cat.id] ?? true}
+                onToggle={() => toggleSection(cat.id)}
+              />
             </div>
           ))}
         </div>

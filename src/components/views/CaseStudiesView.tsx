@@ -23,12 +23,10 @@ const CASES = [
   {
     id: 0,
     filter: "Lead Generation",
-    // Card fields (brief spec: client type, service, key result, short desc)
     clientType:  "B2B Event Platform",
     service:     "Lead Generation & Outreach",
     result:      "3× increase in qualified leads",
     shortDesc:   "Built a targeted lead database and executed outreach campaigns to generate consistent leads.",
-    // Detail page fields
     client:  "Event Management Company",
     region:  "DACH Region",
     problem: "No consistent lead generation system. Outdated exhibitor lists with incorrect emails and missing decision-makers caused campaigns to fail before they started.",
@@ -445,7 +443,6 @@ const CASES = [
     color: "fuchsia",
   },
 
-  /* ── 10 ── NEW: Multi-ICP LinkedIn Outreach — Global Founders */
   {
     id: 10,
     filter: "Outreach",
@@ -523,14 +520,6 @@ const CM: Record<string, { text: string; bg: string; border: string; badge: stri
 
 /* ══════════════════════════════════════════════════════════════════════════════
    DETAIL PAGE
-   Structure from brief:
-     • Client Type
-     • Problem
-     • Solution (bullet list)
-     • Results (bullet list)
-     • "How We Delivered Results" process (numbered steps) — REQUIRED
-     • "Services Used" tags — REQUIRED
-   + extras: stats banner, data fields, qualification criteria, sample message
 ══════════════════════════════════════════════════════════════════════════════ */
 function DetailPage({
   c, onBack, onPrev, onNext, hasPrev, hasNext,
@@ -584,25 +573,21 @@ function DetailPage({
 
       <div className="container-custom px-4 relative z-10 max-w-4xl mx-auto">
 
-        {/* ══ HEADER — client type, service, result ══ */}
+        {/* ══ HEADER ══ */}
         <motion.div initial={{ opacity:0, y:28 }} animate={{ opacity:1, y:0 }}
           transition={{ delay:0.05, duration:0.55 }} className="pt-10 pb-8 md:pt-14">
 
-          {/* Colour accent bar */}
           <div className={`h-1.5 w-24 bg-gradient-to-r ${col.grad} rounded-full mb-8`} />
 
-          {/* Client type + region tags */}
           <div className="flex flex-wrap gap-2 mb-5">
             <span className={`text-xs font-bold px-3 py-1.5 rounded-xl border ${col.badge}`}>{c.clientType}</span>
             <span className="text-xs text-white/45 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">{c.region}</span>
             <span className={`text-xs font-bold px-3 py-1.5 rounded-xl border ${col.badge}`}>{c.filter}</span>
           </div>
 
-          {/* Client name */}
           <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-2">{c.client}</h1>
           <p className={`text-base md:text-lg font-semibold ${col.text} mb-5`}>{c.service}</p>
 
-          {/* Key result highlight */}
           <div className={`inline-flex items-center gap-3 px-5 py-3.5 rounded-2xl ${col.bg} border ${col.border}`}>
             <Award className={`w-5 h-5 ${col.text} flex-shrink-0`} />
             <p className={`text-sm md:text-base font-bold ${col.text} italic`}>{c.result}</p>
@@ -623,7 +608,7 @@ function DetailPage({
 
         {/* ══ PROBLEM ══ */}
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-          transition={{ delay:0.18, duration:0.5 }} className="feature-card-premium p-6 md:p-8 mb-6">
+          transition={{ delay:0.18, duration:0.5 }} className="feature-card-premium p-4 md:p-6 mb-6">
           <div className="flex items-center gap-3 mb-5">
             <span className="w-3 h-3 rounded-full bg-red-400 flex-shrink-0" />
             <h2 className="text-base md:text-lg font-black text-white uppercase tracking-widest">Problem</h2>
@@ -633,7 +618,7 @@ function DetailPage({
 
         {/* ══ SOLUTION ══ */}
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-          transition={{ delay:0.24, duration:0.5 }} className="feature-card-premium p-6 md:p-8 mb-6">
+          transition={{ delay:0.24, duration:0.5 }} className="feature-card-premium p-4 md:p-6 mb-6">
           <div className="flex items-center gap-3 mb-5">
             <span className={`w-3 h-3 rounded-full ${col.dot} flex-shrink-0`} />
             <h2 className="text-base md:text-lg font-black text-white uppercase tracking-widest">Solution</h2>
@@ -650,7 +635,7 @@ function DetailPage({
 
         {/* ══ RESULTS ══ */}
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
-          transition={{ delay:0.3, duration:0.5 }} className="feature-card-premium p-6 md:p-8 mb-6">
+          transition={{ delay:0.3, duration:0.5 }} className="feature-card-premium p-4 md:p-6 mb-6">
           <div className="flex items-center gap-3 mb-5">
             <Award className={`w-5 h-5 ${col.text}`} />
             <h2 className="text-base md:text-lg font-black text-white uppercase tracking-widest">Result</h2>
@@ -665,7 +650,7 @@ function DetailPage({
           </ul>
         </motion.div>
 
-        {/* ══ PROCESS PROOF — "How We Delivered Results" ══ */}
+        {/* ══ PROCESS PROOF ══ */}
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
           transition={{ delay:0.36, duration:0.5 }} className="mb-6">
           <h2 className="text-base md:text-lg font-black text-white uppercase tracking-widest text-center mb-6">
@@ -683,7 +668,7 @@ function DetailPage({
           </div>
         </motion.div>
 
-        {/* ══ EXTRA: Data Fields / Target Roles ══ */}
+        {/* ══ EXTRA: Data Fields ══ */}
         {"extraFields" in c && (c as any).extraFields && (
           <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }}
             transition={{ delay:0.42 }} className="feature-card-premium p-6 md:p-7 mb-6">
@@ -712,7 +697,7 @@ function DetailPage({
           </motion.div>
         )}
 
-        {/* ══ EXTRA: Sample Outreach Message ══ */}
+        {/* ══ EXTRA: Sample Message ══ */}
         {"sampleMessage" in c && (c as any).sampleMessage && (
           <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }}
             transition={{ delay:0.46 }} className="feature-card-premium p-6 md:p-7 mb-6">
@@ -725,7 +710,7 @@ function DetailPage({
           </motion.div>
         )}
 
-        {/* ══ SERVICES USED TAGS ══ */}
+        {/* ══ SERVICES USED ══ */}
         <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }}
           transition={{ delay:0.5 }} className="mb-12">
           <h3 className="text-xs font-black text-white/40 uppercase tracking-widest text-center mb-4">Services Used</h3>
@@ -736,7 +721,7 @@ function DetailPage({
           </div>
         </motion.div>
 
-        {/* ══ Bottom prev / next ══ */}
+        {/* ══ Bottom navigation ══ */}
         <div className="flex items-center justify-between pt-8 pb-6 border-t border-white/10 mb-10">
           <button onClick={onPrev} disabled={!hasPrev}
             className={`flex items-center gap-2.5 px-5 py-3 rounded-xl border transition-all touch-manipulation ${hasPrev ? `${col.bg} ${col.border} hover:scale-105` : "bg-white/5 border-white/10 opacity-25 cursor-not-allowed"}`}>
@@ -751,8 +736,8 @@ function DetailPage({
           </button>
         </div>
 
-        {/* ══ Page-level CTA ══ */}
-        <div className="card-glass-premium text-center p-8 md:p-12">
+        {/* ══ CTA ══ */}
+        <div className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-7">
           <h2 className="heading-xl mb-4">
             <span className="text-white">Ready to Write Your</span>
             <span className="block gradient-text-enhanced mt-2">Success Story?</span>
@@ -773,12 +758,6 @@ function DetailPage({
 
 /* ══════════════════════════════════════════════════════════════════════════════
    CASE CARD
-   Structure from brief:
-     • Client type
-     • Service used
-     • Short 2–3 line description
-     • Key result
-     • Button: View Details
 ══════════════════════════════════════════════════════════════════════════════ */
 function CaseCard({ c, onOpen, isMobile, index }: {
   c: Case; onOpen: () => void; isMobile: boolean; index: number;
@@ -796,28 +775,22 @@ function CaseCard({ c, onOpen, isMobile, index }: {
         onKeyDown={(e) => e.key === "Enter" && onOpen()}
         aria-label={`View ${c.client} case study`}>
 
-        {/* Background number watermark */}
         <div className="absolute top-4 right-4 text-6xl font-black text-white/[0.03] select-none pointer-events-none">
           {String(index + 1).padStart(2, "0")}
         </div>
 
         <div className="relative z-10 flex flex-col h-full">
-          {/* ① Client type tag + region */}
           <div className="flex items-start justify-between gap-2 mb-3">
             <span className={`text-xs font-bold px-2.5 py-1.5 rounded-lg border ${col.badge}`}>{c.clientType}</span>
             <span className="text-[10px] text-white/35 leading-tight text-right">{c.region}</span>
           </div>
 
-          {/* ② Service used */}
           <p className={`text-[11px] font-black uppercase tracking-widest ${col.text} mb-2`}>{c.service}</p>
 
-          {/* ③ Client name */}
           <h3 className="text-white font-bold text-base leading-snug mb-3">{c.client}</h3>
 
-          {/* ④ Short 2–3 line description */}
           <p className="text-sm text-white/50 leading-relaxed mb-5 flex-grow">{c.shortDesc}</p>
 
-          {/* ⑤ Mini stats */}
           <div className="grid grid-cols-3 gap-2 mb-4 p-3 bg-white/[0.025] rounded-xl border border-white/[0.05]">
             {c.stats.map((s, i) => (
               <div key={i} className="text-center">
@@ -827,13 +800,11 @@ function CaseCard({ c, onOpen, isMobile, index }: {
             ))}
           </div>
 
-          {/* ⑥ Key result */}
           <div className={`flex items-center gap-2 p-2.5 rounded-xl ${col.bg} border ${col.border} mb-4`}>
             <Award className={`w-3.5 h-3.5 ${col.text} flex-shrink-0`} />
             <p className={`text-xs font-semibold ${col.text} italic leading-snug`}>{c.result}</p>
           </div>
 
-          {/* ⑦ View Details button */}
           <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 hover:border-white/25 text-white/55 hover:text-white text-sm font-semibold transition-all touch-manipulation">
             View Details
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -845,12 +816,7 @@ function CaseCard({ c, onOpen, isMobile, index }: {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   MAIN PAGE
-   Structure from brief:
-     HEADER  → Our Work + subtext
-     FILTERS → All | Lead Generation | Outreach | Content | Website
-     GRID    → 3-col desktop, 1-col mobile
-     (+ process strip + CTA below)
+   MAIN PAGE — ✅ FIXED: Reduced hero spacing (pt-16 md:pt-20)
 ══════════════════════════════════════════════════════════════════════════════ */
 export default function CaseStudiesView() {
   const setView      = useAppStore((s) => s.setView);
@@ -876,7 +842,6 @@ export default function CaseStudiesView() {
     if (next) setOpenId(next.id);
   }, [openId]);
 
-  /* Show full detail page when a case is open */
   if (openCase) {
     return (
       <AnimatePresence mode="wait">
@@ -893,10 +858,9 @@ export default function CaseStudiesView() {
     );
   }
 
-  /* ── GRID VIEW ── */
   return (
     <div className="flex flex-col min-h-screen text-white">
-      {/* Static background */}
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {!prefersReduced && !isMobile && (
           <>
@@ -909,8 +873,8 @@ export default function CaseStudiesView() {
         <div className="absolute inset-0 bg-grid-dense opacity-[0.018]" />
       </div>
 
-      {/* ════ HEADER — "Our Work" ════ */}
-      <section className="relative section-spacing pt-16 md:pt-24">
+      {/* ════ HEADER — ✅ FIXED: pt-16 md:pt-20 ════ */}
+      <section className="relative section-spacing pt-16 md:pt-20">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
             <div className="badge-glow mx-auto mb-6 w-fit">
@@ -918,21 +882,18 @@ export default function CaseStudiesView() {
               Precision • Verification • Execution
             </div>
 
-            {/* Heading: Our Work */}
             <h1 className="heading-display mb-4 max-w-4xl mx-auto">
               <span className="block text-white">Our Work</span>
               <span className="block gradient-text-enhanced mt-2">Real Results, Real Growth</span>
             </h1>
             <div className="h-1.5 w-24 mx-auto bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 rounded-full mb-6" />
 
-            {/* Subtext from brief */}
             <p className="text-body-lg max-w-2xl mx-auto text-white/72 px-4">
               A look at how we help businesses generate leads, build systems and drive consistent
               growth through data, outreach and execution.
             </p>
           </motion.div>
 
-          {/* Stats strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 md:mt-14 max-w-4xl mx-auto">
             {[
               { n:"11+",    l:"Case Studies"      },
@@ -951,11 +912,10 @@ export default function CaseStudiesView() {
         </div>
       </section>
 
-      {/* ════ FILTER / CATEGORY TABS ════ */}
+      {/* ════ FILTERS ════ */}
       <section className="section-spacing bg-white/[0.01]">
         <div className="container-custom px-4">
 
-          {/* Tabs — All | Lead Generation | Outreach | Content | Website */}
           <div className="flex gap-2 mb-10 overflow-x-auto pb-2 -mx-4 px-4 md:flex-wrap md:justify-center md:overflow-visible md:pb-0 md:mx-0 md:px-0 scrollbar-hide">
             {FILTERS.map((f) => (
               <button key={f} onClick={() => setActive(f)}
@@ -969,7 +929,6 @@ export default function CaseStudiesView() {
             ))}
           </div>
 
-          {/* ════ PROJECT / CASE STUDY CARDS — 3-col desktop, 1-col mobile ════ */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             <AnimatePresence mode="popLayout">
               {visible.map((c, i) => (
@@ -988,7 +947,7 @@ export default function CaseStudiesView() {
         </div>
       </section>
 
-      {/* ════ PROCESS PROOF — "How We Delivered Results" ════ */}
+      {/* ════ PROCESS ════ */}
       <section className="section-spacing-sm">
         <div className="container-custom px-4">
           <motion.div initial={{ opacity:0, y:24 }} whileInView={{ opacity:1, y:0 }}
@@ -1026,7 +985,7 @@ export default function CaseStudiesView() {
         <div className="container-custom px-4">
           <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
             viewport={{ once:true }} transition={{ duration:0.55 }}
-            className="card-glass-premium max-w-4xl mx-auto text-center p-8 md:p-12 lg:p-14">
+            className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-8">
             <h2 className="heading-xl mb-4">
               <span className="text-white">Ready to Write Your</span>
               <span className="block gradient-text-enhanced mt-2">Success Story?</span>
