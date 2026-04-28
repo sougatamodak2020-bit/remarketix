@@ -167,7 +167,7 @@ export default function FeedbackView() {
       `}</style>
 
       {/* ── Hero — ✅ FIXED: pt-16 md:pt-20 ── */}
-      <section className="relative section-spacing pt-16 md:pt-20">
+      <section className="relative section-spacing pt-14 md:pt-16">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -179,7 +179,7 @@ export default function FeedbackView() {
               Client Success Stories
             </div>
 
-            <h1 className="heading-display mb-5 md:mb-6">
+            <h1 className="heading-display mb-4 md:mb-5">
               <span className="block text-white">What Our</span>
               <span className="block gradient-text-enhanced mt-2 md:mt-3">Clients Say</span>
             </h1>
@@ -300,12 +300,12 @@ export default function FeedbackView() {
               <Award className="w-8 h-8 md:w-10 md:h-10 text-emerald-400" />
             </div>
 
-            <h2 className="heading-xl mb-5 md:mb-6">
+            <h2 className="heading-xl mb-4 md:mb-5">
               <span className="text-white">Ready to Write Your</span>
               <span className="block gradient-text-enhanced mt-2">Success Story?</span>
             </h2>
 
-            <p className="text-body-lg max-w-2xl mx-auto mb-8 md:mb-10 text-white/80">
+            <p className="text-body-lg max-w-2xl mx-auto mb-5 md:mb-7 text-white/80">
               Join hundreds of businesses that turned their data challenges into growth opportunities.
             </p>
 

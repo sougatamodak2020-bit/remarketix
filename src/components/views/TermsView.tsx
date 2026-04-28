@@ -155,7 +155,7 @@ export default function TermsView() {
       </div>
 
       {/* Hero Section — ✅ FIXED: pt-20 md:pt-24 */}
-      <section className="relative pt-20 md:pt-24 pb-16 md:pb-20">
+      <section className="relative pt-14 md:pt-16 pb-10 md:pb-14">
         <div className="container-custom relative z-10 px-4">
           <motion.button
             onClick={() => setView("home")}
@@ -225,7 +225,7 @@ export default function TermsView() {
                   className="group"
                 >
                   <motion.div
-                    className="feature-card-premium p-8"
+                    className="feature-card-premium p-5 md:p-6"
                     whileHover={!isMobile ? { y: -6, scale: 1.01 } : {}}
                     transition={{ duration: 0.3 }}
                   >
@@ -274,7 +274,7 @@ export default function TermsView() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="feature-card-premium p-8"
+              className="feature-card-premium p-5 md:p-6"
             >
               <div className="flex items-start gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center flex-shrink-0">
@@ -300,7 +300,7 @@ export default function TermsView() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="card-glass-premium p-8 md:p-12 text-center"
+              className="card-glass-premium p-5 md:p-7 text-center"
             >
               <h3 className="heading-xl mb-6">
                 <span className="text-white">Questions About Our</span>

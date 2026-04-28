@@ -40,6 +40,7 @@ const fadeInUp = {
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
 };
+
 const staggerContainer = {
   animate: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
@@ -55,16 +56,20 @@ function SwipeCarousel({
   const [idx, setIdx] = useState(0);
   const total = children.length;
   const startX = useRef(0);
+
   const prev = () => setIdx((i) => (i > 0 ? i - 1 : total - 1));
   const next = () => setIdx((i) => (i < total - 1 ? i + 1 : 0));
+
   const onTouchStart = (e: React.TouchEvent) => {
     startX.current = e.touches[0].clientX;
   };
+
   const onTouchEnd = (e: React.TouchEvent) => {
     const dx = startX.current - e.changedTouches[0].clientX;
     if (dx > 50) next();
     else if (dx < -50) prev();
   };
+
   return (
     <div className={`relative ${className}`}>
       <div
@@ -87,6 +92,8 @@ function SwipeCarousel({
           ))}
         </div>
       </div>
+      
+      {/* Dots */}
       <div className="flex justify-center gap-2 mt-4">
         {children.map((_, i) => (
           <button
@@ -116,6 +123,7 @@ function AnimatedNumber({
   const [display, setDisplay] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
+
   useEffect(() => {
     if (!inView) return;
     const startTime = performance.now();
@@ -130,6 +138,7 @@ function AnimatedNumber({
     const raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
   }, [inView, value, duration]);
+
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
@@ -459,47 +468,44 @@ export default function HomeView() {
   );
 
   return (
-    <div className="relative min-h-screen">
+    <>
       {/* ══════════════════════════════════════════════════════════════════════
-          HERO - ✅ FIXED: Reduced top padding
-          ══════════════════════════════════════════════════════════════════════ */}
+          HERO
+          ═══════════════════════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-24"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-14 md:pt-16"
         style={{ transform: "translateZ(0)" }}
       >
         {/* BG */}
-        <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[700px]"
+          style={{
+            background:
+              "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16,185,129,0.18), rgba(6,182,212,0.13) 40%, transparent 70%)",
+            filter: "blur(70px)",
+          }}
+        />
+        {!isMobile && (
           <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[700px]"
+            className="absolute bottom-0 right-0 w-[900px] h-[900px]"
             style={{
               background:
-                "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(16,185,129,0.18), rgba(6,182,212,0.13) 40%, transparent 70%)",
-              filter: "blur(70px)",
+                "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59,130,246,0.13), rgba(139,92,246,0.08) 40%, transparent 70%)",
+              filter: "blur(90px)",
             }}
           />
-          {!isMobile && (
-            <div
-              className="absolute bottom-0 right-0 w-[900px] h-[900px]"
-              style={{
-                background:
-                  "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(59,130,246,0.13), rgba(139,92,246,0.08) 40%, transparent 70%)",
-                filter: "blur(90px)",
-              }}
-            />
-          )}
-          <div className="absolute inset-0 bg-grid-dense opacity-20" />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg,transparent 0%,rgba(3,7,18,0.35) 55%,rgba(3,7,18,0.8) 100%)",
-            }}
-          />
-        </div>
+        )}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg,transparent 0%,rgba(3,7,18,0.35) 55%,rgba(3,7,18,0.8) 100%)",
+          }}
+        />
 
         {/* Content */}
-        <div className="relative z-10 container-custom pt-4 md:pt-8 pb-16 px-4">
+        <div className="relative z-10 container-custom pt-2 md:pt-4 pb-12 px-4">
           <motion.div
             variants={staggerContainer}
             initial="initial"
@@ -701,7 +707,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="text-center max-w-3xl mx-auto mb-8 md:mb-12"
+            // ✅ FIX: Reduced mb-12 to mb-6 md:mb-8
+            className="text-center max-w-3xl mx-auto mb-6 md:mb-8"
           >
             <div className="badge mx-auto mb-3 md:mb-4 w-fit">
               <Zap className="w-4 h-4" />
@@ -854,7 +861,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="text-center max-w-3xl mx-auto mb-8 md:mb-12"
+            // ✅ FIX: Reduced mb-12 to mb-6 md:mb-8
+            className="text-center max-w-3xl mx-auto mb-6 md:mb-8"
           >
             <div className="badge mx-auto mb-3 md:mb-4 w-fit">
               <Building2 className="w-4 h-4" />
@@ -939,7 +947,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="text-center max-w-4xl mx-auto mb-8 md:mb-12"
+            // ✅ FIX: Reduced mb-12 to mb-6 md:mb-8
+            className="text-center max-w-4xl mx-auto mb-6 md:mb-8"
           >
             <div className="badge mx-auto mb-3 md:mb-4 w-fit">
               <Shield className="w-4 h-4" />
@@ -1032,7 +1041,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="text-center mb-8 md:mb-12"
+            // ✅ FIX: Reduced mb-12 to mb-6 md:mb-8
+            className="text-center mb-6 md:mb-8"
           >
             <div className="badge mx-auto mb-3 md:mb-4 w-fit">
               <TrendingUp className="w-4 h-4" />
@@ -1130,7 +1140,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="text-center max-w-3xl mx-auto mb-12 md:mb-20"
+            // ✅ FIX: Reduced mb-20 to mb-8 md:mb-12
+            className="text-center max-w-3xl mx-auto mb-8 md:mb-12"
           >
             <div className="badge mx-auto mb-4 md:mb-6 w-fit">
               <Zap className="w-4 h-4" />
@@ -1225,7 +1236,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col items-center text-center mb-12 md:mb-16"
+            // ✅ FIX: Reduced mb-16 to mb-8 md:mb-10
+            className="flex flex-col items-center text-center mb-8 md:mb-10"
           >
             <div className="badge mb-4 md:mb-6">
               <Sparkles className="w-4 h-4" />
@@ -1297,7 +1309,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="flex flex-col items-center text-center mb-12 md:mb-16"
+            // ✅ FIX: Reduced mb-16 to mb-8 md:mb-10
+            className="flex flex-col items-center text-center mb-8 md:mb-10"
           >
             <div className="badge mb-4 md:mb-6">
               <Award className="w-4 h-4" />
@@ -1331,7 +1344,7 @@ export default function HomeView() {
                       className="object-cover"
                       sizes="100vw"
                       loading="lazy"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+                      blurDataURL="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
                       placeholder="blur"
                     />
                   </div>
@@ -1432,7 +1445,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="text-center mb-8 md:mb-12"
+            // ✅ FIX: Reduced mb-12 to mb-6 md:mb-8
+            className="text-center mb-6 md:mb-8"
           >
             <div className="badge mx-auto mb-4 w-fit">
               <Star className="w-4 h-4" />
@@ -1454,7 +1468,8 @@ export default function HomeView() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-12 md:mb-16"
+            // ✅ FIX: Reduced mb-16 to mb-8 md:mb-10
+            className="mb-8 md:mb-10"
           >
             <p className="text-center text-sm md:text-base font-bold text-white mb-2">
               Our Clientele
@@ -1581,65 +1596,133 @@ export default function HomeView() {
             </div>
           </motion.div>
 
-          {isMobile ? (
-            <SwipeCarousel>
-              {testimonials.map((t, i) => (
-                <div
-                  key={i}
-                  className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.08]"
-                >
-                  <Quote className="w-8 h-8 text-emerald-400/50 mb-4" />
-                  <p className="text-white/80 text-sm leading-relaxed mb-6 italic">
-                    "{t.quote}"
-                  </p>
-                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                    <span className="text-sm font-semibold text-white/70">
-                      {t.company}
-                    </span>
-                    <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                      {t.result}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </SwipeCarousel>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {testimonials.map((t, i) => (
+          {/* Horizontal scroll carousel — all testimonials from FeedbackView */}
+          <div className="relative">
+            {/* Fade edges on desktop */}
+            <div className="absolute left-0 top-0 bottom-4 w-8 md:w-16 bg-gradient-to-r from-[#0a0e1a] to-transparent pointer-events-none z-10" />
+            <div className="absolute right-0 top-0 bottom-4 w-8 md:w-16 bg-gradient-to-l from-[#0a0e1a] to-transparent pointer-events-none z-10" />
+            <div
+              className="flex gap-4 md:gap-5 overflow-x-auto pb-4 -mx-4 px-4 md:-mx-6 md:px-6"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                WebkitOverflowScrolling: "touch",
+                scrollSnapType: "x mandatory",
+              }}
+            >
+              {[
+                {
+                  quote:
+                    "Remarketix delivered exactly what we needed — accurate leads, on time.",
+                  author: "B2B Project Client",
+                  role: "Marketing Director",
+                  color: "emerald",
+                },
+                {
+                  quote:
+                    "We were impressed by the accuracy of their data and the quick turnaround time.",
+                  author: "U.S. E-commerce Company",
+                  role: "VP of Sales",
+                  color: "blue",
+                },
+                {
+                  quote:
+                    "Fast, reliable, and highly accurate data for our campaigns.",
+                  author: "UK Hospitality Project",
+                  role: "Operations Lead",
+                  color: "violet",
+                },
+                {
+                  quote:
+                    "Working with Remarketix was a great experience. They were meticulous in their work, had a direct approach, and delivered impressive results.",
+                  author: "Joshua Austin",
+                  role: "Founder of Bluvise",
+                  color: "cyan",
+                },
+                {
+                  quote:
+                    "Amazing experience! Excellent post creation and super smooth LinkedIn and Instagram handling. Truly reliable and effective.",
+                  author: "Mohd Aamish Aftab",
+                  role: "Founder - The Collabhub",
+                  color: "pink",
+                },
+                {
+                  quote:
+                    "Out of 149 leads, 147 are highly valid. Only 2 bounced. Considering how niche the Japanese market is, this is excellent.",
+                  author: "Lead Generation Client",
+                  role: "Business Development",
+                  color: "amber",
+                },
+              ].map((t, i) => (
                 <motion.div
                   key={i}
-                  className="group relative"
-                  initial={{ opacity: 0, y: 30 }}
+                  className="flex-shrink-0 group"
+                  style={{
+                    width: "min(88vw, 320px)",
+                    scrollSnapAlign: "start",
+                  }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ delay: (i % 3) * 0.07, duration: 0.4 }}
                 >
-                  <motion.div
-                    className="p-6 md:p-8 rounded-2xl md:rounded-[1.8rem] bg-white/[0.03] border border-white/[0.07] transition-all duration-300 group-hover:border-white/15 group-hover:bg-white/[0.05] h-full flex flex-col"
-                    style={{ willChange: "transform" }} whileHover={{ y: -5 }}
+                  <div
+                    className={`flex flex-col h-full p-5 md:p-6 rounded-2xl bg-white/[0.03] border border-white/10 relative overflow-hidden transition-transform duration-300 ease-out hover:-translate-y-1.5`}
                   >
-                    <Quote className="w-10 h-10 text-emerald-400/40 mb-6" />
-                    <p className="text-white/80 text-base md:text-lg leading-relaxed italic flex-1 mb-6">
-                      "{t.quote}"
-                    </p>
-                    <div className="flex items-center justify-between pt-5 border-t border-white/10">
-                      <p className="text-sm font-bold text-white/80">
-                        {t.company}
+                    <div
+                      className={`absolute -inset-1 bg-gradient-to-r from-${t.color}-500/15 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
+                    />
+                    <div className="relative z-10 flex flex-col h-full">
+                      <div className="flex gap-1 mb-4">
+                        {[0, 1, 2, 3, 4].map((j) => (
+                          <Star
+                            key={j}
+                            className="w-3.5 h-3.5 fill-emerald-400 text-emerald-400"
+                          />
+                        ))}
+                      </div>
+                      <Quote className="w-8 h-8 text-white/10 mb-3 flex-shrink-0" />
+                      <p className="text-sm md:text-base text-white/85 leading-relaxed flex-grow mb-4 italic">
+                        &ldquo;{t.quote}&rdquo;
                       </p>
-                      <span className="text-xs md:text-sm font-bold text-emerald-400 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
-                        {t.result}
-                      </span>
+                      <div className="pt-4 border-t border-white/10 mt-auto">
+                        <p className="font-semibold text-white text-sm">
+                          {t.author}
+                        </p>
+                        <p
+                          className={`text-xs text-${t.color}-400 font-medium mt-0.5`}
+                        >
+                          {t.role}
+                        </p>
+                      </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </motion.div>
               ))}
             </div>
-          )}
+          </div>
+
+          {/* View All Reviews CTA */}
+          <motion.div
+            className="flex justify-center mt-6 md:mt-8"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+          >
+            <button
+              onClick={() => setView("feedback")}
+              className="group flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/10 hover:border-emerald-500/35 hover:bg-emerald-500/5 text-white/70 hover:text-white transition-all duration-200 text-sm font-semibold"
+            >
+              View All Reviews
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+            </button>
+          </motion.div>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════════
-          FINAL CTA
+          FINAL CTA - ✅ FIXED: Constrained width for premium feel
           ══════════════════════════════════════════════════════════════════════ */}
       <section className="section-spacing relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -1657,6 +1740,7 @@ export default function HomeView() {
         </div>
 
         <div className="container-custom relative z-10 px-4">
+          {/* ✅ FIX: Added max-w-3xl mx-auto wrapper */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1664,7 +1748,7 @@ export default function HomeView() {
             transition={{ duration: 0.8 }}
             className="relative max-w-3xl mx-auto"
           >
-            <div className="card-glass-premium text-center p-5 md:p-8 relative overflow-hidden">
+            <div className="card-glass-premium text-center p-5 md:p-7 relative overflow-hidden">
               <div
                 className="absolute inset-0 rounded-2xl md:rounded-[2rem] pointer-events-none"
                 style={{
@@ -1679,7 +1763,7 @@ export default function HomeView() {
               />
               <div className="relative z-10">
                 <motion.div
-                  className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 mb-6 md:mb-8"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 mb-4 md:mb-5"
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
@@ -1691,7 +1775,7 @@ export default function HomeView() {
                 </motion.div>
 
                 <motion.h2
-                  className="heading-xl mb-6 md:mb-8 text-3xl md:text-5xl lg:text-6xl"
+                  className="heading-xl mb-4 md:mb-5 text-3xl md:text-5xl lg:text-6xl"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -1719,7 +1803,7 @@ export default function HomeView() {
                 </motion.h2>
 
                 <motion.p
-                  className="text-base md:text-lg lg:text-xl max-w-3xl mx-auto mb-10 md:mb-12 leading-relaxed text-white/80"
+                  className="text-base md:text-lg max-w-2xl mx-auto mb-6 md:mb-8 leading-relaxed text-white/80"
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
@@ -1741,7 +1825,7 @@ export default function HomeView() {
                 </motion.p>
 
                 <motion.div
-                  className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10 md:mb-12"
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-5 md:mb-6"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -1790,11 +1874,6 @@ export default function HomeView() {
                 >
                   {[
                     {
-                      icon: Check,
-                      color: "emerald",
-                      text: "No credit card required",
-                    },
-                    {
                       icon: Shield,
                       color: "cyan",
                       text: "100% Confidential",
@@ -1820,6 +1899,6 @@ export default function HomeView() {
           </motion.div>
         </div>
       </section>
-    </div>
+    </>
   );
 }

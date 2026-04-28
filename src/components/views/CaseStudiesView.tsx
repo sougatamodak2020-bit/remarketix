@@ -550,7 +550,7 @@ function DetailPage({
       </div>
 
       {/* ── Sticky navigation bar ── */}
-      <div className="sticky top-16 md:top-20 z-40 bg-[#0a0f1a]/85 backdrop-blur-xl border-b border-white/[0.07]">
+      <div className="sticky top-[64px] z-40 bg-[#0a0f1a]/85 backdrop-blur-xl border-b border-white/[0.07]">
         <div className="container-custom px-4 py-3 flex items-center justify-between gap-4">
           <button onClick={onBack}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all group text-sm font-semibold touch-manipulation">
@@ -874,7 +874,7 @@ export default function CaseStudiesView() {
       </div>
 
       {/* ════ HEADER — ✅ FIXED: pt-16 md:pt-20 ════ */}
-      <section className="relative section-spacing pt-16 md:pt-20">
+      <section className="relative section-spacing pt-14 md:pt-16">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
             <div className="badge-glow mx-auto mb-6 w-fit">
@@ -985,7 +985,7 @@ export default function CaseStudiesView() {
         <div className="container-custom px-4">
           <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
             viewport={{ once:true }} transition={{ duration:0.55 }}
-            className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-8">
+            className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-7">
             <h2 className="heading-xl mb-4">
               <span className="text-white">Ready to Write Your</span>
               <span className="block gradient-text-enhanced mt-2">Success Story?</span>

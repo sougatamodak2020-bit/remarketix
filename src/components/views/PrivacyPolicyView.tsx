@@ -1,8 +1,20 @@
 "use client";
-
 import { motion, useReducedMotion } from "framer-motion";
 import { useAppStore } from "@/store/appStore";
-import { Shield, Lock, Eye, Database, Cookie, ExternalLink, User, Mail, Phone, ArrowLeft, CheckCircle2, AlertTriangle } from "lucide-react";
+import {
+  Shield,
+  Lock,
+  Eye,
+  Database,
+  Cookie,
+  ExternalLink,
+  User,
+  Mail,
+  Phone,
+  ArrowLeft,
+  CheckCircle2,
+  AlertTriangle,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 
 const sections = [
@@ -83,13 +95,46 @@ const sections = [
   },
 ];
 
-const colorMap: Record<string, { bg: string; border: string; text: string; gradient: string }> = {
-  emerald: { bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400", gradient: "from-emerald-500 to-emerald-600" },
-  blue: { bg: "bg-blue-500/10", border: "border-blue-500/30", text: "text-blue-400", gradient: "from-blue-500 to-blue-600" },
-  violet: { bg: "bg-violet-500/10", border: "border-violet-500/30", text: "text-violet-400", gradient: "from-violet-500 to-violet-600" },
-  cyan: { bg: "bg-cyan-500/10", border: "border-cyan-500/30", text: "text-cyan-400", gradient: "from-cyan-500 to-cyan-600" },
-  amber: { bg: "bg-amber-500/10", border: "border-amber-500/30", text: "text-amber-400", gradient: "from-amber-500 to-amber-600" },
-  rose: { bg: "bg-rose-500/10", border: "border-rose-500/30", text: "text-rose-400", gradient: "from-rose-500 to-rose-600" },
+const colorMap: Record<
+  string,
+  { bg: string; border: string; text: string; gradient: string }
+> = {
+  emerald: {
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/30",
+    text: "text-emerald-400",
+    gradient: "from-emerald-500 to-emerald-600",
+  },
+  blue: {
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/30",
+    text: "text-blue-400",
+    gradient: "from-blue-500 to-blue-600",
+  },
+  violet: {
+    bg: "bg-violet-500/10",
+    border: "border-violet-500/30",
+    text: "text-violet-400",
+    gradient: "from-violet-500 to-violet-600",
+  },
+  cyan: {
+    bg: "bg-cyan-500/10",
+    border: "border-cyan-500/30",
+    text: "text-cyan-400",
+    gradient: "from-cyan-500 to-cyan-600",
+  },
+  amber: {
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/30",
+    text: "text-amber-400",
+    gradient: "from-amber-500 to-amber-600",
+  },
+  rose: {
+    bg: "bg-rose-500/10",
+    border: "border-rose-500/30",
+    text: "text-rose-400",
+    gradient: "from-rose-500 to-rose-600",
+  },
 };
 
 export default function PrivacyPolicyView() {
@@ -105,36 +150,35 @@ export default function PrivacyPolicyView() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden">
+    <div className="relative min-h-screen">
       {/* Animated Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {!prefersReducedMotion && !isMobile && (
-          <>
-            <motion.div
-              className="absolute top-0 right-1/4 w-[500px] h-[500px]"
-              style={{
-                background: "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(16,185,129,0.12),transparent 70%)",
-                filter: "blur(100px)",
-              }}
-              animate={{ x: [0, 50, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute bottom-0 left-1/4 w-[400px] h-[400px]"
-              style={{
-                background: "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(59,130,246,0.1),transparent 70%)",
-                filter: "blur(100px)",
-              }}
-              animate={{ x: [0, -40, 0], y: [0, -40, 0], scale: [1, 1.15, 1] }}
-              transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </>
-        )}
-        <div className="absolute inset-0 bg-grid-dense opacity-[0.015]" />
-      </div>
+      {!prefersReducedMotion && !isMobile && (
+        <>
+          <motion.div
+            className="absolute top-0 right-1/4 w-[500px] h-[500px]"
+            style={{
+              background:
+                "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(16,185,129,0.12),transparent 70%)",
+              filter: "blur(100px)",
+            }}
+            animate={{ x: [0, 50, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-0 left-1/4 w-[400px] h-[400px]"
+            style={{
+              background:
+                "radial-gradient(ellipse 50% 50% at 50% 50%,rgba(59,130,246,0.1),transparent 70%)",
+              filter: "blur(100px)",
+            }}
+            animate={{ x: [0, -40, 0], y: [0, -40, 0], scale: [1, 1.15, 1] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </>
+      )}
 
       {/* Hero Section — ✅ FIXED: pt-20 md:pt-24 */}
-      <section className="relative pt-20 md:pt-24 pb-16 md:pb-20">
+      <section className="relative pt-14 md:pt-16 pb-10 md:pb-14">
         <div className="container-custom relative z-10 px-4">
           <motion.button
             onClick={() => setView("home")}
@@ -159,7 +203,9 @@ export default function PrivacyPolicyView() {
               transition={{ delay: 0.2 }}
             >
               <Shield className="w-4 h-4 text-emerald-400" />
-              <span className="text-sm font-semibold text-emerald-400">Legal</span>
+              <span className="text-sm font-semibold text-emerald-400">
+                Legal
+              </span>
             </motion.div>
 
             <h1 className="heading-display mb-6">
@@ -177,13 +223,15 @@ export default function PrivacyPolicyView() {
             />
 
             <p className="text-body-lg text-white/70 mb-4">
-              Effective Date: <span className="text-white font-semibold">April 2025</span>
+              Effective Date:{" "}
+              <span className="text-white font-semibold">April 2025</span>
             </p>
 
             <p className="text-body-lg text-white/80 leading-relaxed">
-              Remarketix values your privacy and is committed to protecting your personal information.
-              This Privacy Policy explains how we collect, use and safeguard your data when you visit
-              our website or use our services.
+              Remarketix values your privacy and is committed to protecting your
+              personal information. This Privacy Policy explains how we collect,
+              use and safeguard your data when you visit our website or use our
+              services.
             </p>
           </motion.div>
         </div>
@@ -205,21 +253,27 @@ export default function PrivacyPolicyView() {
                   className="group"
                 >
                   <motion.div
-                    className="feature-card-premium p-8"
+                    className="feature-card-premium p-5 md:p-6"
                     whileHover={!isMobile ? { y: -6, scale: 1.01 } : {}}
                     transition={{ duration: 0.3 }}
                   >
                     <div className="flex items-start gap-6">
                       <div className="relative flex-shrink-0">
-                        <div className={`absolute inset-0 bg-gradient-to-br ${section.gradient} opacity-10 rounded-2xl blur-xl group-hover:opacity-20 transition-opacity`} />
-                        <div className={`relative w-14 h-14 rounded-2xl ${c.bg} border ${c.border} flex items-center justify-center`}>
-                          <section.icon className={`w-7 h-7 ${c.text}`} />
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-br ${section.gradient} opacity-10 rounded-2xl blur-xl group-hover:opacity-20 transition-opacity`}
+                        />
+                        <div
+                          className={`relative w-14 h-14 rounded-2xl ${c.bg} border ${c.border} flex items-center justify-center`}
+                        >
+                          <section.icon
+                            className={`w-7 h-7 ${c.text}`}
+                          />
                         </div>
                       </div>
 
                       <div className="flex-1">
                         <h3 className="heading-sm text-white mb-4 flex items-center gap-2">
-                          <span className="text-2xl font-bold">{i + 1}.</span>
+                          <span className="text-2xl font-bold">{i + 1}. </span>
                           {section.title}
                         </h3>
                         <ul className="space-y-3">
@@ -232,7 +286,9 @@ export default function PrivacyPolicyView() {
                               viewport={{ once: true }}
                               transition={{ delay: 0.1 + idx * 0.05 }}
                             >
-                              <CheckCircle2 className={`w-5 h-5 ${c.text} flex-shrink-0 mt-0.5`} />
+                              <CheckCircle2
+                                className={`w-5 h-5 ${c.text} flex-shrink-0 mt-0.5`}
+                              />
                               <span className="text-body-sm text-white/70 leading-relaxed">
                                 {item}
                               </span>
@@ -257,16 +313,19 @@ export default function PrivacyPolicyView() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="feature-card-premium p-8"
+              className="feature-card-premium p-5 md:p-6"
             >
               <div className="flex items-start gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
                   <AlertTriangle className="w-7 h-7 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="heading-sm text-white mb-3">8. Changes to This Policy</h3>
+                  <h3 className="heading-sm text-white mb-3">
+                    8. Changes to This Policy
+                  </h3>
                   <p className="text-body-sm text-white/70 leading-relaxed">
-                    We may update this Privacy Policy from time to time. Changes will be posted on this page.
+                    We may update this Privacy Policy from time to time. Changes
+                    will be posted on this page.
                   </p>
                 </div>
               </div>
@@ -275,22 +334,25 @@ export default function PrivacyPolicyView() {
         </div>
       </section>
 
-      {/* Contact Section */}
+      {/* Contact Section - ✅ FIXED: Constrained width */}
       <section className="section-spacing-sm relative">
         <div className="container-custom px-4">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="card-glass-premium p-8 md:p-12 text-center"
+              className="card-glass-premium p-5 md:p-7 text-center"
             >
               <h3 className="heading-xl mb-6">
                 <span className="text-white">Have Questions About Your</span>
-                <span className="block mt-2 gradient-text-enhanced">Privacy?</span>
+                <span className="block mt-2 gradient-text-enhanced">
+                  Privacy?
+                </span>
               </h3>
               <p className="text-body-lg text-white/70 mb-8 max-w-2xl mx-auto">
-                If you have any questions regarding this Privacy Policy, please contact us:
+                If you have any questions regarding this Privacy Policy, please
+                contact us:
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -299,14 +361,18 @@ export default function PrivacyPolicyView() {
                   className="group flex items-center gap-3 px-6 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all"
                 >
                   <Mail className="w-5 h-5 text-emerald-400" />
-                  <span className="text-sm font-semibold text-white">info@remarketix.in</span>
+                  <span className="text-sm font-semibold text-white">
+                    info@remarketix.in
+                  </span>
                 </a>
                 <a
                   href="tel:+918759839140"
                   className="group flex items-center gap-3 px-6 py-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 hover:border-cyan-500/50 transition-all"
                 >
                   <Phone className="w-5 h-5 text-cyan-400" />
-                  <span className="text-sm font-semibold text-white">+91 8759839140</span>
+                  <span className="text-sm font-semibold text-white">
+                    +91 8759839140
+                  </span>
                 </a>
               </div>
             </motion.div>

@@ -231,7 +231,7 @@ function FounderStory() {
           <div className="h-1 w-24 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full mx-auto" />
         </motion.div>
 
-        <motion.div {...FADE_IN} className="feature-card-premium p-5 md:p-8">
+        <motion.div {...FADE_IN} className="feature-card-premium p-4 md:p-6">
           <div className="space-y-5 text-white/70 leading-relaxed text-base md:text-lg">
             <p>Remarketix was born out of a simple frustration. Businesses were spending too much time chasing leads that never converted.</p>
             <p>What started as a freelance lead generation service by two young professionals from Kolkata quickly grew into something much bigger.</p>
@@ -333,7 +333,7 @@ export default function AboutView() {
       `}</style>
 
       {/* ── Hero ── */}
-      <section className="relative section-spacing pt-16 md:pt-20">
+      <section className="relative section-spacing pt-14 md:pt-16">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 24 }}

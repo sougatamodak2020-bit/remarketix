@@ -80,7 +80,7 @@ export default function ContactView() {
       </div>
 
       {/* ✅ Updated: pt-32 → pt-16 md:pt-20 */}
-      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-16 md:pt-20">
+      <div className="relative z-10 container-custom section-spacing px-4 md:px-6 pt-14 md:pt-16">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -92,7 +92,7 @@ export default function ContactView() {
             <Sparkles className="w-4 h-4" />
             Let&apos;s Connect
           </div>
-          <h1 className="heading-display mb-5 md:mb-6">
+          <h1 className="heading-display mb-4 md:mb-5">
             <span className="block text-white">Get in</span>
             <span className="block gradient-text-enhanced mt-2 md:mt-3">
               Touch

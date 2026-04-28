@@ -174,7 +174,7 @@ const accentGradMap: Record<string, string> = {
 
 /* ─── Sticky nav height constant — keep in sync with Tailwind class ─────────── */
 // top-20 = 80px (main header) + the sticky nav itself (~52px) = ~132px total offset
-const SCROLL_OFFSET = 136;
+const SCROLL_OFFSET = 120;
 
 /* ─── Service Card ───────────────────────────────────────────────────────────── */
 function ServiceCard({ service, isMobile }: { service: typeof CATEGORIES[0]["services"][0]; isMobile: boolean }) {
@@ -256,7 +256,7 @@ function CategorySection({
     >
       <button
         onClick={onToggle}
-        className="w-full text-left mb-8 md:mb-10 group touch-manipulation"
+        className="w-full text-left mb-5 md:mb-7 group touch-manipulation"
         aria-expanded={isOpen}
       >
         <div className="flex items-center justify-between gap-4">
@@ -407,7 +407,7 @@ export default function ServicesView() {
       </div>
 
       {/* ── Hero ── */}
-      <section className="relative section-spacing pt-20 md:pt-24">
+      <section className="relative section-spacing pt-14 md:pt-16">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="badge-glow mx-auto mb-6 w-fit">
@@ -444,7 +444,7 @@ export default function ServicesView() {
       </section>
 
       {/* ── Category jump nav ── */}
-      <div className="sticky top-20 md:top-24 z-30 bg-[var(--bg-primary)]/80 border-b border-white/[0.06] backdrop-blur-md">
+      <div className="sticky top-[64px] z-30 bg-[var(--bg-primary)]/80 border-b border-white/[0.06] backdrop-blur-md">
         <div className="container-custom px-4">
           <div className="flex gap-1 md:gap-2 overflow-x-auto py-3 scrollbar-hide">
             {CATEGORIES.map((cat) => (
@@ -494,7 +494,7 @@ export default function ServicesView() {
         <div className="container-custom relative z-10 px-4">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="card-glass-premium max-w-4xl mx-auto text-center p-8 md:p-12 lg:p-16">
+            className="card-glass-premium max-w-3xl mx-auto text-center p-5 md:p-7">
             <h2 className="heading-xl mb-4 md:mb-5">
               <span className="text-white">Ready to</span>
               <span className="block gradient-text-enhanced mt-2">Elevate Your Business?</span>

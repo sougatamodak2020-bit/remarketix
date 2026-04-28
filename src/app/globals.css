@@ -1,6 +1,5 @@
-﻿/*
-Remarketix — globals.css (Ultra-Premium Performance Edition)
-*/
+﻿/* globals.css */
+
 @import "tailwindcss";
 
 @theme {
@@ -15,13 +14,16 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   --color-dark-800: #1e293b;
   --color-dark-900: #0f172a;
   --color-dark-950: #020617;
+
   --font-family-sans: "Inter", system-ui, sans-serif;
   --font-family-display: "Cal Sans", "Inter", sans-serif;
+
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 8s ease-in-out infinite;
   --animate-gradient: gradient 8s linear infinite;
   --animate-shimmer: shimmer 2s linear infinite;
   --animate-spin-slow: spin 8s linear infinite;
+
   --shadow-glow-sm: 0 0 20px rgba(16, 185, 129, 0.3);
   --shadow-glow-md: 0 0 40px rgba(16, 185, 129, 0.4);
   --shadow-glow-lg: 0 0 60px rgba(16, 185, 129, 0.5);
@@ -54,7 +56,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
 }
 
 @layer base {
-
   *,
   *::before,
   *::after {
@@ -148,7 +149,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   }
 
   @media (max-width: 767px) {
-
     button,
     a,
     [role="button"],
@@ -176,24 +176,20 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
   }
-
   50% {
     transform: translateY(-20px);
   }
 }
 
 @keyframes gradient {
-
   0%,
   100% {
     background-position: 0% 50%;
   }
-
   50% {
     background-position: 100% 50%;
   }
@@ -203,11 +199,9 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   0% {
     background-position: 0% 50%;
   }
-
   50% {
     background-position: 100% 50%;
   }
-
   100% {
     background-position: 0% 50%;
   }
@@ -217,7 +211,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   0% {
     background-position: -200% 0;
   }
-
   100% {
     background-position: 200% 0;
   }
@@ -228,7 +221,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     transform: translateY(20px);
     opacity: 0;
   }
-
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -240,7 +232,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     transform: translateY(-10px);
     opacity: 0;
   }
-
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -251,7 +242,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   0% {
     opacity: 0;
   }
-
   100% {
     opacity: 1;
   }
@@ -262,7 +252,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     transform: scale(0.95);
     opacity: 0;
   }
-
   100% {
     transform: scale(1);
     opacity: 1;
@@ -273,7 +262,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }
@@ -284,7 +272,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     opacity: 0;
     transform: translateY(-8px) scale(0.98);
   }
-
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -292,10 +279,9 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
 }
 
 @layer components {
-
   /* ────────────────────────────────────────
      ✅ NAVBAR STYLES (Zero Lag, iOS Optimized)
-     ───────────────────────────────────────── */
+     ────────────────────────────────────────── */
   .header {
     position: sticky;
     position: -webkit-sticky;
@@ -337,9 +323,9 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.6), 
-                0 0 0 1px rgba(16, 185, 129, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(16, 185, 129, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -425,54 +411,70 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     }
   }
 
+  /* ✅ UPDATED: Minimal premium section spacing - tight and cohesive */
   .section-spacing {
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
   }
-
+  
   .section-spacing-sm {
-    padding-top: 1.75rem;
-    padding-bottom: 1.75rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 
   @media (min-width: 768px) {
     .section-spacing {
-      padding-top: 4rem;
-      padding-bottom: 4rem;
+      padding-top: 1.75rem;
+      padding-bottom: 1.75rem;
     }
-
     .section-spacing-sm {
-      padding-top: 2.5rem;
-      padding-bottom: 2.5rem;
+      padding-top: 1.25rem;
+      padding-bottom: 1.25rem;
     }
   }
 
   @media (min-width: 1024px) {
     .section-spacing {
-      padding-top: 5rem;
-      padding-bottom: 5rem;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
     }
-
     .section-spacing-sm {
-      padding-top: 3rem;
-      padding-bottom: 3rem;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
     }
   }
 
-  /* ✅ FIXED: Optimized hero section spacing */
+  /* ✅ UPDATED: Optimized hero section spacing - reduced significantly */
   .hero-section-pt {
-    padding-top: 5.5rem;
+    padding-top: 4rem;
   }
 
   @media (min-width: 768px) {
     .hero-section-pt {
-      padding-top: 6.5rem;
+      padding-top: 4.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .hero-section-pt {
-      padding-top: 7rem;
+      padding-top: 5rem;
+    }
+  }
+
+  /* ✅ UPDATED: Hero top padding - tighter, more premium */
+  .hero-pt {
+    padding-top: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero-pt {
+      padding-top: 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-pt {
+      padding-top: 3.5rem;
     }
   }
 
@@ -630,7 +632,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  @media (min-width:768px) {
+  @media (min-width: 768px) {
     .card-glass {
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -661,7 +663,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  @media (min-width:768px) {
+  @media (min-width: 768px) {
     .card-glass-premium {
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
@@ -829,7 +831,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     transform: translateY(0) translateZ(0);
   }
 
-  @media (min-width:768px) {
+  @media (min-width: 768px) {
     .btn-primary-premium::before {
       content: "";
       position: absolute;
@@ -840,7 +842,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
       transition: left 0.5s ease;
     }
-
     .btn-primary-premium:hover::before {
       left: 100%;
     }
@@ -917,7 +918,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     transition: transform 0.25s ease;
   }
 
-  @media (min-width:768px) {
+  @media (min-width: 768px) {
     .icon-container-premium {
       width: 5rem;
       height: 5rem;
@@ -949,7 +950,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     animation: float 12s ease-in-out infinite;
   }
 
-  @media (min-width:768px) {
+  @media (min-width: 768px) {
     .bg-blob-animated {
       will-change: transform;
     }
@@ -985,7 +986,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     display: none;
   }
 
-  .swipe-row>* {
+  .swipe-row > * {
     scroll-snap-align: start;
     flex-shrink: 0;
   }
@@ -1055,7 +1056,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
   }
 
   /* ── MOBILE OPTIMIZATIONS ── */
-  @media (max-width:767px) {
+  @media (max-width: 767px) {
     body::before {
       opacity: 0.5;
       will-change: auto;
@@ -1082,13 +1083,13 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     }
 
     .section-spacing {
-      padding-top: 2rem;
-      padding-bottom: 2rem;
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
     }
 
     .section-spacing-sm {
-      padding-top: 1.5rem;
-      padding-bottom: 1.5rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
     }
 
     .card-glass-premium {
@@ -1146,7 +1147,7 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
     }
   }
 
-  @media (max-width:480px) {
+  @media (max-width: 480px) {
     .container-custom {
       padding-left: 0.75rem;
       padding-right: 0.75rem;
@@ -1155,7 +1156,6 @@ Remarketix — globals.css (Ultra-Premium Performance Edition)
 
   /* ── ACCESSIBILITY ── */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {

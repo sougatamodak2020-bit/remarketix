@@ -194,7 +194,7 @@ export default function Navbar() {
         className="header"
         style={{ willChange: "transform", transform: "translateZ(0)", backfaceVisibility: "hidden" }}
       >
-        <div className="relative flex items-center w-full px-4 md:px-6 lg:px-8 py-3 gap-8">
+        <div className="relative flex items-center justify-between w-full px-4 md:px-6 lg:px-8 py-3 max-w-[1600px] mx-auto">
 
           {/* Noise overlay */}
           <div
@@ -207,7 +207,7 @@ export default function Navbar() {
           {/* ── Logo + Brand ── */}
           <button
             onClick={() => handleNavigation("home")}
-            className="flex-shrink-0 flex items-center gap-3 group"
+            className="flex-shrink-0 flex items-center gap-3 group z-10"
             aria-label="Go to home"
           >
             <Image
@@ -220,16 +220,16 @@ export default function Navbar() {
               loading="eager"
               quality={90}
             />
-            <div className="hidden xl:flex flex-col leading-none gap-1">
-              <span className="text-[15px] font-bold text-white tracking-tight">Remarketix</span>
-              <span className="text-[11px] font-medium tracking-wide" style={{ color: "rgba(52,211,153,0.8)" }}>
+            <div className="hidden xl:flex flex-col leading-none gap-1.5">
+              <span className="text-[19px] font-bold text-white tracking-tight">Remarketix</span>
+              <span className="text-[13px] font-medium tracking-wide" style={{ color: "rgba(52,211,153,0.8)" }}>
                 Turn data into growth
               </span>
             </div>
           </button>
 
-          {/* ── Desktop Nav ── */}
-          <div className="hidden lg:flex items-center gap-7 ml-auto">
+          {/* ── Desktop Nav - Centered with Large Gaps ── */}
+          <div className="hidden lg:flex items-center gap-9 xl:gap-12 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             {NAV_ITEMS.map(({ id, label, hasDropdown }) => (
               <NavLink
                 key={id}
@@ -243,8 +243,8 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* ── CTA / Auth ── */}
-          <div className="hidden lg:flex items-center gap-3 ml-6 flex-shrink-0">
+          {/* ── CTA / Auth - Right Side ── */}
+          <div className="hidden lg:flex items-center gap-3 flex-shrink-0 z-10">
             {user ? (
               <div className="flex items-center gap-2">
                 {userRole === "admin" && (
