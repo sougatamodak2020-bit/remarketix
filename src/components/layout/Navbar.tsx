@@ -27,7 +27,6 @@ const NAV_ITEMS: { id: ViewId; label: string; hasDropdown?: boolean }[] = [
   { id: "contact",     label: "Contact" },
 ];
 
-// Sticky nav offset — must match the constant in ServicesView.tsx
 const SCROLL_OFFSET = 136;
 
 // ─── Dropdown sub-item ────────────────────────────────────────────────────────
@@ -135,13 +134,6 @@ export default function Navbar() {
     [setView]
   );
 
-  /**
-   * Navigate to the Services view and scroll to a specific category section.
-   * Strategy:
-   *   1. If already on services → scroll directly (section is already in DOM).
-   *   2. If on a different view → switch to services, then scroll once the
-   *      section elements have mounted (poll with rAF until the element exists).
-   */
   const handleServiceCategoryClick = useCallback(
     (id: ViewId, categoryId: string) => {
       setIsMobileMenuOpen(false);
@@ -156,18 +148,16 @@ export default function Navbar() {
       };
 
       if (activeView === "services") {
-        // Already on Services page — DOM is present, scroll immediately
         requestAnimationFrame(() => requestAnimationFrame(scrollToCategory));
       } else {
-        // Switch view first, then wait for the target element to appear in the DOM
         setView(id);
         let attempts = 0;
-        const MAX_ATTEMPTS = 40; // ~660ms at 60fps
+        const MAX_ATTEMPTS = 40;
 
         const poll = () => {
           attempts++;
-          if (scrollToCategory()) return;          // found it — done
-          if (attempts >= MAX_ATTEMPTS) return;    // give up after timeout
+          if (scrollToCategory()) return;
+          if (attempts >= MAX_ATTEMPTS) return;
           requestAnimationFrame(poll);
         };
 
@@ -220,72 +210,76 @@ export default function Navbar() {
               loading="eager"
               quality={90}
             />
-            <div className="hidden xl:flex flex-col leading-none gap-1.5">
+            <div className="hidden lg:flex flex-col leading-none gap-1.5">
               <span className="text-[19px] font-bold text-white tracking-tight">Remarketix</span>
-              <span className="text-[13px] font-medium tracking-wide" style={{ color: "rgba(52,211,153,0.8)" }}>
+              <span className="text-[15px] font-semibold tracking-wide" style={{ color: "rgba(52,211,153,0.85)" }}>
                 Turn data into growth
               </span>
             </div>
           </button>
 
-          {/* ── Desktop Nav - Centered with Large Gaps ── */}
-          <div className="hidden lg:flex items-center gap-9 xl:gap-12 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            {NAV_ITEMS.map(({ id, label, hasDropdown }) => (
-              <NavLink
-                key={id}
-                id={id}
-                label={label}
-                isActive={activeView === id}
-                onClick={handleNavigation}
-                onServiceClick={handleServiceCategoryClick}
-                hasDropdown={hasDropdown}
-              />
-            ))}
-          </div>
+          {/* ── Desktop Nav + CTA — unified right section ── */}
+          <div className="hidden lg:flex items-center flex-1 ml-10">
 
-          {/* ── CTA / Auth - Right Side ── */}
-          <div className="hidden lg:flex items-center gap-3 flex-shrink-0 z-10">
-            {user ? (
-              <div className="flex items-center gap-2">
-                {userRole === "admin" && (
+            {/* Nav links — spread evenly, mr-10 matches ml-10 for equal gaps */}
+            <div className="flex items-center justify-between flex-1 mr-10">
+              {NAV_ITEMS.map(({ id, label, hasDropdown }) => (
+                <NavLink
+                  key={id}
+                  id={id}
+                  label={label}
+                  isActive={activeView === id}
+                  onClick={handleNavigation}
+                  onServiceClick={handleServiceCategoryClick}
+                  hasDropdown={hasDropdown}
+                />
+              ))}
+            </div>
+
+            {/* CTA */}
+            <div className="flex items-center gap-3 flex-shrink-0 z-10">
+              {user ? (
+                <div className="flex items-center gap-2">
+                  {userRole === "admin" && (
+                    <button
+                      onClick={() => handleNavigation("admin")}
+                      className="group relative px-3 py-2 rounded-lg overflow-hidden border border-blue-500/20 bg-blue-500/5 flex items-center gap-2 hover:bg-blue-500/10 transition-colors"
+                    >
+                      <Shield className="w-4 h-4 text-blue-400" />
+                      <span className="text-xs font-bold tracking-wide text-blue-200">Admin</span>
+                    </button>
+                  )}
+                  <div className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
+                    <UserIcon className="w-4 h-4 text-slate-300" />
+                    <span className="text-xs font-medium text-slate-200 max-w-[90px] truncate">
+                      {user.email?.split("@")[0]}
+                    </span>
+                  </div>
                   <button
-                    onClick={() => handleNavigation("admin")}
-                    className="group relative px-3 py-2 rounded-lg overflow-hidden border border-blue-500/20 bg-blue-500/5 flex items-center gap-2 hover:bg-blue-500/10 transition-colors"
+                    onClick={handleSignOut}
+                    className="p-2 rounded-lg border border-white/5 text-slate-400 hover:text-red-400 hover:border-red-500/30 transition-colors"
+                    title="Sign Out"
                   >
-                    <Shield className="w-4 h-4 text-blue-400" />
-                    <span className="text-xs font-bold tracking-wide text-blue-200">Admin</span>
+                    <LogOut className="w-4 h-4" />
                   </button>
-                )}
-                <div className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
-                  <UserIcon className="w-4 h-4 text-slate-300" />
-                  <span className="text-xs font-medium text-slate-200 max-w-[90px] truncate">
-                    {user.email?.split("@")[0]}
-                  </span>
                 </div>
+              ) : (
                 <button
-                  onClick={handleSignOut}
-                  className="p-2 rounded-lg border border-white/5 text-slate-400 hover:text-red-400 hover:border-red-500/30 transition-colors"
-                  title="Sign Out"
+                  onClick={() => handleNavigation("contact")}
+                  className="group relative flex items-center gap-2 px-5 py-2.5 rounded-xl
+                             bg-gradient-to-r from-emerald-500/20 to-cyan-500/15
+                             border border-emerald-500/30 hover:border-emerald-500/55
+                             text-emerald-300 hover:text-white transition-all duration-200
+                             text-[14px] font-semibold overflow-hidden whitespace-nowrap
+                             hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  <span className="relative">Get a Quote</span>
+                  <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
                 </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => handleNavigation("contact")}
-                className="group relative flex items-center gap-2 px-5 py-2.5 rounded-xl
-                           bg-gradient-to-r from-emerald-500/20 to-cyan-500/15
-                           border border-emerald-500/30 hover:border-emerald-500/55
-                           text-emerald-300 hover:text-white transition-all duration-200
-                           text-[14px] font-semibold overflow-hidden whitespace-nowrap
-                           hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                <span className="relative">Get a Quote</span>
-                <ArrowRight className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
-              </button>
-            )}
+              )}
+            </div>
           </div>
 
           {/* ── Mobile hamburger ── */}
@@ -320,6 +314,26 @@ export default function Navbar() {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="fixed top-[72px] left-3 right-3 z-[9999] lg:hidden max-h-[calc(100vh-84px)] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d1526]/97 backdrop-blur-2xl shadow-2xl"
             >
+              {/* Mobile Brand Header */}
+              <div className="px-4 py-4 border-b border-white/10 bg-gradient-to-r from-emerald-500/5 to-cyan-500/5">
+                <div className="flex items-center gap-3">
+                  <Image
+                    src="https://i.postimg.cc/t4msmVH7/Remarketix-logo.png"
+                    alt="Remarketix"
+                    width={120}
+                    height={36}
+                    className="h-auto w-auto max-h-9"
+                    quality={90}
+                  />
+                  <div className="flex flex-col leading-none gap-1.5">
+                    <span className="text-[17px] font-bold text-white tracking-tight">Remarketix</span>
+                    <span className="text-[13px] font-semibold tracking-wide" style={{ color: "rgba(52,211,153,0.85)" }}>
+                      Turn data into growth
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               <div className="p-3 space-y-0.5">
                 {NAV_ITEMS.map(({ id, label, hasDropdown }, index) => (
                   <div key={id}>

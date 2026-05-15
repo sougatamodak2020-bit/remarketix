@@ -5,7 +5,7 @@ import { useAppStore } from "@/store/appStore";
 import {
   ArrowRight, Sparkles, Target, TrendingUp, Award,
   CheckCircle, ChevronLeft, ChevronRight,
-  BarChart3, Search, Zap, Settings, Users, ArrowLeft
+  BarChart3, Search, Zap, Settings, Users, ArrowLeft, Globe
 } from "lucide-react";
 
 /* ══════════════════════════════════════════════════════════════════════════════
@@ -14,7 +14,7 @@ import {
 const FILTERS = ["All", "Lead Generation", "Outreach", "Content", "Website"];
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   CASES  — original 4 + 6 new, mapped to the brief's filter categories
+   CASES  — original 4 + 6 new + 3 websites
 ══════════════════════════════════════════════════════════════════════════════ */
 const CASES = [
 
@@ -497,6 +497,173 @@ const CASES = [
     color: "sky",
   },
 
+  /* ─── NEW WEBSITE PROJECTS ─────────────────────────────────────────────────── */
+
+  {
+    id: 11,
+    filter: "Website",
+    clientType:  "Luxury Real Estate",
+    service:     "Web Development & UI/UX Design",
+    result:      "High-end property showcase with seamless user experience",
+    shortDesc:   "Developed a sophisticated real estate platform featuring elegant property listings, interactive galleries, and intuitive navigation for luxury properties.",
+    client:  "Maison Elite",
+    region:  "International",
+    problem: "The client needed a premium digital presence to showcase luxury properties with an emphasis on visual appeal and user experience. Standard real estate templates couldn't capture the exclusivity and sophistication required for high-end property marketing.",
+    solution: [
+      "Designed custom UI/UX focused on visual storytelling",
+      "Implemented responsive layouts for all device types",
+      "Created interactive property galleries with smooth animations",
+      "Built intuitive navigation and filtering system",
+      "Optimized performance for fast loading times",
+      "Integrated modern design trends with timeless elegance",
+    ],
+    results: [
+      "Fully responsive luxury real estate website delivered",
+      "Seamless browsing experience across all devices",
+      "Professional showcase of premium property listings",
+      "Enhanced brand perception and credibility",
+      "Fast-loading, performance-optimized platform",
+    ],
+    process: [
+      "Brand & design direction research",
+      "UI/UX wireframing and prototyping",
+      "Custom frontend development with Next.js",
+      "Responsive design implementation",
+      "Quality assurance and performance optimization",
+      "Deployment and launch support",
+    ],
+    services: ["Web Development", "UI/UX Design", "Responsive Design", "Performance Optimization"],
+    stats: [
+      { v: "100%",   l: "Responsive"     },
+      { v: "Custom", l: "UI/UX Design"   },
+      { v: "Next.js", l: "Technology"    },
+    ],
+    extraFields: {
+      label: "Key Features Delivered",
+      items: [
+        "Elegant Property Galleries",
+        "Responsive Design (Mobile, Tablet, Desktop)",
+        "Smooth Page Transitions & Animations",
+        "Intuitive Navigation System",
+        "Fast Loading Performance",
+        "Modern Tech Stack (Next.js, React)",
+        "SEO-Friendly Structure",
+      ],
+    },
+    websiteLink: "https://maison-elite-smoky.vercel.app/",
+    color: "rose",
+  },
+
+  {
+    id: 12,
+    filter: "Website",
+    clientType:  "Entertainment & Events",
+    service:     "Web Development & Brand Design",
+    result:      "Dynamic entertainment platform with engaging user interface",
+    shortDesc:   "Built a vibrant entertainment and events website with bold design, interactive elements, and seamless booking experience for audiences and clients.",
+    client:  "Roy Entertainment",
+    region:  "Regional",
+    problem: "The client needed a digital platform that reflected the energy and excitement of their entertainment business. They required a website that could showcase events, engage visitors, and facilitate easy communication while standing out in a competitive entertainment market.",
+    solution: [
+      "Created bold, energetic design language aligned with brand identity",
+      "Developed interactive UI elements for enhanced engagement",
+      "Built responsive layouts optimized for event promotion",
+      "Implemented clear call-to-action flows for bookings",
+      "Designed intuitive content structure for easy navigation",
+      "Integrated modern animations and visual effects",
+    ],
+    results: [
+      "Fully functional entertainment website delivered",
+      "Engaging and visually striking user interface",
+      "Seamless mobile and desktop experience",
+      "Professional platform for event promotion",
+      "Improved client communication channels",
+    ],
+    process: [
+      "Brand identity and visual direction development",
+      "Interactive UI/UX design and prototyping",
+      "Custom frontend development",
+      "Content structure and layout implementation",
+      "Cross-browser and device testing",
+      "Launch and post-launch optimization",
+    ],
+    services: ["Web Development", "UI/UX Design", "Brand Design", "Interactive Design"],
+    stats: [
+      { v: "Dynamic", l: "User Interface" },
+      { v: "Full",    l: "Responsive"     },
+      { v: "Modern",  l: "Tech Stack"     },
+    ],
+    extraFields: {
+      label: "Platform Features",
+      items: [
+        "Bold Visual Design",
+        "Interactive UI Elements",
+        "Event Showcase Sections",
+        "Mobile-Optimized Experience",
+        "Fast Performance",
+        "Contact & Booking Integration",
+        "Engaging Animations",
+      ],
+    },
+    websiteLink: "https://roy-entertainment.vercel.app/",
+    color: "fuchsia",
+  },
+
+  {
+    id: 13,
+    filter: "Website",
+    clientType:  "Educational Institution",
+    service:     "Web Development & Information Architecture",
+    result:      "Comprehensive campus website with intuitive structure and accessibility",
+    shortDesc:   "Rebuilt a campus website with improved information architecture, modern design, and user-friendly navigation for students, faculty, and visitors.",
+    client:  "Campus Digital Platform",
+    region:  "Educational",
+    problem: "The existing campus website had outdated design, poor navigation, and fragmented information that made it difficult for students and visitors to find essential resources. The institution needed a modern, accessible platform that could serve diverse user groups efficiently.",
+    solution: [
+      "Restructured information architecture for logical content flow",
+      "Designed clean, professional UI aligned with institutional branding",
+      "Developed responsive layouts for all user devices",
+      "Implemented accessible design following WCAG guidelines",
+      "Created intuitive navigation and search functionality",
+      "Built modular content sections for easy updates",
+    ],
+    results: [
+      "Modern, fully responsive campus website delivered",
+      "Improved information accessibility for all users",
+      "Streamlined navigation and content discovery",
+      "Professional digital presence for the institution",
+      "Foundation for ongoing content management",
+    ],
+    process: [
+      "User research and content audit",
+      "Information architecture planning",
+      "UI/UX design and prototyping",
+      "Frontend development with modern framework",
+      "Accessibility testing and optimization",
+      "Content migration and launch",
+    ],
+    services: ["Web Development", "Information Architecture", "UI/UX Design", "Accessibility Design"],
+    stats: [
+      { v: "WCAG",   l: "Accessible"     },
+      { v: "Modern", l: "Architecture"   },
+      { v: "Multi",  l: "User Groups"    },
+    ],
+    extraFields: {
+      label: "Core Capabilities",
+      items: [
+        "Intuitive Information Architecture",
+        "Accessible Design (WCAG Compliant)",
+        "Responsive Across All Devices",
+        "Clear Navigation System",
+        "Modular Content Structure",
+        "Fast Page Load Times",
+        "Search Functionality",
+      ],
+    },
+    websiteLink: "https://null-campus-rebuild-11.vercel.app/",
+    color: "blue",
+  },
+
 ];
 
 type Case = typeof CASES[number];
@@ -721,6 +888,26 @@ function DetailPage({
           </div>
         </motion.div>
 
+        {/* ══ LIVE WEBSITE LINK ══ */}
+        {"websiteLink" in c && (c as any).websiteLink && (
+          <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }}
+            transition={{ delay:0.52 }} className="mb-12">
+            <div className={`card-glass-premium p-6 md:p-7 text-center border-2 ${col.border}`}>
+              <h3 className="text-sm font-black text-white/60 uppercase tracking-widest mb-4">Live Project</h3>
+              <a 
+                href={(c as any).websiteLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-3 px-6 py-3.5 rounded-xl border-2 ${col.border} ${col.bg} hover:scale-105 transition-all group font-bold ${col.text}`}
+              >
+                <Globe className="w-5 h-5" />
+                View Live Website
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </div>
+          </motion.div>
+        )}
+
         {/* ══ Bottom navigation ══ */}
         <div className="flex items-center justify-between pt-8 pb-6 border-t border-white/10 mb-10">
           <button onClick={onPrev} disabled={!hasPrev}
@@ -816,7 +1003,7 @@ function CaseCard({ c, onOpen, isMobile, index }: {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   MAIN PAGE — ✅ FIXED: Reduced hero spacing (pt-16 md:pt-20)
+   MAIN PAGE
 ══════════════════════════════════════════════════════════════════════════════ */
 export default function CaseStudiesView() {
   const setView      = useAppStore((s) => s.setView);
@@ -873,7 +1060,7 @@ export default function CaseStudiesView() {
         <div className="absolute inset-0 bg-grid-dense opacity-[0.018]" />
       </div>
 
-      {/* ════ HEADER — ✅ FIXED: pt-16 md:pt-20 ════ */}
+      {/* ════ HEADER ════ */}
       <section className="relative section-spacing pt-14 md:pt-16">
         <div className="container-custom relative z-10 text-center px-4">
           <motion.div initial={{ opacity:0, y:30 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
@@ -896,10 +1083,10 @@ export default function CaseStudiesView() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 md:mt-14 max-w-4xl mx-auto">
             {[
-              { n:"11+",    l:"Case Studies"      },
+              { n:"14",     l:"Case Studies"      },
               { n:"99%",    l:"Data Accuracy"     },
               { n:"12",     l:"Countries Served"  },
-              { n:"4,500+", l:"Verified Contacts" },
+              { n:"10,000+", l:"Verified Contacts" },
             ].map((s, i) => (
               <motion.div key={s.l} className="stat-card-premium"
                 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }}
